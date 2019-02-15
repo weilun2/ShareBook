@@ -183,6 +183,8 @@ public class LoginActivity extends AppCompatActivity{
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            Intent intent= new Intent(this,MainActivity.class);
+            startActivity(intent);
         }
     }
 
