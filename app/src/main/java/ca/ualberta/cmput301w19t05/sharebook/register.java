@@ -28,6 +28,7 @@ public class register extends AppCompatActivity {
     private Button submitRegister;
     private Button back;
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ public class register extends AppCompatActivity {
         signupInputName = (EditText) findViewById(R.id.signup_input_name);
         signupInputEmail = (EditText) findViewById(R.id.signup_input_email);
         signupInputPassword = (EditText) findViewById(R.id.signup_input_password);
-        secondPassword = (EditText)findViewById(R.id.second_input_password) ;
+        secondPassword = (EditText) findViewById(R.id.second_input_password);
         submitRegister = (Button) findViewById(R.id.submut_register);
         back = (Button) findViewById(R.id.end_register);
         submitRegister.setOnClickListener(new View.OnClickListener() {
@@ -46,11 +47,10 @@ public class register extends AppCompatActivity {
                 secondPassword.setError(null);
                 String first = signupInputPassword.getText().toString();
                 String second = secondPassword.getText().toString();
-                submitForm();
-                if (first.equals(second) && !"".equals(first)){
+
+                if (first.equals(second) && !"".equals(first)) {
                     submitForm();
-                }
-                else{
+                } else {
 
                     secondPassword.setError(getString(R.string.error_two_password_not_match));
                 }
@@ -65,21 +65,26 @@ public class register extends AppCompatActivity {
             }
         });
     }
+
     private void submitForm() {
         mAuth = FirebaseAuth.getInstance();
         final String email = signupInputEmail.getText().toString();
         String password = signupInputPassword.getText().toString();
-
+        progressDialog.setMessage("Adding you ...");
+        showDialog();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        hideDialog();
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
                             Intent intent = new Intent();
-                            intent.putExtra("email",email);
+                            intent.putExtra("email", email);
                             setResult(0x07, intent);
                             finish();
 
@@ -95,5 +100,14 @@ public class register extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void showDialog() {
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+    private void hideDialog() {
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 }
