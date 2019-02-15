@@ -44,11 +44,15 @@ public class register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 secondPassword.setError(null);
-                if (signupInputPassword.getText().toString().equals(secondPassword.getText().toString())){
-                    secondPassword.setError(getString(R.string.error_two_password_not_match));
+                String first = signupInputPassword.getText().toString();
+                String second = secondPassword.getText().toString();
+                submitForm();
+                if (first.equals(second) && !"".equals(first)){
+                    submitForm();
                 }
                 else{
-                    submitForm();
+
+                    secondPassword.setError(getString(R.string.error_two_password_not_match));
                 }
 
             }
@@ -63,8 +67,9 @@ public class register extends AppCompatActivity {
     }
     private void submitForm() {
         mAuth = FirebaseAuth.getInstance();
-        String email = signupInputEmail.getText().toString();
+        final String email = signupInputEmail.getText().toString();
         String password = signupInputPassword.getText().toString();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -73,6 +78,10 @@ public class register extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Intent intent = new Intent();
+                            intent.putExtra("email",email);
+                            setResult(0x07, intent);
+                            finish();
 
                         } else {
                             // If sign in fails, display a message to the user.

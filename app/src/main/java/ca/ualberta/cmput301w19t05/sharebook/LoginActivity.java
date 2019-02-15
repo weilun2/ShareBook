@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -159,7 +160,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
     private void register(){
         Intent goto_register = new Intent(this,register.class);
-        startActivity(goto_register);
+        startActivityForResult(goto_register,0x07);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==0x07 && resultCode== 0x07){
+            String email = data.getStringExtra("email");
+            mEmailView.setText(email);
+
+        }
     }
 
 
