@@ -11,4 +11,12 @@
     <string name="error_field_required">填好所有信息</string>
     <string name="permission_rationale">没有通讯录授权</string>
     <string name="action_register">现在注册</string>
+    <string name="prompt_password_again">重新输入密码</string>
+    <string name="back">返回</string>
+    <string name="username_string">用户名</string>
+    <string name="error_two_password_not_match">两次的密码不一样</string>
+    <string name="title_home">主页</string>
+    <string name="title_notifications">提醒</string>
+    <string name="title_activity_profile">个人信息</string>
+    <string name="action_settings">设置</string>
 </resources>
