@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity{
 
 
     private void register(){
-        Intent goto_register = new Intent(this,register.class);
+        Intent goto_register = new Intent(this,Register.class);
         startActivityForResult(goto_register,0x07);
     }
     @Override

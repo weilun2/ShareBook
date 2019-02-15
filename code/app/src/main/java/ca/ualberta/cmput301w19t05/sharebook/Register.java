@@ -18,7 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class register extends AppCompatActivity {
+public class Register extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
 
@@ -91,7 +91,7 @@ public class register extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(register.this, "Authentication failed.",
+                            Toast.makeText(Register.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                         }
