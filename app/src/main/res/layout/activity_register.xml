@@ -62,26 +62,29 @@
             android:layout_height="wrap_content"
 
             android:layout_marginTop="10dp">
+
             <EditText
-                android:id="@+id/signup_input_age"
+                android:id="@+id/second_input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/prompt_password_again"/>
+                android:hint="@string/prompt_password_again" />
         </android.support.design.widget.TextInputLayout>
 
-    <Button android:id="@+id/btn_signup"
+    <Button android:id="@+id/submut_register"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/action_register"
             android:layout_marginTop="40dp"
             android:textColor="@android:color/white"/>
-        <Button android:id="@+id/btn_link_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/back"
-            android:background="@null"
-            android:layout_marginTop="3dp"
-            android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/end_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:background="@null"
+        android:text="@string/back"
+        android:textColor="@android:color/black" />
 
 </LinearLayout>
