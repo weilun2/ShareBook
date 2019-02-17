@@ -31,7 +31,7 @@ public class FirebaseHandler {
         Log.d(TAG, "start add " + email + ", " + username);
         UsernameEmail user = new UsernameEmail(userId, username, email);
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
-                .child(userId).setValue(user);
+                .child(username).setValue(email);
 
 
     }

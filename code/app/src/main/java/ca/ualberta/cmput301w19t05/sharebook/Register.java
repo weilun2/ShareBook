@@ -116,15 +116,13 @@ public class Register extends AppCompatActivity {
 
 
         reference.child(getString(R.string.db_username_email_tuple))
-                .orderByChild(getString(R.string.field_username))
-                .equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            if (data.exists()) {
-                                //TODO duplicate username check
-                            }
+                        if (dataSnapshot.exists()) {
+                            //Todo handle duplicate username
+                        } else {
+
                         }
 
                     }
