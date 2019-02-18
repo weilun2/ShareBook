@@ -3,6 +3,7 @@ package ca.ualberta.cmput301w19t05.sharebook;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -40,6 +41,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,28 +60,29 @@ public class LoginActivity extends AppCompatActivity{
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     private static final String TAG = "login screen";
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    final static String DATABASE_URL = "https://sharebook-80fa6.firebaseio.com";
 
     // UI references.
     private EditText mEmailView;
     private EditText mPasswordView;
     private View mLoginFormView;
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        //progressDialog.setCancelable(false);
         // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
 
@@ -127,11 +131,12 @@ public class LoginActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==0x07 && resultCode== 0x07){
             String email = data.getStringExtra("email");
+            mEmailView.getText().clear();
+            mPasswordView.getText().clear();
             mEmailView.setText(email);
 
         }
     }
-
 
 
     /**
@@ -141,13 +146,20 @@ public class LoginActivity extends AppCompatActivity{
      */
     private void attemptLogin() {
 
-
+        String email;
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        if (isEmailValid(mEmailView.getText().toString())){
+            email = mEmailView.getText().toString();
+        }
+        else{
+            database = FirebaseDatabase.getInstance();
+            myRef = database.getReference();
 
+            email = myRef.child("Username").child(mEmailView.getText().toString()).toString();
+        }
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -165,10 +177,6 @@ public class LoginActivity extends AppCompatActivity{
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
         }
 
         if (cancel) {
@@ -178,14 +186,14 @@ public class LoginActivity extends AppCompatActivity{
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-
-//            mAuthTask = new UserLoginTask(email, password);
-//            mAuthTask.execute((Void) null);
+            progressDialog.setMessage("Attempt to Login ...");
+            showDialog();
             mAuth = FirebaseAuth.getInstance();
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            hideDialog();
 
                             if (!task.isSuccessful()) {
                                 // there was an error
@@ -210,6 +218,8 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
+
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -218,6 +228,15 @@ public class LoginActivity extends AppCompatActivity{
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
+    }
+
+    private void showDialog() {
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+    private void hideDialog() {
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 
 

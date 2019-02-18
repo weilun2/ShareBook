@@ -35,4 +35,6 @@
     <string name="requested">requested</string>
     <string name="db_username_email_tuple">username_email_tuple</string>
     <string name="field_username">username</string>
+    <string name="title_my_book">My Bookshelf</string>
+    <string name="title_my_borrow">Borrowing</string>
 </resources>
