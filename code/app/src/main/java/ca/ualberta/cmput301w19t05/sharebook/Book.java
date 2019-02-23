@@ -2,27 +2,44 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 public class Book {
     private String title;
-    private String auther;
+    private String author;
     private String ISBN;
     private User owner;
     private String photo;
     private String status;
+    private Location mLocation;
 
-    public Book(String title, String auther, String ISBN) {
+    public Book(String title, String author, String ISBN) {
         this.title = title;
-        this.auther = auther;
+        this.author = author;
         this.ISBN = ISBN;
 
     }
 
-    public Book(String title, String auther, String ISBN, User owner) {
+    public Book(String title, String author, String ISBN, User owner) {
         this.title = title;
-        this.auther = auther;
+        this.author = author;
         this.ISBN = ISBN;
         this.owner = owner;
     }
 
     public Book() {
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public Location getmLocation() {
+        return mLocation;
+    }
+
+    public void setmLocation(Location mLocation) {
+        this.mLocation = mLocation;
     }
 
     public String getTitle() {
@@ -33,12 +50,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuther() {
-        return auther;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuther(String auther) {
-        this.auther = auther;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getISBN() {

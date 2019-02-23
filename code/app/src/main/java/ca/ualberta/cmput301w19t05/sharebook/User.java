@@ -49,9 +49,11 @@ public class User {
     public void setShelf(ArrayList<Book> shelf) {
         this.myBooks = shelf;
     }
-    public void accept(Book book){
+
+    public void accept(Book book, Location mLocation){
         book.setStatus("accepted");
-        sendMessage("accepte", book.getOwner());
+        sendMessage("accept", book.getOwner());
+        book.setmLocation(mLocation);
     }
     public void decline(Book book){
         book.setStatus("declined");
@@ -61,7 +63,6 @@ public class User {
         book.setStatus("declined");
         sendMessage("Request", book.getOwner());
         Record record = new Record(book,this,book.getOwner());
-
     }
     public void sendMessage( String message, User receiver){
         Notification notification = new Notification(message,this, receiver);
