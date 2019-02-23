@@ -1,5 +1,7 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
+import android.location.Location;
+
 import java.util.ArrayList;
 
 public class User {
@@ -53,7 +55,6 @@ public class User {
     public void accept(Book book, Location mLocation){
         book.setStatus("accepted");
         sendMessage("accept", book.getOwner());
-        book.setmLocation(mLocation);
     }
     public void decline(Book book){
         book.setStatus("declined");
