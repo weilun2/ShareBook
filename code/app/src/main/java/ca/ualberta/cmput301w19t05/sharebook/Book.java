@@ -1,5 +1,4 @@
 package ca.ualberta.cmput301w19t05.sharebook;
-import android.location.Location;
 
 
 public class Book {
