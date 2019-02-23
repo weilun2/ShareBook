@@ -1,7 +1,5 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-import android.location.Location;
-
 import java.util.ArrayList;
 
 public class User {
@@ -53,20 +51,22 @@ public class User {
     }
 
     public void accept(Book book, Location mLocation){
-        book.setStatus("accepted");
+        book.setStatus("ACCEPTED");
         sendMessage("accept", book.getOwner());
     }
     public void decline(Book book){
-        book.setStatus("declined");
         sendMessage("decline", book.getOwner());
     }
     public void sendRequest(Book book){
-        book.setStatus("declined");
+        book.setStatus("REQUESTED");
         sendMessage("Request", book.getOwner());
         Record record = new Record(book,this,book.getOwner());
     }
-    public void sendMessage( String message, User receiver){
+    public Notification sendMessage( String message, User receiver){
         Notification notification = new Notification(message,this, receiver);
+        return notification;
     }
+
+
 
 }
