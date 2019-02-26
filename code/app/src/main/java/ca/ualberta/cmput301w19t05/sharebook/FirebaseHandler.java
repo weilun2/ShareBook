@@ -29,7 +29,6 @@ public class FirebaseHandler {
 
     public void addUsernameEmailTuple(String email, String username) {
         Log.d(TAG, "start add " + email + ", " + username);
-        User user = new User(userId, username, email);
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
                 .child(username).setValue(email);
 
