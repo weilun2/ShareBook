@@ -35,7 +35,7 @@ public class Register extends AppCompatActivity {
     private Button back;
     private FirebaseAuth mAuth;
     private FirebaseHandler firebaseHandler;
-    private boolean cancel, wait;
+    private boolean cancel;
 
 
 
@@ -56,7 +56,6 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 cancel = true;
-                wait = true;
                 secondPassword.setError(null);
                 String first = signupInputPassword.getText().toString();
                 String second = secondPassword.getText().toString();
@@ -84,13 +83,9 @@ public class Register extends AppCompatActivity {
         final String email = signupInputEmail.getText().toString();
         final String password = signupInputPassword.getText().toString();
         final String username = signupInputName.getText().toString();
-        checkIfUsernameExists(username);
+        checkIfUsernameExists(username, email);
         firebaseHandler.addUsernameEmailTuple(email, username);
 
-        if (cancel){
-            sameUsernameError();
-            return;
-        }
         progressDialog.setMessage("Adding you ...");
         showDialog();
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -99,9 +94,14 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideDialog();
-                        if (task.isSuccessful()) {
+                        if (cancel){
+                            sameUsernameError();
+
+                        }
+                        else if (task.isSuccessful()&&!cancel) {
                             // Sign in success
                             Log.d(TAG, "createUserWithEmail:success");
+
 
 
                             Intent intent = new Intent();
@@ -110,6 +110,8 @@ public class Register extends AppCompatActivity {
                             finish();
 
                         } else {
+
+
                             // If sign in fails
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(Register.this, "Authentication failed.",
@@ -122,7 +124,7 @@ public class Register extends AppCompatActivity {
 
     }
 
-    private void checkIfUsernameExists(final String username) {
+    private void checkIfUsernameExists(final String username, final String email) {
         Log.d(TAG, "usernameExists: check if " + username + " already exists");
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
@@ -131,10 +133,9 @@ public class Register extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()==null){
+                if (dataSnapshot.getValue()==null|| dataSnapshot.child(username).toString().equals(email)){
                     cancel = false;
                 }
-                wait= false;
             }
 
             @Override
@@ -170,8 +171,10 @@ public class Register extends AppCompatActivity {
             progressDialog.dismiss();
     }
     private void sameUsernameError(){
+
         signupInputName.setError(null);
         signupInputName.setError("username exists");
         signupInputName.requestFocus();
+        firebaseHandler.removeUser();
     }
 }
