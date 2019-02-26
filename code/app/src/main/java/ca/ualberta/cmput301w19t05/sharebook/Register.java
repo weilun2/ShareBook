@@ -22,8 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.concurrent.TimeUnit;
-
 public class Register extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
@@ -72,11 +70,22 @@ public class Register extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                finish();
+                backToLogin();
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        backToLogin();
+    }
+
+    private void backToLogin() {
+        Intent intent = new Intent(Register.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    
 
     private void submitForm() {
         mAuth = FirebaseAuth.getInstance();
