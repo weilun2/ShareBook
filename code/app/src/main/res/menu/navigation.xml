@@ -7,7 +7,7 @@
         android:title="@string/title_my_book" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_borrowing"
         android:icon="@drawable/ic_hand"
         android:title="@string/title_my_borrow" />
 
