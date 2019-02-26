@@ -170,7 +170,6 @@ public class MainActivity extends AppCompatActivity
         if (!fragments[index].isAdded()) {
             transaction.add(R.id.fram_layout, fragments[index]);
 
-
         }
         transaction.show(fragments[index]).commitAllowingStateLoss();
 
@@ -248,7 +247,7 @@ public class MainActivity extends AppCompatActivity
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getActivity(), "borrowing_fragment", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "borrowingFragment", Toast.LENGTH_SHORT).show();
                 }
             });
 

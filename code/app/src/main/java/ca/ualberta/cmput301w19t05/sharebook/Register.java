@@ -85,7 +85,7 @@ public class Register extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    
+
 
     private void submitForm() {
         mAuth = FirebaseAuth.getInstance();
