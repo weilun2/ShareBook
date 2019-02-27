@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class Register extends AppCompatActivity {
@@ -32,6 +33,8 @@ public class Register extends AppCompatActivity {
     private Button back;
     private FirebaseAuth mAuth;
     private FirebaseHandler firebaseHandler;
+    private boolean cancel;
+
 
 
     @Override
@@ -50,6 +53,7 @@ public class Register extends AppCompatActivity {
         submitRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cancel = true;
                 secondPassword.setError(null);
                 String first = signupInputPassword.getText().toString();
                 String second = secondPassword.getText().toString();
@@ -66,18 +70,30 @@ public class Register extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                finish();
+                backToLogin();
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        backToLogin();
+    }
+
+    private void backToLogin() {
+        Intent intent = new Intent(Register.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     private void submitForm() {
         mAuth = FirebaseAuth.getInstance();
         final String email = signupInputEmail.getText().toString();
         final String password = signupInputPassword.getText().toString();
         final String username = signupInputName.getText().toString();
-        checkIfUsernameExists(username);
+        checkIfUsernameExists(username, email);
+        firebaseHandler.addUsernameEmailTuple(email, username);
 
         progressDialog.setMessage("Adding you ...");
         showDialog();
@@ -87,17 +103,21 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideDialog();
-                        if (task.isSuccessful()) {
+                        if (cancel){
+                            sameUsernameError();
+                        }
+                        else if (task.isSuccessful()&&!cancel) {
                             // Sign in success
                             Log.d(TAG, "createUserWithEmail:success");
-                            firebaseHandler.addUsernameEmailTuple(email, username);
 
                             Intent intent = new Intent();
                             intent.putExtra("email", email);
                             setResult(0x07, intent);
-                            finish();
+                            backToLogin();
 
                         } else {
+
+
                             // If sign in fails
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(Register.this, "Authentication failed.",
@@ -110,19 +130,46 @@ public class Register extends AppCompatActivity {
 
     }
 
-    private void checkIfUsernameExists(final String username) {
+
+    private void checkIfUsernameExists(final String username, final String email) {
         Log.d(TAG, "usernameExists: check if " + username + " already exists");
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
+        Query query = reference.child(getString(R.string.db_username_email_tuple))
+                .orderByKey().equalTo(username);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()==null){
 
-        reference.child(getString(R.string.db_username_email_tuple))
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    cancel = false;
+                }
+                else{
+                    String res = dataSnapshot.child(username).getValue(String.class);
+                    if(res.equals(email)){
+                        cancel = false;
+                    }
+                    else{
+                        cancel = true;
+                    }
+
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+/*        reference.child(getString(R.string.db_username_email_tuple))
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            //Todo handle duplicate username
-                        } else {
-
+                        if(!dataSnapshot.hasChild(username)){
+                            cancel = false;
                         }
 
                     }
@@ -131,7 +178,7 @@ public class Register extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
-                });
+                });*/
 
 
     }
@@ -143,5 +190,12 @@ public class Register extends AppCompatActivity {
     private void hideDialog() {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
+    }
+    private void sameUsernameError(){
+
+        signupInputName.setError(null);
+        signupInputName.setError("username exists");
+        signupInputName.requestFocus();
+        firebaseHandler.removeUser();
     }
 }
