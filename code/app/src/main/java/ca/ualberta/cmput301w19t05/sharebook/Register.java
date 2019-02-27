@@ -105,18 +105,15 @@ public class Register extends AppCompatActivity {
                         hideDialog();
                         if (cancel){
                             sameUsernameError();
-
                         }
                         else if (task.isSuccessful()&&!cancel) {
                             // Sign in success
                             Log.d(TAG, "createUserWithEmail:success");
 
-
-
                             Intent intent = new Intent();
                             intent.putExtra("email", email);
                             setResult(0x07, intent);
-                            finish();
+                            backToLogin();
 
                         } else {
 
@@ -133,6 +130,7 @@ public class Register extends AppCompatActivity {
 
     }
 
+
     private void checkIfUsernameExists(final String username, final String email) {
         Log.d(TAG, "usernameExists: check if " + username + " already exists");
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -142,8 +140,22 @@ public class Register extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()==null|| dataSnapshot.child(username).toString().equals(email)){
+                if (dataSnapshot.getValue()==null){
+
+
                     cancel = false;
+                }
+                else{
+                    String res = dataSnapshot.child(username).getValue(String.class);
+                    if(res.equals(email)){
+                        cancel = false;
+                    }
+                    else{
+                        cancel = true;
+                    }
+
+
+
                 }
             }
 
