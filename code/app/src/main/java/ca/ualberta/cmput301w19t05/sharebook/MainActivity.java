@@ -1,9 +1,13 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,12 +26,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private MyShelfFragment myShelfFragment;
     private BorrowingFragment borrowingFragment;
     private NotificationFragment notificationFragment;
+    private NavigationView drawerNavigationView;
+    private BottomNavigationView bottomNavigationView;
+    private FloatingActionButton sign_out_button;
+    private View headerView;
+    private FirebaseUser user;
     private Fragment[] fragments;
     private int lastFragment;
     private FragmentManager supportFragmentManager;
@@ -70,14 +82,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-/*        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -85,12 +90,37 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        drawerNavigationView = findViewById(R.id.nav_view);
+        drawerNavigationView.setNavigationItemSelectedListener(this);
+        initDrawer();
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         initFragment();
+    }
+
+    private void initDrawer() {
+        headerView = drawerNavigationView.getHeaderView(0);
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            TextView navUsername = headerView.findViewById(R.id.username);
+            TextView navEmail = headerView.findViewById(R.id.email);
+            String email = user.getEmail();
+            navEmail.setText(email);
+            String username = user.getDisplayName();
+            navUsername.setText(username);
+        }
     }
 
     @Override
@@ -143,6 +173,35 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Do you want to logout")
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FirebaseAuth.getInstance().signOut();
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("no", null)
+                    .show();
+
+
+        } else if (id == R.id.log_out) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setMessage("Do you want to logout")
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FirebaseAuth.getInstance().signOut();
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("no", null)
+                    .show();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

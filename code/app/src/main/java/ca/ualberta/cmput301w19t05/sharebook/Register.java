@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -110,6 +112,22 @@ public class Register extends AppCompatActivity {
                             // Sign in success
                             Log.d(TAG, "createUserWithEmail:success");
 
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user != null) {
+                                UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(username)
+                                        .build();
+                                user.updateProfile(profileChangeRequest)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, "username updated");
+                                                }
+                                            }
+                                        });
+
+                            }
                             Intent intent = new Intent();
                             intent.putExtra("email", email);
                             setResult(0x07, intent);
@@ -147,14 +165,7 @@ public class Register extends AppCompatActivity {
                 }
                 else{
                     String res = dataSnapshot.child(username).getValue(String.class);
-                    if(res.equals(email)){
-                        cancel = false;
-                    }
-                    else{
-                        cancel = true;
-                    }
-
-
+                    cancel = !res.equals(email);
 
                 }
             }
