@@ -37,4 +37,6 @@
     <string name="field_username">username</string>
     <string name="title_my_book">My Bookshelf</string>
     <string name="title_my_borrow">Borrowing</string>
+    <string name="add_book">add book</string>
+    <string name="title_activity_add_book_screen">add_book_screen</string>
 </resources>

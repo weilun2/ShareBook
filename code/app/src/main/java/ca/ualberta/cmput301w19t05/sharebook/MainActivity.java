@@ -81,6 +81,17 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.string.add_book:
+                        Intent intent = new Intent(MainActivity.this, AddBookScreen.class);
+                        startActivity(intent);
+                }
+                return true;
+            }
+        });
 
 
 
@@ -90,6 +101,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
         drawerNavigationView = findViewById(R.id.nav_view);
         drawerNavigationView.setNavigationItemSelectedListener(this);
         initDrawer();
@@ -97,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         initFragment();
+
     }
 
     private void initDrawer() {
