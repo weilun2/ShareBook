@@ -12,9 +12,6 @@ assignees: ''
 **Detailed description:**
 A clear and concise description of what you want to happen. from eclass or use your own words.
 
-**Describe probable solution you've considered**	
- 
-A general description of the solution.
 
 **Additional context**
 Add any other context or screenshots about the feature request here.
