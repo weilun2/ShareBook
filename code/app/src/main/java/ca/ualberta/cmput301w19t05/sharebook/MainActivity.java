@@ -186,19 +186,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Do you want to logout")
-                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            FirebaseAuth.getInstance().signOut();
-                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("no", null)
-                    .show();
+
 
 
         } else if (id == R.id.log_out) {
@@ -255,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.my_shelf_fragment, container, false);
+            return inflater.inflate(R.layout.myshelf_fragment, container, false);
         }
 
         @Override
