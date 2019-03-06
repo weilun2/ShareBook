@@ -1,8 +1,10 @@
 ---
 name: Task
-about: 
+about: Task need doing
 title: ''
-descricption:''
+labels: ''
+assignees: ''
+
 ---
 
 **Describe the task**
