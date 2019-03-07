@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.myshelf_fragment, container, false);
+            return inflater.inflate(R.layout.fragment_myshelf, container, false);
         }
 
         @Override
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.notification_fragment, container, false);
+            return inflater.inflate(R.layout.fragment_notification, container, false);
         }
 
         @Override
@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.borrowing_fragment, container, false);
+            return inflater.inflate(R.layout.fragment_borrowing, container, false);
         }
 
         @Override
