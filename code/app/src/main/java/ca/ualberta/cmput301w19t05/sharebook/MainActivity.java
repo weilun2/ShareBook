@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity
         notificationFragment = new NotificationFragment();
         fragments = new Fragment[]{myShelfFragment, borrowingFragment, notificationFragment};
         lastFragment = 0;
-        getSupportFragmentManager().beginTransaction().replace(R.id.fram_layout, myShelfFragment)
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, myShelfFragment)
                 .show(myShelfFragment).commit();
 
 
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.hide(fragments[lastFragment]);
         if (!fragments[index].isAdded()) {
-            transaction.add(R.id.fram_layout, fragments[index]);
+            transaction.add(R.id.main_container, fragments[index]);
 
         }
         transaction.show(fragments[index]).commitAllowingStateLoss();
