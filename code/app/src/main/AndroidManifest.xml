@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".add_book_screen"
+            android:name=".AddBookScreen"
             android:label="@string/title_activity_add_book_screen"
             android:parentActivityName=".MainActivity"
             android:theme="@style/NoActionBar">
@@ -37,8 +37,9 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_main"
-            android:noHistory="true" />
+            />
         <activity android:name=".UserProfile"></activity>
+
     </application>
 
 </manifest>

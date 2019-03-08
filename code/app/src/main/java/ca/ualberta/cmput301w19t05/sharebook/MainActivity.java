@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,18 +17,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import ca.ualberta.cmput301w19t05.sharebook.fragments.BorrowingFragment;
+import ca.ualberta.cmput301w19t05.sharebook.fragments.MyShelfFragment;
+import ca.ualberta.cmput301w19t05.sharebook.fragments.NotificationFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -204,19 +207,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Do you want to logout")
-                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            FirebaseAuth.getInstance().signOut();
-                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("no", null)
-                    .show();
+
 
 
         } else if (id == R.id.log_out) {
@@ -246,7 +237,7 @@ public class MainActivity extends AppCompatActivity
         notificationFragment = new NotificationFragment();
         fragments = new Fragment[]{myShelfFragment, borrowingFragment, notificationFragment};
         lastFragment = 0;
-        getSupportFragmentManager().beginTransaction().replace(R.id.fram_layout, myShelfFragment)
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, myShelfFragment)
                 .show(myShelfFragment).commit();
 
 
@@ -258,89 +249,11 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.hide(fragments[lastFragment]);
         if (!fragments[index].isAdded()) {
-            transaction.add(R.id.fram_layout, fragments[index]);
+            transaction.add(R.id.main_container, fragments[index]);
 
         }
         transaction.show(fragments[index]).commitAllowingStateLoss();
 
     }
 
-    public static class MyShelfFragment extends Fragment {
-
-        private TextView textView;
-        private Button button;
-
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.my_shelf_fragment, container, false);
-        }
-
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            textView = getActivity().findViewById(R.id.textView1);
-            button = getActivity().findViewById(R.id.button1);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getActivity(), "myShelfFragment", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-    }
-
-
-    public static class NotificationFragment extends Fragment {
-
-        private TextView textView;
-        private Button button;
-
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.notification_fragment, container, false);
-        }
-
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            textView = getActivity().findViewById(R.id.textView1);
-            button = getActivity().findViewById(R.id.button1);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getActivity(), "notificationFragment", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-    }
-
-    public static class BorrowingFragment extends Fragment {
-
-        private TextView textView;
-        private Button button;
-
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.borrowing_fragment, container, false);
-        }
-
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            textView = getActivity().findViewById(R.id.textView1);
-            button = getActivity().findViewById(R.id.button1);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getActivity(), "borrowingFragment", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-    }
 }

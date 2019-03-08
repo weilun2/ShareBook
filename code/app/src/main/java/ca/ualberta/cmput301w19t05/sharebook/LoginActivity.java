@@ -21,8 +21,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A login screen that offers login via email/password.
@@ -65,7 +68,7 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    username_or_email(mEmailView.getText().toString(), mPasswordView.getText().toString());
                     return true;
                 }
                 return false;
@@ -85,12 +88,39 @@ public class LoginActivity extends AppCompatActivity{
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                username_or_email(mEmailView.getText().toString(), mPasswordView.getText().toString());
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
 
+    }
+
+    private void username_or_email(String email, final String password) {
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            attemptLogin(email, password);
+        } else {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+            //get the emailId associated with the username
+            reference.child(getString(R.string.db_username_email_tuple)).child(email)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot != null) {
+                                String user_email = dataSnapshot.getValue(String.class);
+                                attemptLogin(user_email, password);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+
+
+                    });
+        }
     }
 
 
@@ -116,21 +146,12 @@ public class LoginActivity extends AppCompatActivity{
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptLogin(String email, String password) {
 
-        String email;
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-        email = mEmailView.getText().toString();
-
-        // Store values at the time of the login attempt.
-        String password = mPasswordView.getText().toString();
 
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             mEmailView.requestFocus();
-
         }
 
         // Check for a valid password, if the user entered one.

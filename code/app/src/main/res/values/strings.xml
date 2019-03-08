@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ShareBook</string>
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">Email or Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -39,4 +39,5 @@
     <string name="title_my_borrow">Borrowing</string>
     <string name="add_book">add book</string>
     <string name="title_activity_add_book_screen">add_book_screen</string>
+    <string name="prompt_signup_email">email</string>
 </resources>
