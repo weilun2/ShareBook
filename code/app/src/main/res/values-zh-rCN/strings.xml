@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SB借书</string>
-    <string name="prompt_email">邮箱</string>
+    <string name="prompt_email">邮箱或用户名</string>
     <string name="prompt_password">密码</string>
     <string name="action_sign_in">登陆</string>
     <string name="action_sign_in_short">登陆/注册</string>
@@ -23,4 +23,5 @@
     <string name="borrowed">已借出</string>
     <string name="available">没人要</string>
     <string name="requested">有人要</string>
+    <string name="prompt_signup_email">邮箱</string>
 </resources>

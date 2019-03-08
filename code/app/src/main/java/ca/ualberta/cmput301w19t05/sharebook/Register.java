@@ -72,21 +72,13 @@ public class Register extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                backToLogin();
+                finish();
             }
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        backToLogin();
-    }
 
-    private void backToLogin() {
-        Intent intent = new Intent(Register.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
+
 
 
     private void submitForm() {
@@ -131,7 +123,7 @@ public class Register extends AppCompatActivity {
                             Intent intent = new Intent();
                             intent.putExtra("email", email);
                             setResult(0x07, intent);
-                            backToLogin();
+                            finish();
 
                         } else {
 
