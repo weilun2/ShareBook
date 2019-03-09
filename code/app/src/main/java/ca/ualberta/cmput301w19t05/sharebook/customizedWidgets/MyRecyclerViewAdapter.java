@@ -1,6 +1,7 @@
 package ca.ualberta.cmput301w19t05.sharebook.customizedWidgets;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,6 +26,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
+    private String imageURL;
 
 
     // data is passed into the constructor
@@ -46,7 +54,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         holder.myTextView.setText(name);
 
-
     }
 
     // total number of rows
@@ -59,13 +66,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView myView;
         TextView myTextView;
+        //StorageReference storageReference = FirebaseStorage.getInstance().getReference("image");
 
         ViewHolder(View itemView) {
             super(itemView);
             myView = itemView.findViewById(R.id.book_cover);
+
             myTextView = itemView.findViewById(R.id.book_name);
+
+//            Glide.with(mContext)
+//                    .load(storageReference)
+//                    .into(myView);
+
             itemView.setOnClickListener(this);
         }
+
 
         @Override
         public void onClick(View view) {
