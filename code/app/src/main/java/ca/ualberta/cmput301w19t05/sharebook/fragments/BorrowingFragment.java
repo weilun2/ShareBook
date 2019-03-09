@@ -26,14 +26,14 @@ public final class BorrowingFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        textView = getActivity().findViewById(R.id.textView1);
+        /*textView = getActivity().findViewById(R.id.textView1);
         button = getActivity().findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity(), "borrowingFragment", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
     }
 }
