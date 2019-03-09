@@ -1,6 +1,13 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-
+/**
+ * Book
+ *      this class stores book information, each instance refers to a literal book owned by a user
+ *      different copies owned by different user are stored separately
+ *
+ * Public Methods:
+ *      getters & setters
+ */
 public class Book {
     private String title;
     private String author;
