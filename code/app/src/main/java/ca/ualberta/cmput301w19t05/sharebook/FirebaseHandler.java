@@ -25,7 +25,7 @@ public class FirebaseHandler {
     private Context mContext;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private String userId;
+    private FirebaseUser user;
     private FirebaseAuth mAuth;
     private StorageReference storageRef;
 
@@ -36,7 +36,7 @@ public class FirebaseHandler {
         this.mAuth = FirebaseAuth.getInstance();
         this.storageRef = FirebaseStorage.getInstance().getReference();
         if (mAuth.getCurrentUser() != null) {
-            userId = mAuth.getCurrentUser().getUid();
+            user = mAuth.getCurrentUser();
         }
         Log.d(TAG, "handler instance created");
     }
@@ -85,7 +85,21 @@ public class FirebaseHandler {
             }
         });
 
+
     }
 
+    public void addBook(Book book) {
+        myRef.child("books").push().setValue(book);
+    }
+
+    public User getCurrentUser() {
+        User res;
+        if (user != null) {
+            res = new User(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl());
+        } else {
+            res = new User();
+        }
+        return res;
+    }
 
 }

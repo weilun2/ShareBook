@@ -84,7 +84,6 @@ public final class MyShelfFragment extends Fragment {
         cs.drawText(text, x_coord, height + 15f, paint);
 
         firebaseHandler.uploadImage(text, dest);
-
     }
 
 

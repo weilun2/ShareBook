@@ -40,4 +40,5 @@
     <string name="add_book">add book</string>
     <string name="title_activity_add_book_screen">add_book_screen</string>
     <string name="prompt_signup_email">email</string>
+    <string name="db_books">books</string>
 </resources>

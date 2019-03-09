@@ -1,6 +1,5 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,11 +14,13 @@ public class AddBookActivity extends AppCompatActivity {
     private String authorText;
     private String descriptionText;
     private String ISBN;
+    private FirebaseHandler firebaseHandler;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseHandler = new FirebaseHandler(AddBookActivity.this);
         setContentView(R.layout.activity_add_book_screen);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -53,13 +54,9 @@ public class AddBookActivity extends AppCompatActivity {
 
                 //check ok
                 if (valid) {
-                    Book book = new Book(titleText, authorText, descriptionText, ISBN);
-
-                    Bundle bundle = new Bundle();
-                    Intent intent = new Intent(AddBookActivity.this, MainActivity.class);
-                    bundle.putSerializable("getB", book);
-                    intent.putExtra("B", bundle);
-                    setResult(RESULT_OK, intent);
+                    ISBN = "place holder";
+                    Book book = new Book(titleText, authorText, ISBN, firebaseHandler.getCurrentUser());
+                    firebaseHandler.addBook(book);
                     finish();
                 }
             }
