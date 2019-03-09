@@ -4,6 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+/**
+ * AddBookScreen
+ *      Activity for book information gathering
+ *
+ */
 public class AddBookScreen extends AppCompatActivity {
 
     @Override
