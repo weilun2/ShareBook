@@ -68,5 +68,14 @@ public class User {
     }
 
 
+    
+    public void  addShelf(Intent data){
+        Book book = (Book) data.getBundleExtra("B").getSerializable("getB");
+        myBooks.add(book);
+    }
+
+    public void editShelf(Intent data){
+
+    }
 
 }
