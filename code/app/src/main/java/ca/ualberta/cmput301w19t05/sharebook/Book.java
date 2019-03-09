@@ -1,7 +1,11 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
 
-public class Book {
+import android.support.annotation.Nullable;
+
+import java.io.Serializable;
+
+public class Book implements Serializable {
     private String title;
     private String author;
     private String ISBN;
@@ -9,11 +13,13 @@ public class Book {
     private String photo;
     private String status;
     private Location mLocation;
+    private String description;
 
-    public Book(String title, String author, String ISBN) {
+    public Book(String title, String author, @Nullable String description, @Nullable String ISBN) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
+        this.description = description;
 
     }
 
@@ -90,6 +96,19 @@ public class Book {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString(){
+        return title + "\n" + author + "\n" + ISBN;
     }
 
 }
