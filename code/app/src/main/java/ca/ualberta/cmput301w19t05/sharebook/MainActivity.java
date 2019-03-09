@@ -3,6 +3,7 @@ package ca.ualberta.cmput301w19t05.sharebook;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -21,6 +22,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -134,14 +140,30 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         } else {
+            ImageView navImageView = headerView.findViewById(R.id.imageView);
+
             TextView navUsername = headerView.findViewById(R.id.username);
             TextView navEmail = headerView.findViewById(R.id.email);
+
+            Uri photoUrl = user.getPhotoUrl();
+            navImageView.setImageURI(photoUrl);
+
             String email = user.getEmail();
             navEmail.setText(email);
             String username = user.getDisplayName();
             navUsername.setText(username);
+
+            headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, UserProfile.class);
+                    startActivity(intent);
+                }
+            });
         }
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -163,7 +185,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up button, as long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 

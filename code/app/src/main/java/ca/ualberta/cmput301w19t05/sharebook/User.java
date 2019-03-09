@@ -1,22 +1,26 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class User {
     private String userID;
     private String username;
     private String email;
+    private URI image;
     private ArrayList<Book> myBooks;
 
 
-    public User(String userID, String username, String email) {
+    public User(String userID, String username, String email, URI image) {
         this.userID = userID;
         this.username = username;
         this.email = email;
+        this.image = image;
     }
 
-    public User() {
-    }
+    public URI getImage(){ return image; }
+
+    public void setUserimage(URI image) { this.image = image; }
 
     public String getUsername() {
         return username;
