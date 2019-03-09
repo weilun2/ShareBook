@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".AddBookScreen"
+            android:name=".AddBookActivity"
             android:label="@string/title_activity_add_book_screen"
             android:parentActivityName=".MainActivity"
             android:theme="@style/NoActionBar">

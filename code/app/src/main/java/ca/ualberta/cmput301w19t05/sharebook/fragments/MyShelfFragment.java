@@ -1,5 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import ca.ualberta.cmput301w19t05.sharebook.AddBookActivity;
 import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;
@@ -33,6 +36,14 @@ public final class MyShelfFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        FloatingActionButton submit = getActivity().findViewById(R.id.add_book);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddBookActivity.class);
+                startActivity(intent);
+            }
+        });
         firebaseHandler = new FirebaseHandler(getContext());
 
         RecyclerView recyclerView = getView().findViewById(R.id.available_list);

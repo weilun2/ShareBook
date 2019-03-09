@@ -1,5 +1,7 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
+import android.content.Intent;
+
 import java.net.URI;
 import java.util.ArrayList;
 

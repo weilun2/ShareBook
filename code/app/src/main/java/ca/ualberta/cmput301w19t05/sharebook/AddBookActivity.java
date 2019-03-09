@@ -20,17 +20,17 @@ public class AddBookActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_add_book_screen);
+        setContentView(R.layout.activity_add_book_screen);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Button submitButton = (Button) findViewById(R.id.submit);
-        final EditText editTitle = (EditText) findViewById(R.id.title);
-        final EditText editAuthor = (EditText) findViewById(R.id.author);
-        final EditText editDescription = (EditText) findViewById(R.id.description);
+        Button submitButton = findViewById(R.id.submit);
+        final EditText editTitle = findViewById(R.id.title);
+        final EditText editAuthor = findViewById(R.id.author);
+        final EditText editDescription = findViewById(R.id.description);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
