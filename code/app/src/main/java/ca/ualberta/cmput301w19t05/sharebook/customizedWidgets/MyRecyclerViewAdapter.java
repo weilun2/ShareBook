@@ -1,7 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook.customizedWidgets;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,23 +9,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ca.ualberta.cmput301w19t05.sharebook.MainActivity;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
-    private List<Integer> mImages;
+
     private List<String> mNames;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Context mContext;
 
 
     // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context, List<Integer> images, List<String> names) {
+    public MyRecyclerViewAdapter(Context context, List<String> names) {
         this.mInflater = LayoutInflater.from(context);
-        this.mImages = images;
+        mContext = context;
         this.mNames = names;
 
 
@@ -43,10 +41,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int image = mImages.get(position);
-        String animal = mNames.get(position);
-        holder.myView.setImageResource(image);
-        holder.myTextView.setText(animal);
+
+        String name = mNames.get(position);
+
+        holder.myTextView.setText(name);
+
+
     }
 
     // total number of rows
