@@ -40,6 +40,8 @@ public class LoginActivity extends AppCompatActivity{
     private static final String TAG = "login screen";
     public static final int REGISTER_REQUEST_CODE = 0x07;
     public static final int PASSWORD_LENGTH = 4;
+
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
