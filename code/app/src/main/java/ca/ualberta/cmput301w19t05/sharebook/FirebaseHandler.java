@@ -14,6 +14,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import static android.support.constraint.Constraints.TAG;
 
+/**
+ * FirebaseHandler
+ *
+ * Public Methods:
+ *      addUsernameEmailTuple (String, String) -> void :
+ *          create an extra table to help distinguish occupied email and support email login feature
+ *
+ *      removeUser() -> void:
+ *          remove current logged user
+ *
+ */
 public class FirebaseHandler {
     private Context mContext;
     private FirebaseDatabase database;
@@ -32,12 +43,24 @@ public class FirebaseHandler {
         Log.d(TAG, "handler instance created");
     }
 
+
+    /**
+     * create an extra table to help distinguish occupied email and support email login feature
+     * expected to be called at each signing up attempt
+     * @param email -user email
+     * @param username -unique username string
+     */
     public void addUsernameEmailTuple(String email, String username) {
         Log.d(TAG, "start add " + email + ", " + username);
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
                 .child(username).setValue(email);
 
     }
+
+
+    /**
+     * remove current logged user
+     */
     public void removeUser() {
         Log.d(TAG, "remove current user" );
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

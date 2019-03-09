@@ -13,7 +13,7 @@ public class Book {
     private String author;
     private String ISBN;
     private User owner;
-    private String photo;
+    private String photo; // todo: photos set attaching not done
     private String status;
     private Location mLocation;
 

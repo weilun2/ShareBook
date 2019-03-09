@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
  * AddBookScreen
  *      Activity for book information gathering
  *
+ * todo: to be finished...
+ *
  */
 public class AddBookScreen extends AppCompatActivity {
 
