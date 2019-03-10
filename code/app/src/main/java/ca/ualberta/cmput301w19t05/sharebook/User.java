@@ -18,13 +18,11 @@ public class User {
         this.image = image;
     }
 
-    public URI getImage(){ return image; }
+    public URI getImage() { return image; }
 
     public void setUserimage(URI image) { this.image = image; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
 
     public void setUsername(String username) {
         this.username = username;

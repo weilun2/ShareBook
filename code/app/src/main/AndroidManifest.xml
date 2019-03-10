@@ -36,10 +36,10 @@
         <activity android:name=".Register" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_main"
-            />
-        <activity android:name=".UserProfile"></activity>
-
+            android:label="@string/title_activity_main" />
+        <activity android:name=".UserProfile" />
+        <activity android:name=".UserProfileEditName" />
+        <activity android:name=".UserProfileEditEmail"></activity>
     </application>
 
 </manifest>
