@@ -2,9 +2,13 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,9 +29,10 @@ public class FirebaseHandler {
     private Context mContext;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private String userId;
+    private FirebaseUser user;
     private FirebaseAuth mAuth;
     private StorageReference storageRef;
+    private String imageURL;
 
     public FirebaseHandler(Context mContext) {
         this.mContext = mContext;
@@ -36,7 +41,7 @@ public class FirebaseHandler {
         this.mAuth = FirebaseAuth.getInstance();
         this.storageRef = FirebaseStorage.getInstance().getReference();
         if (mAuth.getCurrentUser() != null) {
-            userId = mAuth.getCurrentUser().getUid();
+            user = mAuth.getCurrentUser();
         }
         Log.d(TAG, "handler instance created");
     }
@@ -64,17 +69,26 @@ public class FirebaseHandler {
 
     public void uploadImage(String name, Bitmap bp) {
 
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
         String filenames = "image/" + name.hashCode() + ".png";
         final StorageReference ref = storageRef.child(filenames);
         UploadTask uploadTask = ref.putBytes(data);
+
+
+//        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                imageURL = uri.toString();
+//            }
+//        });
+
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
+
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -85,7 +99,22 @@ public class FirebaseHandler {
             }
         });
 
+
+
     }
 
+    public void addBook(Book book) {
+        myRef.child("books").child(book.getOwner().getUsername()).child(book.getTitle()).setValue(book);
+    }
+
+    public User getCurrentUser() {
+        User res;
+        if (user != null) {
+            res = new User(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl());
+        } else {
+            res = new User();
+        }
+        return res;
+    }
 
 }

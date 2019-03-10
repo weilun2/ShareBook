@@ -16,9 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.AddBookActivity;
+import ca.ualberta.cmput301w19t05.sharebook.Book;
 import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;
@@ -45,25 +52,53 @@ public final class MyShelfFragment extends Fragment {
             }
         });
         firebaseHandler = new FirebaseHandler(getContext());
+        initRecyclerView();
 
+    }
+
+    private void initRecyclerView() {
         RecyclerView recyclerView = getView().findViewById(R.id.available_list);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(verticalLayoutManager);
 
-        ArrayList<String> bookNames = new ArrayList<>();
-        bookNames.add("first");
-        bookNames.add("second");
-        generateImageFromText("first");
-        generateImageFromText("second");
-
-
-        adapter = new MyRecyclerViewAdapter(getActivity(), bookNames);
+        adapter = new MyRecyclerViewAdapter(getActivity(), new ArrayList<Book>());
         adapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
             }
         });
         recyclerView.setAdapter(adapter);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUsername());
+
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Book temp = dataSnapshot.getValue(Book.class);
+                adapter.addBook(temp);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Book temp = dataSnapshot.getValue(Book.class);
+                adapter.removeBook(temp);
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -74,7 +109,7 @@ public final class MyShelfFragment extends Fragment {
         Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas cs = new Canvas(dest);
         Paint paint = new Paint();
-        paint.setTextSize(35);
+        paint.setTextSize(10);
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.FILL);
         cs.drawBitmap(src, 0f, 0f, null);
@@ -84,7 +119,6 @@ public final class MyShelfFragment extends Fragment {
         cs.drawText(text, x_coord, height + 15f, paint);
 
         firebaseHandler.uploadImage(text, dest);
-
     }
 
 

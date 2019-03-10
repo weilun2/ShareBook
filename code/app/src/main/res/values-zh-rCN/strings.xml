@@ -19,9 +19,5 @@
     <string name="title_notifications">提醒</string>
     <string name="title_activity_profile">个人信息</string>
     <string name="action_settings">设置</string>
-    <string name="accepted">已接受</string>
-    <string name="borrowed">已借出</string>
-    <string name="available">没人要</string>
-    <string name="requested">有人要</string>
     <string name="prompt_signup_email">邮箱</string>
 </resources>

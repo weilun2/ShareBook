@@ -1,68 +1,73 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
 
-import android.support.annotation.Nullable;
+import android.net.Uri;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 
 public class Book implements Serializable {
-    private static String title;
-    private static String author;
+    private String title;
+    private String author;
     private String ISBN;
     private User owner;
-    private String photo;
     private String status;
     private Location mLocation;
-    private static String description;
-
-    public Book(String title, String author, @Nullable String description, @Nullable String ISBN) {
-        Book.title = title;
-        Book.author = author;
-        this.ISBN = ISBN;
-        Book.description = description;
-
-    }
+    private String description;
+    private Uri photo;
 
     public Book(String title, String author, String ISBN, User owner) {
-        Book.title = title;
-        Book.author = author;
+        this.title = title;
+        this.author = author;
         this.ISBN = ISBN;
         this.owner = owner;
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child("image/" + title.hashCode() + ".png");
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                photo = uri;
+            }
+        });
+    }
+
+    public Book(String title, String author, String ISBN, User owner, Uri uri) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.owner = owner;
+        this.photo = uri;
     }
 
     public Book() {
+
     }
 
+
     public String getPhoto() {
-        return photo;
+        return photo.toString();
     }
 
     public void setPhoto(String photo) {
-        this.photo = photo;
+        this.photo = Uri.parse(photo);
     }
 
-    public Location getmLocation() {
-        return mLocation;
-    }
-
-    public void setmLocation(Location mLocation) {
-        this.mLocation = mLocation;
-    }
-
-    public static String getTitle() {
+    public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
-        Book.title = title;
+        this.title = title;
     }
 
-    public static String getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
     public void setAuthor(String author) {
-        Book.author = author;
+        this.author = author;
     }
 
     public String getISBN() {
@@ -73,14 +78,14 @@ public class Book implements Serializable {
         this.ISBN = ISBN;
     }
 
-
-    public String getPhote() {
-        return photo;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setPhote(String phote) {
-        this.photo = phote;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
+
 
     public String getStatus() {
         return status;
@@ -90,20 +95,20 @@ public class Book implements Serializable {
         this.status = status;
     }
 
-    public User getOwner() {
-        return owner;
+    public Location getmLocation() {
+        return mLocation;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setmLocation(Location mLocation) {
+        this.mLocation = mLocation;
     }
 
-    public static String getDescription() {
+    public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
-        Book.description = description;
+        this.description = description;
     }
 
     @Override
