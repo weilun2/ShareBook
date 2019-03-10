@@ -25,6 +25,7 @@
 
     <TextView
         android:id="@+id/UserName"
+        android:tag="username"
         android:layout_width="0dp"
         android:layout_height="39dp"
         android:textSize="24sp"
@@ -35,6 +36,7 @@
 
     <TextView
         android:id="@+id/UserEmail"
+        android:tag="email"
         android:layout_width="0dp"
         android:layout_height="39dp"
         android:textSize="24sp"

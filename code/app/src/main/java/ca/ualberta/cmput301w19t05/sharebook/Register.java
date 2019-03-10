@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -119,48 +121,42 @@ public class Register extends AppCompatActivity {
 
     private void upload(final String email, final String username, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onSuccess(AuthResult authResult) {
                         hideDialog();
-                        if (task.isSuccessful()) {
-                            // Sign in success
-                            Log.d(TAG, "createUserWithEmail:success");
+                        Log.d(TAG, "createUserWithEmail:success");
 
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user != null) {
-                                UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(username)
-                                        .build();
-                                user.updateProfile(profileChangeRequest)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Log.d(TAG, "username updated");
-                                                }
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .build();
+                            user.updateProfile(profileChangeRequest)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "username updated");
                                             }
-                                        });
-                                User created = new User(user.getUid(), username, email);
-                                firebaseHandler.addUsernameEmailTuple(created);
-                            }
-
-                            Intent intent = new Intent();
-                            intent.putExtra("email", email);
-                            setResult(0x07, intent);
-                            finish();
-
-                        } else {
-
-
-                            // If sign in fails
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            User created = new User(user.getUid(), username, email);
+                            firebaseHandler.addUsernameEmailTuple(created);
                         }
 
-                        // ...
+                        Intent intent = new Intent();
+                        intent.putExtra("email", email);
+                        setResult(0x07, intent);
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "createUserWithEmail:failure");
+                        Toast.makeText(Register.this, e.toString(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
