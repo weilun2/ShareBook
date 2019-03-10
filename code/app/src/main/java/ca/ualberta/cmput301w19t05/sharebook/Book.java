@@ -2,10 +2,10 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.io.Serializable;
-
-public class Book implements Serializable {
+public class Book implements Parcelable {
     private String title;
     private String author;
     private String ISBN;
@@ -105,4 +105,54 @@ public class Book implements Serializable {
         return title + "\n" + author + "\n" + ISBN;
     }
 
+    public static final Parcelable.Creator<Book> CREATOR = new Creator<Book>() {
+
+
+        @Override
+        public Book createFromParcel(Parcel source) {
+            return new Book(source);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
+
+    public Book(Parcel in) {
+        title = in.readString();
+        author = in.readString();
+        ISBN = in.readString();
+        owner = in.readParcelable(User.class.getClassLoader());
+        status = in.readString();
+        description = in.readString();
+        photo = Uri.parse((in.readString()));
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        /*    private String title;
+    private String author;
+    private String ISBN;
+    private User owner;
+    private String status;
+    private Location mLocation;
+    private String description;
+    private Uri photo;*/
+
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeString(ISBN);
+        dest.writeParcelable(owner, flags);
+        dest.writeString(status);
+        dest.writeString(description);
+        dest.writeString(String.valueOf(photo));
+
+    }
 }
