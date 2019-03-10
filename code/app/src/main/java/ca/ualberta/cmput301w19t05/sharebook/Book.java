@@ -1,19 +1,28 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-
 import android.net.Uri;
 
 import java.io.Serializable;
+/**
+ * Book
+ *      this class stores book information, each instance refers to a literal book owned by a user
+ *      different copies owned by different user are stored separately
+ *
+ * Public Methods:
+ *      getters & setters
+ */
 
 public class Book implements Serializable {
+
     private String title;
     private String author;
     private String ISBN;
     private User owner;
+
     private String status;
     private Location mLocation;
     private String description;
-    private Uri photo;
+    private Uri photo; //todo: multiple photos support
 
     public Book(String title, String author, String ISBN, User owner) {
         this.title = title;
