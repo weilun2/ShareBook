@@ -69,6 +69,7 @@ public class AddBookActivity extends AppCompatActivity {
                             if (!descriptionText.equals("")) {
                                 book.setDescription(descriptionText);
                             }
+                            book.setStatus(getString(R.string.available));
                             firebaseHandler.addBook(book);
                             finish();
                         }
@@ -78,7 +79,6 @@ public class AddBookActivity extends AppCompatActivity {
             }
 
         });
-
 
     }
 }

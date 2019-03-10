@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,12 @@ import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.AddBookActivity;
 import ca.ualberta.cmput301w19t05.sharebook.Book;
+import ca.ualberta.cmput301w19t05.sharebook.BookDetail;
 import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;
+
+import static android.support.constraint.Constraints.TAG;
 
 public final class MyShelfFragment extends Fragment {
     private MyRecyclerViewAdapter adapter;
@@ -65,10 +69,23 @@ public final class MyShelfFragment extends Fragment {
         adapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Log.d(TAG, "setClickListener: clicked");
+
+                Intent intent = new Intent(getActivity(), BookDetail.class);
+                intent.putExtra("book", "test");
+                startActivity(intent);
+
             }
         });
-        recyclerView.setAdapter(adapter);
 
+        recyclerView.setAdapter(adapter);
+        onlineDatabaseListener();
+
+
+    }
+
+
+    private void onlineDatabaseListener() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUsername());
 
         reference.addChildEventListener(new ChildEventListener() {

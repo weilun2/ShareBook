@@ -3,10 +3,6 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.net.Uri;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.io.Serializable;
 
 public class Book implements Serializable {
@@ -24,13 +20,6 @@ public class Book implements Serializable {
         this.author = author;
         this.ISBN = ISBN;
         this.owner = owner;
-        StorageReference ref = FirebaseStorage.getInstance().getReference().child("image/" + title.hashCode() + ".png");
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                photo = uri;
-            }
-        });
     }
 
     public Book(String title, String author, String ISBN, User owner, Uri uri) {
