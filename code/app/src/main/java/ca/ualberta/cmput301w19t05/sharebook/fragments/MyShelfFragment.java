@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.AddBookActivity;
 import ca.ualberta.cmput301w19t05.sharebook.Book;
-import ca.ualberta.cmput301w19t05.sharebook.BookDetail;
+import ca.ualberta.cmput301w19t05.sharebook.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;
@@ -71,7 +71,7 @@ public final class MyShelfFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 Log.d(TAG, "setClickListener: clicked");
 
-                Intent intent = new Intent(getActivity(), BookDetail.class);
+                Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                 intent.putExtra("book", adapter.getItem(position));
                 startActivity(intent);
 

@@ -92,8 +92,8 @@
 
     <ImageView
         android:id="@+id/book_cover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
         android:layout_alignParentTop="true"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="56dp"
