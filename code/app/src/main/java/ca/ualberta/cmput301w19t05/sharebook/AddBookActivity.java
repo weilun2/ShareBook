@@ -66,6 +66,9 @@ public class AddBookActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             book.setPhoto(String.valueOf(uri));
+                            if (!descriptionText.equals("")) {
+                                book.setDescription(descriptionText);
+                            }
                             firebaseHandler.addBook(book);
                             finish();
                         }
