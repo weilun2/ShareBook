@@ -13,7 +13,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -21,7 +20,6 @@ public class UserProfileEditEmail extends AppCompatActivity {
 
     private TextView userEmail;
     private FirebaseUser user;
-    private String newEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,20 +50,17 @@ public class UserProfileEditEmail extends AppCompatActivity {
         }
     }
 
-    private void saveInFireBase(){
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
+    private void saveInFireBase() {
         user.updateEmail(userEmail.getText().toString())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Log.d(TAG, "User email address updated.");
+                    finish();
                 }
             }
         });
 
-        finish();
     }
-
 }
