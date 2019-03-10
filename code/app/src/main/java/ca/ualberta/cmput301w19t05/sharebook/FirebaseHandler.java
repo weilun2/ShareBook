@@ -5,10 +5,8 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -57,34 +55,15 @@ public class FirebaseHandler {
     /**
      * create an extra table to help distinguish occupied email and support email login feature
      * expected to be called at each signing up attempt
-     * @param email -user email
-     * @param username -unique username string
+
      */
-    public void addUsernameEmailTuple(String email, String username) {
-        Log.d(TAG, "start add " + email + ", " + username);
+    public void addUsernameEmailTuple(User user) {
+        Log.d(TAG, "start add new user");
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
-                .child(username).setValue(email);
+                .child(user.getUserID()).setValue(user);
 
     }
 
-
-    /**
-     * remove current logged user
-     */
-
-    public void removeUser() {
-        Log.d(TAG, "remove current user" );
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Log.d(TAG, "User account deleted.");
-                }
-            }
-        });
-
-    }
 
     public void uploadImage(String name, Bitmap bp) {
 

@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -105,20 +106,28 @@ public class LoginActivity extends AppCompatActivity{
      * @param email -user input for email or username
      * @param password -user input for password
      */
-    private void username_or_email(String email, final String password) {
+    private void username_or_email(final String email, final String password) {
         if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             attemptLogin(email, password);
         } else {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
             //get the emailId associated with the username
-            reference.child(getString(R.string.db_username_email_tuple)).child(email)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            Query query = reference.child(getString(R.string.db_username_email_tuple))
+                    .orderByChild("username").equalTo(email);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot != null) {
-                                String user_email = dataSnapshot.getValue(String.class);
-                                attemptLogin(user_email, password);
+                            if (dataSnapshot.getValue() != null) {
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    String user_email = data.child("email").getValue().toString();
+                                    attemptLogin(user_email, password);
+                                }
+
+                            } else {
+                                mEmailView.setError(null);
+                                mEmailView.setError("username not exist");
+                                mEmailView.requestFocus();
                             }
                         }
 
