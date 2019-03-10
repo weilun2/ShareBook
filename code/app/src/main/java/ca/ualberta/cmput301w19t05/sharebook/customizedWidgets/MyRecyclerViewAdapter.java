@@ -38,8 +38,24 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         if (mbooks == null) {
             mbooks = new ArrayList<>();
         }
-        mbooks.add(book);
+        mbooks.add(0, book);
         notifyItemInserted(0);
+    }
+
+    public void removeBook(Book book) {
+
+        int index = 0;
+        for (Book it : mbooks) {
+            if (it.getTitle().equals(book.getTitle()) && it.getISBN().equals(book.getISBN())) {
+                mbooks.remove(index);
+                notifyItemRemoved(index);
+                return;
+            } else {
+                index++;
+            }
+        }
+
+
     }
 
     // inflates the row layout from xml when needed

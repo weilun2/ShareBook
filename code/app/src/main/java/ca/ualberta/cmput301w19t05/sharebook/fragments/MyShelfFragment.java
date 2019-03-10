@@ -16,11 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -52,14 +52,16 @@ public final class MyShelfFragment extends Fragment {
             }
         });
         firebaseHandler = new FirebaseHandler(getContext());
+        initRecyclerView();
 
+    }
+
+    private void initRecyclerView() {
         RecyclerView recyclerView = getView().findViewById(R.id.available_list);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(verticalLayoutManager);
 
-        final ArrayList<Book> books = new ArrayList<Book>();
-
-        adapter = new MyRecyclerViewAdapter(getActivity(), books);
+        adapter = new MyRecyclerViewAdapter(getActivity(), new ArrayList<Book>());
         adapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -67,16 +69,29 @@ public final class MyShelfFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUsername());
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        reference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    Book temp = data.getValue(Book.class);
-                    books.add(temp);
-                    adapter.addBook(temp);
-                }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Book temp = dataSnapshot.getValue(Book.class);
+                adapter.addBook(temp);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Book temp = dataSnapshot.getValue(Book.class);
+                adapter.removeBook(temp);
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -84,7 +99,6 @@ public final class MyShelfFragment extends Fragment {
 
             }
         });
-
 
     }
 
@@ -95,7 +109,7 @@ public final class MyShelfFragment extends Fragment {
         Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas cs = new Canvas(dest);
         Paint paint = new Paint();
-        paint.setTextSize(35);
+        paint.setTextSize(10);
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.FILL);
         cs.drawBitmap(src, 0f, 0f, null);
