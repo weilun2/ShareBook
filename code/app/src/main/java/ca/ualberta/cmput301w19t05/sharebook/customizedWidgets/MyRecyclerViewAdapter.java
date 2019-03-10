@@ -42,11 +42,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         notifyItemInserted(0);
     }
 
+    public void changeBook(Book book) {
+        int index = 0;
+        for (Book it : mbooks) {
+            if (it.getBookId().equals(book.getBookId())) {
+                mbooks.set(index, book);
+                notifyItemChanged(index);
+                return;
+            } else {
+                index++;
+            }
+        }
+    }
     public void removeBook(Book book) {
 
         int index = 0;
         for (Book it : mbooks) {
-            if (it.getTitle().equals(book.getTitle()) && it.getISBN().equals(book.getISBN())) {
+            if (it.getBookId().equals(book.getBookId())) {
                 mbooks.remove(index);
                 notifyItemRemoved(index);
                 return;
@@ -55,7 +67,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             }
         }
 
+    }
 
+    public boolean contains(Book book) {
+        for (Book it : mbooks) {
+            if (it.getBookId().equals(book.getBookId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // inflates the row layout from xml when needed
@@ -75,6 +95,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.myView.setImageURI(null);
         Glide.with(mContext).load(Uri.parse(book.getPhoto()))
                 .into(holder.myView);
+
         //holder.myView.setImageURI(Uri.parse(book.getPhoto()));
 
         //holder.myView.setImageResource(R.drawable.common_google_signin_btn_icon_dark);
@@ -87,12 +108,24 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return mbooks.size();
     }
 
+    // allows clicks events to be caught
+    public void setClickListener(ItemClickListener itemClickListener) {
+
+        this.mClickListener = itemClickListener;
+    }
+
+    // convenience method for getting data at click position
+    public Book getItem(int id) {
+        return mbooks.get(id);
+    }
+
+
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView myView;
         TextView myTextView;
 
-        ViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             myView = itemView.findViewById(R.id.book_cover);
             myTextView = itemView.findViewById(R.id.book_name);
@@ -103,16 +136,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
-    }
-
-    // convenience method for getting data at click position
-    public Book getItem(int id) {
-        return mbooks.get(id);
-    }
-
-    // allows clicks events to be caught
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
     }
 
     // parent activity will implement this method to respond to click events

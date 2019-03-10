@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,14 +16,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -38,6 +38,10 @@ public class LoginActivity extends AppCompatActivity{
     private static final int REQUEST_READ_CONTACTS = 0;
 
     private static final String TAG = "login screen";
+    public static final int REGISTER_REQUEST_CODE = 0x07;
+    public static final int PASSWORD_LENGTH = 4;
+
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -93,29 +97,43 @@ public class LoginActivity extends AppCompatActivity{
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-
     }
 
-    private void username_or_email(String email, final String password) {
+
+    /**
+     * login attempt via username or email
+     * @param email -user input for email or username
+     * @param password -user input for password
+     */
+    private void username_or_email(final String email, final String password) {
         if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             attemptLogin(email, password);
         } else {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
             //get the emailId associated with the username
-            reference.child(getString(R.string.db_username_email_tuple)).child(email)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+            Query query = reference.child(getString(R.string.db_username_email_tuple))
+                    .orderByChild("username").equalTo(email);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot != null) {
-                                String user_email = dataSnapshot.getValue(String.class);
-                                attemptLogin(user_email, password);
+                            if (dataSnapshot.getValue() != null) {
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    String user_email = data.child("email").getValue().toString();
+                                    attemptLogin(user_email, password);
+                                }
+
+                            } else {
+                                mEmailView.setError(null);
+                                mEmailView.setError("username not exist");
+                                mEmailView.requestFocus();
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            Toast.makeText(LoginActivity.this, databaseError.toString(),
+                                    Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -126,12 +144,16 @@ public class LoginActivity extends AppCompatActivity{
 
     private void register(){
         Intent goto_register = new Intent(this, Register.class);
-        startActivityForResult(goto_register,0x07);
+        startActivityForResult(goto_register, REGISTER_REQUEST_CODE);
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==0x07 && resultCode== 0x07){
+        mPasswordView.requestFocus();
+        if (requestCode== REGISTER_REQUEST_CODE && resultCode== REGISTER_REQUEST_CODE){
+
             String email = data.getStringExtra("email");
             mEmailView.getText().clear();
             mPasswordView.getText().clear();
@@ -171,29 +193,21 @@ public class LoginActivity extends AppCompatActivity{
             showDialog();
             mAuth = FirebaseAuth.getInstance();
             mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                        public void onSuccess(AuthResult authResult) {
                             hideDialog();
-
-                            if (!task.isSuccessful()) {
-                                // there was an error
-
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-
-
-                            } else {
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-
-                            }
-
-
-                            // ...
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            hideDialog();
+                            Toast.makeText(LoginActivity.this, e.toString(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -209,7 +223,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > PASSWORD_LENGTH;
     }
 
     private void showDialog() {

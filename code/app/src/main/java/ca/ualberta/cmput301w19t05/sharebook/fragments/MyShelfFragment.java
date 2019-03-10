@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +27,18 @@ import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.AddBookActivity;
 import ca.ualberta.cmput301w19t05.sharebook.Book;
+import ca.ualberta.cmput301w19t05.sharebook.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;
 
+import static android.support.constraint.Constraints.TAG;
+
 public final class MyShelfFragment extends Fragment {
-    private MyRecyclerViewAdapter adapter;
+    private MyRecyclerViewAdapter availableAdapter;
+    private MyRecyclerViewAdapter requestedAdapter;
+    private MyRecyclerViewAdapter acceptedAdapter;
+    private MyRecyclerViewAdapter borrowedAdapter;
     private FirebaseHandler firebaseHandler;
 
     @Nullable
@@ -52,35 +59,85 @@ public final class MyShelfFragment extends Fragment {
             }
         });
         firebaseHandler = new FirebaseHandler(getContext());
-        initRecyclerView();
+        initAdapter(availableAdapter, "available");
+        initAdapter(requestedAdapter, "requested");
+        initAdapter(acceptedAdapter, "accepted");
+        initAdapter(borrowedAdapter, "borrowed");
 
     }
 
-    private void initRecyclerView() {
-        RecyclerView recyclerView = getView().findViewById(R.id.available_list);
+
+    private void initAdapter(MyRecyclerViewAdapter adapter, String status) {
+        RecyclerView recyclerView;
+        switch (status) {
+            case "borrowed":
+                recyclerView = getView().findViewById(R.id.borrowed_list);
+                break;
+            case "requested":
+                recyclerView = getView().findViewById(R.id.requested_list);
+                break;
+            case "accepted":
+                recyclerView = getView().findViewById(R.id.accepted_list);
+                break;
+            default:
+
+                recyclerView = getView().findViewById(R.id.available_list);
+                break;
+        }
+
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(verticalLayoutManager);
 
         adapter = new MyRecyclerViewAdapter(getActivity(), new ArrayList<Book>());
+        final MyRecyclerViewAdapter finalAdapter = adapter;
         adapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Log.d(TAG, "setClickListener: clicked");
+
+                Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                intent.putExtra("book", finalAdapter.getItem(position));
+                startActivity(intent);
+
             }
         });
-        recyclerView.setAdapter(adapter);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUsername());
+        recyclerView.setAdapter(adapter);
+        onlineDatabaseListener(adapter, status);
+
+
+    }
+
+
+    private void onlineDatabaseListener(final MyRecyclerViewAdapter adapter, final String status) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUserID());
 
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Book temp = dataSnapshot.getValue(Book.class);
-                adapter.addBook(temp);
+                if (temp != null && temp.getStatus().equals(status)) {
+                    adapter.addBook(temp);
+                }
+
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+                Book temp = dataSnapshot.getValue(Book.class);
+                if (temp.getStatus().equals(status)) {
+                    if (adapter.contains(temp)) {
+                        adapter.changeBook(temp);
+                    } else {
+                        adapter.addBook(temp);
+                    }
+                } else {
+                    if (adapter.contains(temp)) {
+                        adapter.removeBook(temp);
+                    }
+                }
+                //adapter.changeBook(temp);
             }
 
             @Override

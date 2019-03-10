@@ -1,5 +1,11 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
+/**
+ * Location
+ *      store location information
+ *
+ * todo: this class needs to be re-designed when a map api is chosen for this project
+ */
 public class Location {
     private double let;
     private double lon;

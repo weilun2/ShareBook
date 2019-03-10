@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +37,7 @@ public class Register extends AppCompatActivity {
     private Button back;
     private FirebaseAuth mAuth;
     private FirebaseHandler firebaseHandler;
-    private boolean cancel;
+
 
 
 
@@ -55,7 +57,7 @@ public class Register extends AppCompatActivity {
         submitRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cancel = true;
+                signupInputName.setError(null);
                 secondPassword.setError(null);
                 String first = signupInputPassword.getText().toString();
                 String second = secondPassword.getText().toString();
@@ -86,79 +88,23 @@ public class Register extends AppCompatActivity {
         final String email = signupInputEmail.getText().toString();
         final String password = signupInputPassword.getText().toString();
         final String username = signupInputName.getText().toString();
-        checkIfUsernameExists(username, email);
-        firebaseHandler.addUsernameEmailTuple(email, username);
+        //checkIfUsernameExists(username, email);
+        //firebaseHandler.addUsernameEmailTuple(email, username);
 
         progressDialog.setMessage("Adding you ...");
         showDialog();
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        hideDialog();
-                        if (cancel){
-                            sameUsernameError();
-                        }
-                        else if (task.isSuccessful()&&!cancel) {
-                            // Sign in success
-                            Log.d(TAG, "createUserWithEmail:success");
-
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user != null) {
-                                UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(username)
-                                        .build();
-                                user.updateProfile(profileChangeRequest)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Log.d(TAG, "username updated");
-                                                }
-                                            }
-                                        });
-
-                            }
-                            Intent intent = new Intent();
-                            intent.putExtra("email", email);
-                            setResult(0x07, intent);
-                            finish();
-
-                        } else {
-
-
-                            // If sign in fails
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        // ...
-                    }
-                });
-
-    }
-
-
-    private void checkIfUsernameExists(final String username, final String email) {
-        Log.d(TAG, "usernameExists: check if " + username + " already exists");
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
         Query query = reference.child(getString(R.string.db_username_email_tuple))
-                .orderByKey().equalTo(username);
+                .orderByChild("username").equalTo(username);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()==null){
+                if (dataSnapshot.getValue() == null) {
+                    upload(email, username, password);
 
-
-                    cancel = false;
-                }
-                else{
-                    String res = dataSnapshot.child(username).getValue(String.class);
-                    cancel = !res.equals(email);
-
+                } else {
+                    sameUsernameError();
                 }
             }
 
@@ -167,24 +113,54 @@ public class Register extends AppCompatActivity {
 
             }
         });
-/*        reference.child(getString(R.string.db_username_email_tuple))
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.hasChild(username)){
-                            cancel = false;
-                        }
 
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });*/
 
 
     }
+
+    private void upload(final String email, final String username, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        hideDialog();
+                        Log.d(TAG, "createUserWithEmail:success");
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .build();
+                            user.updateProfile(profileChangeRequest)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "username updated");
+                                            }
+                                        }
+                                    });
+                            User created = new User(user.getUid(), username, email);
+                            firebaseHandler.addUsernameEmailTuple(created);
+                        }
+
+                        Intent intent = new Intent();
+                        intent.putExtra("email", email);
+                        setResult(0x07, intent);
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "createUserWithEmail:failure");
+                        Toast.makeText(Register.this, e.toString(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
     private void showDialog() {
         if (!progressDialog.isShowing())
@@ -199,6 +175,6 @@ public class Register extends AppCompatActivity {
         signupInputName.setError(null);
         signupInputName.setError("username exists");
         signupInputName.requestFocus();
-        firebaseHandler.removeUser();
+        hideDialog();
     }
 }

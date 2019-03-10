@@ -2,17 +2,11 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +19,17 @@ import java.io.ByteArrayOutputStream;
 
 import static android.support.constraint.Constraints.TAG;
 
+/**
+ * FirebaseHandler
+ *
+ * Public Methods:
+ *      addUsernameEmailTuple (String, String) -> void :
+ *          create an extra table to help distinguish occupied email and support email login feature
+ *
+ *      removeUser() -> void:
+ *          remove current logged user
+ *
+ */
 public class FirebaseHandler {
     private Context mContext;
     private FirebaseDatabase database;
@@ -46,26 +51,19 @@ public class FirebaseHandler {
         Log.d(TAG, "handler instance created");
     }
 
-    public void addUsernameEmailTuple(String email, String username) {
-        Log.d(TAG, "start add " + email + ", " + username);
+
+    /**
+     * create an extra table to help distinguish occupied email and support email login feature
+     * expected to be called at each signing up attempt
+
+     */
+    public void addUsernameEmailTuple(User user) {
+        Log.d(TAG, "start add new user");
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
-                .child(username).setValue(email);
+                .child(user.getUserID()).setValue(user);
 
     }
 
-    public void removeUser() {
-        Log.d(TAG, "remove current user" );
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Log.d(TAG, "User account deleted.");
-                }
-            }
-        });
-
-    }
 
     public void uploadImage(String name, Bitmap bp) {
 
@@ -104,7 +102,7 @@ public class FirebaseHandler {
     }
 
     public void addBook(Book book) {
-        myRef.child("books").child(book.getOwner().getUsername()).child(book.getTitle()).setValue(book);
+        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId()).setValue(book);
     }
 
     public User getCurrentUser() {
