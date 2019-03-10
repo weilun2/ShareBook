@@ -12,21 +12,21 @@
     tools:context=".LoginActivity">
 
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/signup_input_layout_name"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/signup_input_layout_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <EditText
+            android:id="@+id/signup_input_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <EditText
-                android:id="@+id/signup_input_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autoText="false"
-                android:ems="10"
-                android:hint="@string/username_string"
-                android:inputType="textNoSuggestions" />
-        </android.support.design.widget.TextInputLayout>
+            android:autoText="false"
+            android:ems="10"
+            android:hint="@string/username_string"
+            android:inputType="textNoSuggestions" />
+    </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/signup_input_layout_email"
             android:layout_width="match_parent"
@@ -76,12 +76,14 @@
             android:text="@string/action_register"
             android:layout_marginTop="40dp"
             android:textColor="@android:color/white"/>
-        <Button android:id="@+id/end_register"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/back"
-            android:background="@null"
-            android:layout_marginTop="3dp"
-            android:textColor="@android:color/black"/>
+
+    <Button
+        android:id="@+id/end_register"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:background="@null"
+        android:text="@string/back"
+        android:textColor="@color/checkedTab" />
 
 </LinearLayout>
