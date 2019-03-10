@@ -11,31 +11,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import ca.ualberta.cmput301w19t05.sharebook.Book;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    private List<String> mNames;
+    private List<Book> mbooks;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
-    private String imageURL;
 
 
     // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context, List<String> names) {
+    public MyRecyclerViewAdapter(Context context, List<Book> books) {
         this.mInflater = LayoutInflater.from(context);
         mContext = context;
-        this.mNames = names;
+        this.mbooks = books;
 
+    }
 
+    public void addBook(Book book) {
+        if (mbooks == null) {
+            mbooks = new ArrayList<>();
+        }
+        mbooks.add(book);
+        notifyItemInserted(0);
     }
 
     // inflates the row layout from xml when needed
@@ -50,37 +54,34 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        String name = mNames.get(position);
+        Book book = mbooks.get(position);
+        holder.myTextView.setText(book.getTitle());
+        holder.myView.setImageURI(null);
+        Glide.with(mContext).load(Uri.parse(book.getPhoto()))
+                .into(holder.myView);
+        //holder.myView.setImageURI(Uri.parse(book.getPhoto()));
 
-        holder.myTextView.setText(name);
+        //holder.myView.setImageResource(R.drawable.common_google_signin_btn_icon_dark);
 
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mNames.size();
+        return mbooks.size();
     }
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView myView;
         TextView myTextView;
-        //StorageReference storageReference = FirebaseStorage.getInstance().getReference("image");
 
         ViewHolder(View itemView) {
             super(itemView);
             myView = itemView.findViewById(R.id.book_cover);
-
             myTextView = itemView.findViewById(R.id.book_name);
-
-//            Glide.with(mContext)
-//                    .load(storageReference)
-//                    .into(myView);
-
             itemView.setOnClickListener(this);
         }
-
 
         @Override
         public void onClick(View view) {
@@ -89,8 +90,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
-        return mNames.get(id);
+    public Book getItem(int id) {
+        return mbooks.get(id);
     }
 
     // allows clicks events to be caught

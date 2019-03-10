@@ -1,6 +1,12 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
 
+import android.net.Uri;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.Serializable;
 
 public class Book implements Serializable {
@@ -8,16 +14,44 @@ public class Book implements Serializable {
     private String author;
     private String ISBN;
     private User owner;
-    private String photo;
     private String status;
     private Location mLocation;
     private String description;
+    private Uri photo;
 
     public Book(String title, String author, String ISBN, User owner) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.owner = owner;
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child("image/" + title.hashCode() + ".png");
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                photo = uri;
+            }
+        });
+    }
+
+    public Book(String title, String author, String ISBN, User owner, Uri uri) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.owner = owner;
+        this.photo = uri;
+    }
+
+    public Book() {
+
+    }
+
+
+    public String getPhoto() {
+        return photo.toString();
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = Uri.parse(photo);
     }
 
     public String getTitle() {
@@ -52,13 +86,6 @@ public class Book implements Serializable {
         this.owner = owner;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
 
     public String getStatus() {
         return status;

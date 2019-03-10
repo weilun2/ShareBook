@@ -16,9 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.AddBookActivity;
+import ca.ualberta.cmput301w19t05.sharebook.Book;
 import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;
@@ -50,20 +57,33 @@ public final class MyShelfFragment extends Fragment {
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(verticalLayoutManager);
 
-        ArrayList<String> bookNames = new ArrayList<>();
-        bookNames.add("first");
-        bookNames.add("second");
-        generateImageFromText("first");
-        generateImageFromText("second");
+        final ArrayList<Book> books = new ArrayList<Book>();
 
-
-        adapter = new MyRecyclerViewAdapter(getActivity(), bookNames);
+        adapter = new MyRecyclerViewAdapter(getActivity(), books);
         adapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
             }
         });
         recyclerView.setAdapter(adapter);
+
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUsername());
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Book temp = data.getValue(Book.class);
+                    books.add(temp);
+                    adapter.addBook(temp);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
@@ -85,7 +105,6 @@ public final class MyShelfFragment extends Fragment {
         cs.drawText(text, x_coord, height + 15f, paint);
 
         firebaseHandler.uploadImage(text, dest);
-
     }
 
 

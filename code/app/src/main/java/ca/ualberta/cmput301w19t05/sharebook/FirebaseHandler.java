@@ -104,7 +104,7 @@ public class FirebaseHandler {
     }
 
     public void addBook(Book book) {
-        myRef.child("books").push().setValue(book);
+        myRef.child("books").child(book.getOwner().getUsername()).child(book.getTitle()).setValue(book);
     }
 
     public User getCurrentUser() {
