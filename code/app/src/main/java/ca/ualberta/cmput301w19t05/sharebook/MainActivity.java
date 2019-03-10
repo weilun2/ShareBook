@@ -30,6 +30,10 @@ import ca.ualberta.cmput301w19t05.sharebook.fragments.BorrowingFragment;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.MyShelfFragment;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.NotificationFragment;
 
+/**
+ * MainActivity
+ *      the homepage shown after a successful login
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,13 +101,11 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
 
         drawerNavigationView = findViewById(R.id.nav_view);
         drawerNavigationView.setNavigationItemSelectedListener(this);
@@ -111,14 +114,13 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         initFragment();
-
     }
+
 
     private void initDrawer() {
         headerView = drawerNavigationView.getHeaderView(0);
-
-
     }
+
 
     @Override
     protected void onStart() {

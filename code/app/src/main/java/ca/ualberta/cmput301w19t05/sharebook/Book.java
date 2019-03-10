@@ -1,22 +1,33 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+/**
+ * Book
+ *      this class stores book information, each instance refers to a literal book owned by a user
+ *      different copies owned by different user are stored separately
+ *
+ * Public Methods:
+ *      getters & setters
+ */
 
 import java.util.UUID;
 
 public class Book implements Parcelable {
+
     private String title;
     private String author;
     private String ISBN;
     private User owner;
+
     private String status;
     private Location mLocation;
     private String description;
-    private Uri photo;
+
+    private Uri photo;//todo: multiple photos support
     private String bookId;
+
 
     public Book(String title, String author, String ISBN, User owner) {
         this.title = title;

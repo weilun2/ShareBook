@@ -38,6 +38,10 @@ public class LoginActivity extends AppCompatActivity{
     private static final int REQUEST_READ_CONTACTS = 0;
 
     private static final String TAG = "login screen";
+    public static final int REGISTER_REQUEST_CODE = 0x07;
+    public static final int PASSWORD_LENGTH = 4;
+
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -93,9 +97,14 @@ public class LoginActivity extends AppCompatActivity{
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-
     }
 
+
+    /**
+     * login attempt via username or email
+     * @param email -user input for email or username
+     * @param password -user input for password
+     */
     private void username_or_email(String email, final String password) {
         if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             attemptLogin(email, password);
@@ -126,13 +135,16 @@ public class LoginActivity extends AppCompatActivity{
 
     private void register(){
         Intent goto_register = new Intent(this, Register.class);
-        startActivityForResult(goto_register,0x07);
+        startActivityForResult(goto_register, REGISTER_REQUEST_CODE);
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         mPasswordView.requestFocus();
-        if (requestCode==0x07 && resultCode== 0x07){
+        if (requestCode== REGISTER_REQUEST_CODE && resultCode== REGISTER_REQUEST_CODE){
+
             String email = data.getStringExtra("email");
             mEmailView.getText().clear();
             mPasswordView.getText().clear();
@@ -210,7 +222,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > PASSWORD_LENGTH;
     }
 
     private void showDialog() {
