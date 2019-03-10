@@ -37,6 +37,7 @@
         app:srcCompat="@android:drawable/sym_contact_card" />
 
     <TextView
+
         android:id="@+id/myshelf_requested"
         android:layout_width="128dp"
         android:layout_height="43dp"
@@ -67,6 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myshelf_requested" />
+
 
     <TextView
         android:id="@+id/textView3"
