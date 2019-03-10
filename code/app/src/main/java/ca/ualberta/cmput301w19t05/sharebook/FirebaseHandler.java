@@ -123,7 +123,7 @@ public class FirebaseHandler {
     }
 
     public void addBook(Book book) {
-        myRef.child("books").child(book.getOwner().getUserID()).child(book.getTitle()).setValue(book);
+        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId()).setValue(book);
     }
 
     public User getCurrentUser() {

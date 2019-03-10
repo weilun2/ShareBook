@@ -2,10 +2,12 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class User {
+public class User implements Parcelable {
     private String userID;
     private String username;
     private String email;
@@ -91,4 +93,37 @@ public class User {
 
     }
 
+    public static final Parcelable.Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    public User(Parcel in) {
+        userID = in.readString();
+        username = in.readString();
+        email = in.readString();
+        image = Uri.parse(in.readString());
+
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userID);
+        dest.writeString(username);
+        dest.writeString(email);
+        dest.writeString(String.valueOf(image));
+    }
 }

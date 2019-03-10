@@ -42,11 +42,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         notifyItemInserted(0);
     }
 
+    public void changeBook(Book book) {
+        int index = 0;
+        for (Book it : mbooks) {
+            if (it.getBookId().equals(book.getBookId())) {
+                mbooks.set(index, book);
+                notifyItemChanged(index);
+                return;
+            } else {
+                index++;
+            }
+        }
+    }
     public void removeBook(Book book) {
 
         int index = 0;
         for (Book it : mbooks) {
-            if (it.getTitle().equals(book.getTitle()) && it.getISBN().equals(book.getISBN())) {
+            if (it.getBookId().equals(book.getBookId())) {
                 mbooks.remove(index);
                 notifyItemRemoved(index);
                 return;
@@ -98,6 +110,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public Book getItem(int id) {
         return mbooks.get(id);
     }
+
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
