@@ -67,7 +67,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             }
         }
 
+    }
 
+    public boolean contains(Book book) {
+        for (Book it : mbooks) {
+            if (it.getBookId().equals(book.getBookId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // inflates the row layout from xml when needed
