@@ -131,6 +131,7 @@ public class LoginActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+        mPasswordView.requestFocus();
         if (requestCode==0x07 && resultCode== 0x07){
             String email = data.getStringExtra("email");
             mEmailView.getText().clear();

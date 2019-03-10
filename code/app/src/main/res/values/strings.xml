@@ -29,10 +29,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_profile">profile</string>
-    <string name="accepted">accepted</string>
-    <string name="borrowed">borrowed</string>
-    <string name="available">available</string>
-    <string name="requested">requested</string>
+    <string name="accepted">Accepted</string>
+    <string name="available">Available</string>
+    <string name="requested">Requested</string>
     <string name="db_username_email_tuple">username_email_tuple</string>
     <string name="field_username">username</string>
     <string name="title_my_book">My Bookshelf</string>
@@ -41,4 +40,6 @@
     <string name="title_activity_add_book_screen">add_book_screen</string>
     <string name="prompt_signup_email">email</string>
     <string name="db_books">books</string>
+    <string name="borrowed">Borrowed</string>
+
 </resources>

@@ -190,4 +190,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         tools:srcCompat="@tools:sample/avatars" />
+
 </android.support.constraint.ConstraintLayout>
