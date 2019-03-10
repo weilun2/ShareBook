@@ -20,6 +20,7 @@ public class User {
         this.image = image;
     }
 
+
     public User() {
 
     }
@@ -32,9 +33,7 @@ public class User {
         this.image = image;
     }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
 
     public void setUsername(String username) {
         this.username = username;
