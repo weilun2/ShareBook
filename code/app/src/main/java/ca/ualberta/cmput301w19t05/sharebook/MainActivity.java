@@ -122,13 +122,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        super.onStart();
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else {
+            super.onStart();
             ImageView navImageView = headerView.findViewById(R.id.imageView);
 
             TextView navUsername = headerView.findViewById(R.id.username);
