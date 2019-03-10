@@ -3,7 +3,10 @@ package ca.ualberta.cmput301w19t05.sharebook;
 import java.util.Calendar;
 
 
-
+/**
+ * Notification
+ *
+ */
 public class Notification {
     private String message;
     private Calendar date;

@@ -26,7 +26,7 @@ public class Book implements Serializable {
     private String status;
     private Location mLocation;
     private String description;
-    private Uri photo;
+    private Uri photo; //todo: multiple photos support
 
     public Book(String title, String author, String ISBN, User owner) {
         this.title = title;
