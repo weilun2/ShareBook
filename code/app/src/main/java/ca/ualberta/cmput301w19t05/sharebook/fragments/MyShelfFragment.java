@@ -72,7 +72,7 @@ public final class MyShelfFragment extends Fragment {
                 Log.d(TAG, "setClickListener: clicked");
 
                 Intent intent = new Intent(getActivity(), BookDetail.class);
-                intent.putExtra("book", "test");
+                intent.putExtra("book", adapter.getItem(position));
                 startActivity(intent);
 
             }
