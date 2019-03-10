@@ -2,13 +2,9 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -104,7 +100,7 @@ public class FirebaseHandler {
     }
 
     public void addBook(Book book) {
-        myRef.child("books").child(book.getOwner().getUsername()).child(book.getTitle()).setValue(book);
+        myRef.child("books").child(book.getOwner().getUserID()).child(book.getTitle()).setValue(book);
     }
 
     public User getCurrentUser() {

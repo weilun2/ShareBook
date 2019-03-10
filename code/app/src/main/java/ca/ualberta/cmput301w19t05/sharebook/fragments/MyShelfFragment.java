@@ -86,7 +86,7 @@ public final class MyShelfFragment extends Fragment {
 
 
     private void onlineDatabaseListener() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUsername());
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUserID());
 
         reference.addChildEventListener(new ChildEventListener() {
             @Override
