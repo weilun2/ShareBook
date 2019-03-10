@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "831399794487",
+    "firebase_url": "https://sharebook-80fa6.firebaseio.com",
+    "project_id": "sharebook-80fa6",
+    "storage_bucket": "sharebook-80fa6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831399794487:android:1e2291af5bb3ddd4",
+        "android_client_info": {
+          "package_name": "ca.ualberta.cmput301w19t05.sharebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831399794487-hge3c9ih7as8lcafkghv3ovsaujaj88o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.ualberta.cmput301w19t05.sharebook",
+            "certificate_hash": "07dbd4a0b4221ae33533b49eb03e7d4d63a9f96c"
+          }
+        },
+        {
+          "client_id": "831399794487-mdf4k1998r81hift43fvf593o6eg520n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAusgOIzZhHabknMuEwXWKpEJYZ-9MQk80"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831399794487-mdf4k1998r81hift43fvf593o6eg520n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
