@@ -69,14 +69,20 @@ public final class MyShelfFragment extends Fragment {
 
     private void initAdapter(MyRecyclerViewAdapter adapter, String status) {
         RecyclerView recyclerView;
-        if (status.equals("available")) {
-            recyclerView = getView().findViewById(R.id.available_list);
-        } else if (status.equals("requested")) {
-            recyclerView = getView().findViewById(R.id.requested_list);
-        } else if (status.equals("accepted")) {
-            recyclerView = getView().findViewById(R.id.accepted_list);
-        } else {
-            recyclerView = getView().findViewById(R.id.borrowed_list);
+        switch (status) {
+            case "borrowed":
+                recyclerView = getView().findViewById(R.id.borrowed_list);
+                break;
+            case "requested":
+                recyclerView = getView().findViewById(R.id.requested_list);
+                break;
+            case "accepted":
+                recyclerView = getView().findViewById(R.id.accepted_list);
+                break;
+            default:
+
+                recyclerView = getView().findViewById(R.id.available_list);
+                break;
         }
 
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
