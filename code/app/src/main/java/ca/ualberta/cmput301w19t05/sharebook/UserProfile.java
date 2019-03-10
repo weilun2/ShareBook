@@ -140,14 +140,11 @@ public class UserProfile extends AppCompatActivity {
                 .child(getString(R.string.db_username_email_tuple));
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-
-
         viewUserImage = findViewById(R.id.UserImage);
         viewUserName = findViewById(R.id.UserName);
         viewUserEmail = findViewById(R.id.UserEmail);
         viewUserName.setText(user.getDisplayName());
         viewUserEmail.setText(user.getEmail());
-
         viewUserEmail.setOnClickListener(onClickListener);
         viewUserName.setOnClickListener(onClickListener);
     }
@@ -160,6 +157,17 @@ public class UserProfile extends AppCompatActivity {
     private void hideDialog() {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
+    }
+
+    protected void onResume(){
+        super.onResume();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            viewUserImage.setImageURI(user.getPhotoUrl());
+            viewUserName.setText(user.getDisplayName());
+            viewUserEmail.setText(user.getEmail());
+        }
     }
 
 }
