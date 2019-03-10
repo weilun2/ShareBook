@@ -20,11 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment[] fragments;
     private int lastFragment;
     private FragmentManager supportFragmentManager;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -91,7 +88,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.string.add_book:
-                        Intent intent = new Intent(MainActivity.this, AddBookScreen.class);
+                        Intent intent = new Intent(MainActivity.this, AddBookActivity.class);
                         startActivity(intent);
                 }
                 return true;
