@@ -10,24 +10,50 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ualberta.cmput301w19t05.sharebook.MainActivity;
+import ca.ualberta.cmput301w19t05.sharebook.Book;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
-    private List<Integer> mImages;
-    private List<String> mNames;
+
+    private List<Book> mbooks;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Context mContext;
 
 
     // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context, List<Integer> images, List<String> names) {
+    public MyRecyclerViewAdapter(Context context, List<Book> books) {
         this.mInflater = LayoutInflater.from(context);
-        this.mImages = images;
-        this.mNames = names;
+        mContext = context;
+        this.mbooks = books;
+
+    }
+
+    public void addBook(Book book) {
+        if (mbooks == null) {
+            mbooks = new ArrayList<>();
+        }
+        mbooks.add(0, book);
+        notifyItemInserted(0);
+    }
+
+    public void removeBook(Book book) {
+
+        int index = 0;
+        for (Book it : mbooks) {
+            if (it.getTitle().equals(book.getTitle()) && it.getISBN().equals(book.getISBN())) {
+                mbooks.remove(index);
+                notifyItemRemoved(index);
+                return;
+            } else {
+                index++;
+            }
+        }
 
 
     }
@@ -43,16 +69,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int image = mImages.get(position);
-        String animal = mNames.get(position);
-        holder.myView.setImageResource(image);
-        holder.myTextView.setText(animal);
+
+        Book book = mbooks.get(position);
+        holder.myTextView.setText(book.getTitle());
+        holder.myView.setImageURI(null);
+        Glide.with(mContext).load(Uri.parse(book.getPhoto()))
+                .into(holder.myView);
+        //holder.myView.setImageURI(Uri.parse(book.getPhoto()));
+
+        //holder.myView.setImageResource(R.drawable.common_google_signin_btn_icon_dark);
+
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mNames.size();
+        return mbooks.size();
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -74,8 +106,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
-        return mNames.get(id);
+    public Book getItem(int id) {
+        return mbooks.get(id);
     }
 
     // allows clicks events to be caught
