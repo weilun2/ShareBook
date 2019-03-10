@@ -1,26 +1,36 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-import java.net.URI;
+import android.content.Intent;
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 public class User {
     private String userID;
     private String username;
     private String email;
-    private URI image;
+    private Uri image;
     private ArrayList<Book> myBooks;
 
 
-    public User(String userID, String username, String email, URI image) {
+    public User(String userID, String username, String email, Uri image) {
         this.userID = userID;
         this.username = username;
         this.email = email;
         this.image = image;
     }
 
-    public URI getImage(){ return image; }
+    public User() {
 
-    public void setUserimage(URI image) { this.image = image; }
+    }
+
+    public Uri getImage() {
+        return image;
+    }
+
+    public void setUserimage(Uri image) {
+        this.image = image;
+    }
 
     public String getUsername() {
         return username;
@@ -72,5 +82,14 @@ public class User {
     }
 
 
+    
+    public void  addShelf(Intent data){
+        Book book = (Book) data.getBundleExtra("B").getSerializable("getB");
+        myBooks.add(book);
+    }
+
+    public void editShelf(Intent data){
+
+    }
 
 }
