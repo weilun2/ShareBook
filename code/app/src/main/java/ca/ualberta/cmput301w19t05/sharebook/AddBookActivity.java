@@ -70,12 +70,8 @@ public class AddBookActivity extends AppCompatActivity {
                             finish();
                         }
                     });
-
                 }
             }
-
         });
-
-
     }
 }
