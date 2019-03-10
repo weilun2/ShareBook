@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.UUID;
+
 public class Book implements Parcelable {
     private String title;
     private String author;
@@ -14,12 +16,15 @@ public class Book implements Parcelable {
     private Location mLocation;
     private String description;
     private Uri photo;
+    private String bookId;
 
     public Book(String title, String author, String ISBN, User owner) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
         this.owner = owner;
+        this.bookId = UUID.randomUUID().toString();
+        this.status = "available";
     }
 
     public Book(String title, String author, String ISBN, User owner, Uri uri) {
@@ -28,6 +33,34 @@ public class Book implements Parcelable {
         this.ISBN = ISBN;
         this.owner = owner;
         this.photo = uri;
+        this.bookId = UUID.randomUUID().toString();
+        this.status = "available";
+    }
+
+    public Book(String title, String author, String ISBN, User owner, String status, String id) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.owner = owner;
+        this.status = status;
+        this.bookId = id;
+    }
+
+    public Book(Parcel in) {
+        title = in.readString();
+        author = in.readString();
+        ISBN = in.readString();
+        owner = in.readParcelable(User.class.getClassLoader());
+        status = in.readString();
+        description = in.readString();
+        photo = Uri.parse((in.readString()));
+        status = in.readString();
+        bookId = in.readString();
+
+    }
+
+    public String getBookId() {
+        return bookId;
     }
 
     public Book() {
@@ -119,15 +152,8 @@ public class Book implements Parcelable {
         }
     };
 
-    public Book(Parcel in) {
-        title = in.readString();
-        author = in.readString();
-        ISBN = in.readString();
-        owner = in.readParcelable(User.class.getClassLoader());
-        status = in.readString();
-        description = in.readString();
-        photo = Uri.parse((in.readString()));
-
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
 
     @Override
@@ -153,6 +179,8 @@ public class Book implements Parcelable {
         dest.writeString(status);
         dest.writeString(description);
         dest.writeString(String.valueOf(photo));
+        dest.writeString(status);
+        dest.writeString(bookId);
 
     }
 }

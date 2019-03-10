@@ -7,88 +7,88 @@
     android:orientation="vertical">
 
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/DesInputLayout"
+    <RadioGroup
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/OwnerInputLayout"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_toRightOf="@+id/book_cover">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/des_input"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Description"
-            android:inputType="textMultiLine" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/OwnerInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/AuthorInputLayout"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_toRightOf="@+id/book_cover">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/owner_input"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Owner"
-            android:inputType="textNoSuggestions" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/AuthorInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/TitleInputLayout"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_toRightOf="@+id/book_cover">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/author_input"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Author"
-            android:inputType="textNoSuggestions" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/TitleInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/book_cover">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/title_input"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Title"
-            android:inputType="textNoSuggestions" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/bt_edit_owner"
-        android:layout_width="80dp"
-        android:layout_height="35dp"
-        android:layout_below="@+id/DesInputLayout"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:layout_toRightOf="@+id/book_cover"
-        android:text="Edit"
-        android:textSize="12sp" />
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="prompt"
+            android:text="Title:" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="content" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@+id/book_cover">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="prompt"
+            android:text="Author:" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="content" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/owner_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/author"
+        android:layout_toRightOf="@+id/book_cover">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="prompt"
+            android:text="Owner:" />
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:tag="content" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/owner_name"
+        android:layout_toRightOf="@+id/book_cover">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="prompt"
+            android:text="Description:" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="content" />
+    </RadioGroup>
+
 
     <ImageView
         android:id="@+id/book_cover"

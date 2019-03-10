@@ -98,6 +98,8 @@ public final class MyShelfFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+                Book temp = dataSnapshot.getValue(Book.class);
+                adapter.changeBook(temp);
             }
 
             @Override
