@@ -24,7 +24,9 @@ import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.tools.SearchBookAdapter;
-
+/**
+ * Fragment for borrowing book
+ */
 public final class BorrowingFragment extends Fragment {
     private EditText searchView;
     private SearchBookAdapter adapter;

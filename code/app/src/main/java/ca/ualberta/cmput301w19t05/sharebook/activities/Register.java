@@ -29,6 +29,9 @@ import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
+/**
+ * A register screen that allow new user register email/password.
+ */
 public class Register extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";

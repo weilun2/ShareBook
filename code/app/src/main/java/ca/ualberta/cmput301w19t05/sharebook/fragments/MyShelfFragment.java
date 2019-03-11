@@ -33,7 +33,9 @@ import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.tools.MyRecyclerViewAdapter;
 
 import static android.support.constraint.Constraints.TAG;
-
+/**
+ * Fragment for owner's book shelf
+ */
 public final class MyShelfFragment extends Fragment {
     private MyRecyclerViewAdapter availableAdapter;
     private MyRecyclerViewAdapter requestedAdapter;

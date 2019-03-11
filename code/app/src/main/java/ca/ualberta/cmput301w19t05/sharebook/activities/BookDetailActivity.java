@@ -19,7 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
-
+/**
+ * A book detial screen allow user to edit book
+ */
 public class BookDetailActivity extends AppCompatActivity {
     private RadioGroup title;
     private RadioGroup author;

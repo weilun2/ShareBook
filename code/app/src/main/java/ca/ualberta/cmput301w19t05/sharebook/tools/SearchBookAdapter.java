@@ -20,7 +20,11 @@ import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
-
+/**
+ * FirebaseHandler
+ * Tools for handling search book from book list
+ *
+ */
 public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_ITEM = 0;

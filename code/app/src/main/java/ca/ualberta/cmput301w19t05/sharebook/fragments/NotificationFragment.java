@@ -12,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-
+/**
+ * Fragment for notification
+ */
 public final class NotificationFragment extends Fragment {
     private TextView textView;
     private Button button;
