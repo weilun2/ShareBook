@@ -14,9 +14,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import ca.ualberta.cmput301w19t05.sharebook.Book;
-import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 public class AddBookActivity extends AppCompatActivity {
 

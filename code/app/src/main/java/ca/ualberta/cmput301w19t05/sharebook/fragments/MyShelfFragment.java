@@ -25,12 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import ca.ualberta.cmput301w19t05.sharebook.activities.AddBookActivity;
-import ca.ualberta.cmput301w19t05.sharebook.Book;
-import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
-import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
-import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;
+import ca.ualberta.cmput301w19t05.sharebook.activities.AddBookActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
+import ca.ualberta.cmput301w19t05.sharebook.tools.MyRecyclerViewAdapter;
 
 import static android.support.constraint.Constraints.TAG;
 

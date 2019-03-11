@@ -22,13 +22,12 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
-import ca.ualberta.cmput301w19t05.sharebook.User;
+import ca.ualberta.cmput301w19t05.sharebook.models.User;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 public class Register extends AppCompatActivity {
 
@@ -98,7 +97,7 @@ public class Register extends AppCompatActivity {
         progressDialog.setMessage("Adding you ...");
         showDialog();
 
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference reference = firebaseHandler.getMyRef();
         Query query = reference.child(getString(R.string.db_username_email_tuple))
                 .orderByChild("username").equalTo(username);
         query.addValueEventListener(new ValueEventListener() {
