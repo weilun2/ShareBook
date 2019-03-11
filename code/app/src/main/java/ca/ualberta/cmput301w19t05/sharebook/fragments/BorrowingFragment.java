@@ -105,7 +105,7 @@ public final class BorrowingFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for (DataSnapshot it : dataSnapshot.getChildren()) {
                     Book temp = it.getValue(Book.class);
-                    if (temp.getStatus().equals(status)) {
+                    if (temp.getStatus().equals(status) && !temp.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())) {
                         adapter.addBook(temp);
                     }
                 }
