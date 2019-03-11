@@ -1,5 +1,5 @@
 
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.widget.EditText;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import ca.ualberta.cmput301w19t05.sharebook.Book;
+import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
+import ca.ualberta.cmput301w19t05.sharebook.R;
 
 public class AddBookActivity extends AppCompatActivity {
 

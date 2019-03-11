@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -24,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import ca.ualberta.cmput301w19t05.sharebook.R;
 
 public class UserProfile extends AppCompatActivity {
     private ImageView viewUserImage;
@@ -77,7 +79,29 @@ public class UserProfile extends AppCompatActivity {
                             } else if (textView.getTag().equals("email")) {
                                 progressDialog.setMessage("updating your email...");
                                 showDialog();
-                                updateEmail(userInput.getText().toString());
+                                Query query = reference
+                                        .orderByChild("email")
+                                        .equalTo(userInput.getText().toString());
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.getValue() == null) {
+                                            updateEmail(userInput.getText().toString());
+                                        } else {
+                                            hideDialog();
+                                            Toast.makeText(UserProfile.this, "update email failed", Toast.LENGTH_SHORT).show();
+                                            progressDialog.setMessage(null);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Toast.makeText(UserProfile.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+
+                                
                             }
 
 

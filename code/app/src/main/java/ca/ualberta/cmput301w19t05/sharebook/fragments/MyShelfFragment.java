@@ -25,9 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import ca.ualberta.cmput301w19t05.sharebook.AddBookActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.AddBookActivity;
 import ca.ualberta.cmput301w19t05.sharebook.Book;
-import ca.ualberta.cmput301w19t05.sharebook.BookDetailActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.customizedWidgets.MyRecyclerViewAdapter;

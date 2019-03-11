@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -25,6 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
+import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.User;
 
 public class Register extends AppCompatActivity {
 

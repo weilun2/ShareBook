@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.BorrowingFragment;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.MyShelfFragment;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.NotificationFragment;

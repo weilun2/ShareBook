@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +15,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import ca.ualberta.cmput301w19t05.sharebook.Book;
+import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
+import ca.ualberta.cmput301w19t05.sharebook.R;
 
 public class BookDetailActivity extends AppCompatActivity {
     private RadioGroup title;
