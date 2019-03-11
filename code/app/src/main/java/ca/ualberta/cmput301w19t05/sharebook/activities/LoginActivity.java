@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity{
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressDialog progressDialog;
+    private Boolean inProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +69,17 @@ public class LoginActivity extends AppCompatActivity{
         //progressDialog.setCancelable(false);
         // Set up the login form.
         mEmailView = findViewById(R.id.email);
+        inProgress = false;
 
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    username_or_email(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                    if (!inProgress) {
+                        username_or_email(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                    }
+
                     return true;
                 }
                 return false;
@@ -91,10 +96,14 @@ public class LoginActivity extends AppCompatActivity{
 
 
         CardView mEmailSignInButton = findViewById(R.id.email_sign_in_button);
+
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                username_or_email(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                if (!inProgress) {
+                    username_or_email(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                }
+
             }
         });
 
@@ -108,6 +117,7 @@ public class LoginActivity extends AppCompatActivity{
      * @param password -user input for password
      */
     private void username_or_email(final String email, final String password) {
+        showDialog();
         if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             attemptLogin(email, password);
         } else {
@@ -129,6 +139,7 @@ public class LoginActivity extends AppCompatActivity{
                                 mEmailView.setError(null);
                                 mEmailView.setError("username not exist");
                                 mEmailView.requestFocus();
+                                hideDialog();
                             }
                         }
 
@@ -136,6 +147,7 @@ public class LoginActivity extends AppCompatActivity{
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             Toast.makeText(LoginActivity.this, databaseError.toString(),
                                     Toast.LENGTH_SHORT).show();
+                            hideDialog();
                         }
 
 
@@ -176,12 +188,14 @@ public class LoginActivity extends AppCompatActivity{
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             mEmailView.requestFocus();
+            hideDialog();
         }
 
         // Check for a valid password, if the user entered one.
         else if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             mPasswordView.requestFocus();
+            hideDialog();
 
         }
 
@@ -192,7 +206,7 @@ public class LoginActivity extends AppCompatActivity{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             progressDialog.setMessage("Attempt to Login ...");
-            showDialog();
+
             mAuth = FirebaseAuth.getInstance();
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -229,10 +243,12 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void showDialog() {
+        inProgress = true;
         if (!progressDialog.isShowing())
             progressDialog.show();
     }
     private void hideDialog() {
+        inProgress = false;
         if (progressDialog.isShowing())
             progressDialog.dismiss();
     }
