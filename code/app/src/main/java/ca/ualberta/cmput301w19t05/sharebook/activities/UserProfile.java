@@ -26,7 +26,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-
+/**
+ * A userprofile screen that offers Username, useremail, userImage, and can be edited
+ */
 public class UserProfile extends AppCompatActivity {
     private ImageView viewUserImage;
     private TextView viewUserName;

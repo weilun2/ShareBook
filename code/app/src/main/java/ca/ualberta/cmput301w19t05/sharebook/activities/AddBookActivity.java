@@ -18,6 +18,9 @@ import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
+/**
+ * A addBook screen Allow user adding books into their sheff
+ */
 public class AddBookActivity extends AppCompatActivity {
 
     private String titleText;

@@ -1,5 +1,8 @@
 package ca.ualberta.cmput301w19t05.sharebook.models;
 
+/**
+ * each action made by user will generate a record which record book, owner, borrower
+ */
 public class Record {
     private Book book;
     private User owner;

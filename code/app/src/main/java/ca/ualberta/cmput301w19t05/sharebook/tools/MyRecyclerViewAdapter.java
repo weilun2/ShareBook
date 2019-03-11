@@ -18,6 +18,11 @@ import java.util.List;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 
+/**
+ * FirebaseHandler
+ * Handle books consist with their image(Book cover)
+ *
+ */
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
     private List<Book> mbooks;

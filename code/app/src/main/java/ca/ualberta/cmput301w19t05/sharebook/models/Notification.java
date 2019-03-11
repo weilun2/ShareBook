@@ -3,8 +3,10 @@ package ca.ualberta.cmput301w19t05.sharebook.models;
 import java.util.Calendar;
 
 
+
 /**
- * Notification
+ *
+ * A Notification contains message, date, sender, receiver, seen(boolean)
  *
  */
 public class Notification {
