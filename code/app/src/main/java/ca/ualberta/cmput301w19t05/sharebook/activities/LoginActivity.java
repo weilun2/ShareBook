@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity{
         // Set up the login form.
         mEmailView = findViewById(R.id.email);
         inProgress = false;
+        progressDialog.setMessage("Attempt to Login ...");
 
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -205,7 +206,7 @@ public class LoginActivity extends AppCompatActivity{
         else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            progressDialog.setMessage("Attempt to Login ...");
+
 
             mAuth = FirebaseAuth.getInstance();
             mAuth.signInWithEmailAndPassword(email, password)
