@@ -14,11 +14,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import ca.ualberta.cmput301w19t05.sharebook.Book;
-import ca.ualberta.cmput301w19t05.sharebook.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 public class BookDetailActivity extends AppCompatActivity {
     private RadioGroup title;
@@ -47,7 +46,7 @@ public class BookDetailActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             if (!userInput.getText().toString().equals("") && !userInput.getText().equals(content.getText())) {
                                 content.setText(userInput.getText());
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("books").child(book.getOwner().getUserID()).child(book.getBookId());
+                                DatabaseReference ref = firebaseHandler.getMyRef().child("books").child(book.getOwner().getUserID()).child(book.getBookId());
                                 if (v.equals(title)) {
                                     book.setTitle(userInput.getText().toString());
                                     ref.child("title").setValue(userInput.getText().toString());

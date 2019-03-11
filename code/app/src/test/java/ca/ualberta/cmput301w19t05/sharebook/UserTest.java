@@ -1,7 +1,13 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.Location;
+import ca.ualberta.cmput301w19t05.sharebook.models.Notification;
+import ca.ualberta.cmput301w19t05.sharebook.models.User;
+
+import static org.junit.Assert.assertTrue;
 
 public class UserTest {
     private Book mBook;

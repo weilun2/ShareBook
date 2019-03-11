@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook.customizedWidgets;
+package ca.ualberta.cmput301w19t05.sharebook.tools;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,8 +15,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ualberta.cmput301w19t05.sharebook.Book;
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 

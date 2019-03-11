@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.models;
 
 import android.content.Intent;
 import android.net.Uri;

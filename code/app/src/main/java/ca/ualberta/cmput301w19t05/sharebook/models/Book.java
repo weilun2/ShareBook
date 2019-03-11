@@ -1,18 +1,19 @@
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.models;
 
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-/**
- * Book
- *      this class stores book information, each instance refers to a literal book owned by a user
- *      different copies owned by different user are stored separately
- *
- * Public Methods:
- *      getters & setters
- */
 
 import java.util.UUID;
+
+/**
+ * Book
+ * this class stores book information, each instance refers to a literal book owned by a user
+ * different copies owned by different user are stored separately
+ * <p>
+ * Public Methods:
+ * getters & setters
+ */
 
 public class Book implements Parcelable {
 

@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook;
+package ca.ualberta.cmput301w19t05.sharebook.tools;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+
+import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -51,6 +55,9 @@ public class FirebaseHandler {
         Log.d(TAG, "handler instance created");
     }
 
+    public DatabaseReference getMyRef() {
+        return myRef;
+    }
 
     /**
      * create an extra table to help distinguish occupied email and support email login feature
