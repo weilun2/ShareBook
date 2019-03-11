@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -27,6 +28,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private ImageView bookImage;
     private Book book;
     private FirebaseHandler firebaseHandler;
+    private Button delete;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -86,6 +88,23 @@ public class BookDetailActivity extends AppCompatActivity {
         title.setOnClickListener(onClickListener);
         author.setOnClickListener(onClickListener);
         description.setOnClickListener(onClickListener);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                firebaseHandler.getMyRef().child("books").child(book.getOwner()
+                                        .getUserID())
+                                        .child(book.getBookId()).setValue(null);
+                                finish();
+                            }
+                        }).setNegativeButton("No", null)
+                        .show();
+            }
+        });
+
     }
 
     private void initViews() {
@@ -94,6 +113,8 @@ public class BookDetailActivity extends AppCompatActivity {
         owner = findViewById(R.id.owner_name);
         description = findViewById(R.id.description);
         bookImage = findViewById(R.id.book_cover);
+        delete = findViewById(R.id.delete_book);
+
 
     }
 

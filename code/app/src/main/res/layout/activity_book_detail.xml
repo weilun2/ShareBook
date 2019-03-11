@@ -99,4 +99,12 @@
         tools:layout_editor_absoluteY="56dp"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <Button
+        android:id="@+id/delete_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description"
+        android:layout_toRightOf="@+id/book_cover"
+        android:text="delete" />
+
 </RelativeLayout>
