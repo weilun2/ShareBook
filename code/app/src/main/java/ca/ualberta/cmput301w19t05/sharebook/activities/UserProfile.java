@@ -117,6 +117,7 @@ public class UserProfile extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        hideDialog();
                         Toast.makeText(UserProfile.this, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 })
@@ -142,6 +143,7 @@ public class UserProfile extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(UserProfile.this, e.toString(), Toast.LENGTH_LONG).show();
+
                     }
                 })
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
