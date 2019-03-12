@@ -3,7 +3,6 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.net.Uri;
 
-import com.thoughtworks.xstream.mapper.Mapper;
 
 import org.junit.Test;
 import org.junit.Before;
