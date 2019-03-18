@@ -2,7 +2,11 @@ package ca.ualberta.cmput301w19t05.sharebook.tools;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -77,7 +81,7 @@ public class FirebaseHandler {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
-        String filenames = "image/" + name.hashCode() + ".png";
+        String filenames = "image/" + getCurrentUser().getUserID() + "/" + name.hashCode() + ".png";
         final StorageReference ref = storageRef.child(filenames);
         UploadTask uploadTask = ref.putBytes(data);
 
@@ -120,6 +124,42 @@ public class FirebaseHandler {
             res = new User();
         }
         return res;
+    }
+
+    public void generateImageFromText(String text) {
+
+        Bitmap src = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.book_cover);
+        Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas cs = new Canvas(dest);
+        Paint paint = new Paint();
+        paint.setTextSize(80);
+        paint.setColor(ContextCompat.getColor(mContext, R.color.text_color));
+        paint.setStyle(Paint.Style.FILL);
+        cs.drawBitmap(src, 0f, 0f, null);
+
+        String[] words = text.split(" ");
+        int row = 1;
+        StringBuilder line = new StringBuilder();
+        for (String word : words) {
+
+            float a = paint.measureText(line + word);
+            float b = src.getWidth();
+            if (a < b - 10f) {
+                line.append(word).append(" ");
+            } else {
+                float height = paint.measureText("yY") + 15f;
+                float width = paint.measureText(line.toString());
+                float x_coord = (src.getWidth() - width) / 2;
+                cs.drawText(line.toString(), x_coord, height * row, paint);
+                row++;
+                line = new StringBuilder();
+            }
+        }
+        float height = paint.measureText("yY") + 15f;
+        float width = paint.measureText(line.toString());
+        float x_coord = (src.getWidth() - width) / 2;
+        cs.drawText(line.toString(), x_coord, height * row, paint);
+        uploadImage(text, dest);
     }
 
 }

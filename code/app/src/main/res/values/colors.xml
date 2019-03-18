@@ -8,4 +8,5 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="reply_orange">#F9AA33</color>
+    <color name="text_color">#F5F2D2</color>
 </resources>

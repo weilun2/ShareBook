@@ -1,10 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook.fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -161,24 +157,7 @@ public final class MyShelfFragment extends Fragment {
 
     }
 
-    private void generateImageFromText(String text) {
 
-        //getResources();
-        Bitmap src = Bitmap.createBitmap(200, 80, Bitmap.Config.RGB_565);
-        Bitmap dest = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas cs = new Canvas(dest);
-        Paint paint = new Paint();
-        paint.setTextSize(10);
-        paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.FILL);
-        cs.drawBitmap(src, 0f, 0f, null);
-        float height = paint.measureText("yY");
-        float width = paint.measureText(text);
-        float x_coord = (src.getWidth() - width) / 2;
-        cs.drawText(text, x_coord, height + 15f, paint);
-
-        firebaseHandler.uploadImage(text, dest);
-    }
 
 
 }
