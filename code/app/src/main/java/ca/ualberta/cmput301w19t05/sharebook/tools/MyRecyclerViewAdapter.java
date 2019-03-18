@@ -96,10 +96,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Book book = mbooks.get(position);
-        holder.myTextView.setText(book.getTitle());
-        holder.myView.setImageURI(null);
+        holder.bookName.setText(book.getTitle());
+        holder.authorName.setText(book.getAuthor());
+        holder.bookImage.setImageURI(null);
         Glide.with(mContext).load(Uri.parse(book.getPhoto()))
-                .into(holder.myView);
+                .into(holder.bookImage);
 
         //holder.myView.setImageURI(Uri.parse(book.getPhoto()));
 
@@ -127,13 +128,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView myView;
-        TextView myTextView;
+        ImageView bookImage;
+        TextView bookName;
+        TextView authorName;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            myView = itemView.findViewById(R.id.book_cover);
-            myTextView = itemView.findViewById(R.id.book_name);
+            bookImage = itemView.findViewById(R.id.book_cover);
+            bookName = itemView.findViewById(R.id.book_name);
+            authorName = itemView.findViewById(R.id.author_name);
             itemView.setOnClickListener(this);
         }
 
