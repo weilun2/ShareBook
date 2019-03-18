@@ -1,5 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;

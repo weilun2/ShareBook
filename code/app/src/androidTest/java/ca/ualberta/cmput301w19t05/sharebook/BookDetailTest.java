@@ -1,5 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
@@ -7,7 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ca.ualberta.cmput301w19t05.sharebook.activities.AddBookActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -26,7 +26,7 @@ public class BookDetailTest {
     private String description;
 
     @Rule
-    public ActivityTestRule<AddBookActivity> activityRule
+    public ActivityTestRule<BookDetailActivity> activityRule
             = new ActivityTestRule<>(BookDetailActivity.class);
 
     @Before
@@ -46,7 +46,7 @@ public class BookDetailTest {
         onView(withId((R.id.description)))
                 .perform(typeText(description));
 
-        onView(withId(R.id.delete)).perform(click());
+        onView(withId(R.id.delete_book)).perform(click());
 
         onView(withText(title)).check(matches(isDisplayed()));
         onView(withText(author)).check(matches(isDisplayed()));
