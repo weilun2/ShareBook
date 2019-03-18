@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ca.ualberta.cmput301w19t05.sharebook.activities.AddBookActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -18,17 +18,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-
 @RunWith(AndroidJUnit4.class)
 
-public class AddBookTest {
+public class BookDetailTest {
     private String title;
     private String author;
     private String description;
 
     @Rule
-    public ActivityTestRule<AddBookActivity> activityRule
-            = new ActivityTestRule<>(AddBookActivity.class);
+    public ActivityTestRule<BookDetailActivity> activityRule
+            = new ActivityTestRule<>(BookDetailActivity.class);
 
     @Before
     public void initValidString() {
@@ -37,7 +36,6 @@ public class AddBookTest {
         author = "this is author";
         description = "this is description";
     }
-
 
     @Test
     public void addText_sameActivity(){
@@ -48,7 +46,7 @@ public class AddBookTest {
         onView(withId((R.id.description)))
                 .perform(typeText(description));
 
-        onView(withId(R.id.submit)).perform(click());
+        onView(withId(R.id.delete_book)).perform(click());
 
         onView(withText(title)).check(matches(isDisplayed()));
         onView(withText(author)).check(matches(isDisplayed()));
