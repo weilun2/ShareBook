@@ -160,6 +160,7 @@ public class Register extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        hideDialog();
                         Log.w(TAG, "createUserWithEmail:failure");
                         Toast.makeText(Register.this, e.toString(),
                                 Toast.LENGTH_SHORT).show();

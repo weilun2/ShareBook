@@ -136,6 +136,10 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
+    public Book getItem(int position) {
+        return filteredBook.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return filteredBook == null ? 0 : filteredBook.size();

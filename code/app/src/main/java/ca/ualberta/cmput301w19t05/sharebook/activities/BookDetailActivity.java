@@ -1,9 +1,11 @@
 package ca.ualberta.cmput301w19t05.sharebook.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,12 +14,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 /**
  * A book detial screen allow user to edit book
@@ -31,6 +39,8 @@ public class BookDetailActivity extends AppCompatActivity {
     private Book book;
     private FirebaseHandler firebaseHandler;
     private Button delete;
+    private ProgressDialog progressDialog;
+    private Boolean inProgress;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -106,6 +116,45 @@ public class BookDetailActivity extends AppCompatActivity {
                         .show();
             }
         });
+        TextView ownerText = owner.findViewWithTag("content");
+        final String ownerName = ownerText.getText().toString();
+        owner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!inProgress) {
+                    showDialog();
+                    Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                            .orderByChild("username").equalTo(ownerName);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    User user = data.getValue(User.class);
+                                    Intent intent = new Intent(BookDetailActivity.this, BookDetailActivity.class);
+                                    intent.putExtra("owner", user);
+                                    hideDialog();
+                                    startActivity(intent);
+
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(BookDetailActivity.this, databaseError.toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            hideDialog();
+                        }
+
+
+                    });
+                }
+
+            }
+        });
+
 
     }
 
@@ -116,6 +165,9 @@ public class BookDetailActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         bookImage = findViewById(R.id.book_cover);
         delete = findViewById(R.id.delete_book);
+        progressDialog = new ProgressDialog(BookDetailActivity.this);
+        progressDialog.setMessage("Searching user...");
+        inProgress = false;
 
 
     }
@@ -135,6 +187,18 @@ public class BookDetailActivity extends AppCompatActivity {
                 .into(bookImage);
 
 
+    }
+
+    private void showDialog() {
+        inProgress = true;
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+
+    private void hideDialog() {
+        inProgress = false;
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 
 }
