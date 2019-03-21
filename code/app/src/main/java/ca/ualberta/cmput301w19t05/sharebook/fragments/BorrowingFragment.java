@@ -1,5 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +23,13 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.tools.SearchBookAdapter;
+
+import static android.support.constraint.Constraints.TAG;
+
 /**
  * Fragment for borrowing book
  */
@@ -57,7 +63,10 @@ public final class BorrowingFragment extends Fragment {
         adapter.setClickListener(new SearchBookAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Log.d(TAG, "onItemClick: " + position);
+                Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                intent.putExtra("book", adapter.getItem(position));
+                startActivity(intent);
             }
         });
 

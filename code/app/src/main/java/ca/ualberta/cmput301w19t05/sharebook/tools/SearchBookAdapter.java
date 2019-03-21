@@ -39,9 +39,9 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public SearchBookAdapter(Context context, List<Book> books) {
 
-        bookList = books;
+        this.bookList = books;
         this.mInflater = LayoutInflater.from(context);
-        mContext = context;
+        this.mContext = context;
         //filteredBook = books;
     }
 
@@ -136,6 +136,10 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
+    public Book getItem(int position) {
+        return filteredBook.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return filteredBook == null ? 0 : filteredBook.size();
@@ -214,6 +218,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             title = itemView.findViewById(R.id.rearch_res_title);
             author = itemView.findViewById(R.id.rearch_res_author);
             owner = itemView.findViewById(R.id.rearch_res_owner);
+            itemView.setOnClickListener(this);
 
         }
 

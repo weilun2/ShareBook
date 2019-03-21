@@ -10,6 +10,10 @@ import org.junit.runner.RunWith;
 
 import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 @RunWith(AndroidJUnit4.class)
 
 public class UserProfileTest {
@@ -28,6 +32,9 @@ public class UserProfileTest {
 
     @Test
     public void addText_sameActivity(){
-
+        onView(withId(R.id.UserEmail))
+                .perform(typeText(userEmail));
+        onView(withId(R.id.UserName))
+                .perform(typeText(userName));
     }
 }

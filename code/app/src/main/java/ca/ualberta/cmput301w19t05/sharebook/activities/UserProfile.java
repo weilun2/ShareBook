@@ -2,6 +2,7 @@ package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +27,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.models.User;
+
 /**
  * A userprofile screen that offers Username, useremail, userImage, and can be edited
  */
@@ -173,11 +176,19 @@ public class UserProfile extends AppCompatActivity {
         viewUserImage = findViewById(R.id.UserImage);
         viewUserName = findViewById(R.id.UserName);
         viewUserEmail = findViewById(R.id.UserEmail);
-        viewUserName.setText(user.getDisplayName());
-        viewUserEmail.setText(user.getEmail());
+        Intent intent = getIntent();
+        User owner = intent.getParcelableExtra("owner");
+        if (owner != null) {
+            viewUserName.setText(owner.getUsername());
+            viewUserEmail.setText(owner.getEmail());
+        } else {
+            viewUserName.setText(user.getDisplayName());
+            viewUserEmail.setText(user.getEmail());
+            viewUserEmail.setOnClickListener(onClickListener);
+            viewUserName.setOnClickListener(onClickListener);
+        }
 
-        viewUserEmail.setOnClickListener(onClickListener);
-        viewUserName.setOnClickListener(onClickListener);
+
     }
 
     private void showDialog() {
