@@ -108,7 +108,8 @@ public final class MyShelfFragment extends Fragment {
 
 
     private void onlineDatabaseListener(final MyRecyclerViewAdapter adapter, final String status) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUserID());
+
+        DatabaseReference reference = firebaseHandler.getMyRef().child("books").child(firebaseHandler.getCurrentUser().getUserID());
 
         reference.addChildEventListener(new ChildEventListener() {
             @Override
