@@ -183,7 +183,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void setRequestList() {
         RequestListFragment requestListFragment = new RequestListFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.request_content, requestListFragment)
+        getSupportFragmentManager().beginTransaction().replace(R.id.place_holder, requestListFragment)
                 .show(requestListFragment).commit();
     }
 

@@ -13,8 +13,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -166,14 +170,11 @@ public class FirebaseHandler {
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("requested");
 
-        myRef.child("requested")
+        myRef.child("requests")
                 .child(book.getBookId())
-                .child(user.getUid())
-                .setValue("1");
-        myRef.child("requesting")
-                .child(user.getUid())
-                .child(book.getBookId())
-                .setValue("1");
+                .child(getCurrentUser().getUserID())
+                .setValue(getCurrentUser());
+
     }
 
 }
