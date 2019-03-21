@@ -162,4 +162,18 @@ public class FirebaseHandler {
         uploadImage(text, dest);
     }
 
+    public void sendRequest(Book book) {
+        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
+                .child("status").setValue("requested");
+
+        myRef.child("requested")
+                .child(book.getBookId())
+                .child(user.getUid())
+                .setValue("1");
+        myRef.child("requesting")
+                .child(user.getUid())
+                .child(book.getBookId())
+                .setValue("1");
+    }
+
 }
