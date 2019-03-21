@@ -184,11 +184,11 @@ public class UserProfile extends AppCompatActivity {
         } else {
             viewUserName.setText(user.getDisplayName());
             viewUserEmail.setText(user.getEmail());
+            viewUserEmail.setOnClickListener(onClickListener);
+            viewUserName.setOnClickListener(onClickListener);
         }
 
 
-        viewUserEmail.setOnClickListener(onClickListener);
-        viewUserName.setOnClickListener(onClickListener);
     }
 
     private void showDialog() {

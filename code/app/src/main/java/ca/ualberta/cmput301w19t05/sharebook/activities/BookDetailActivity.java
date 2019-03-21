@@ -100,22 +100,27 @@ public class BookDetailActivity extends AppCompatActivity {
         title.setOnClickListener(onClickListener);
         author.setOnClickListener(onClickListener);
         description.setOnClickListener(onClickListener);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                firebaseHandler.getMyRef().child("books").child(book.getOwner()
-                                        .getUserID())
-                                        .child(book.getBookId()).setValue(null);
-                                finish();
-                            }
-                        }).setNegativeButton("No", null)
-                        .show();
-            }
-        });
+        if (book.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())) {
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    firebaseHandler.getMyRef().child("books").child(book.getOwner()
+                                            .getUserID())
+                                            .child(book.getBookId()).setValue(null);
+                                    finish();
+                                }
+                            }).setNegativeButton("No", null)
+                            .show();
+                }
+            });
+        } else {
+            delete.setVisibility(View.GONE);
+        }
+
         TextView ownerText = owner.findViewWithTag("content");
         final String ownerName = ownerText.getText().toString();
         owner.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +136,7 @@ public class BookDetailActivity extends AppCompatActivity {
                             if (dataSnapshot.getValue() != null) {
                                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                                     User user = data.getValue(User.class);
-                                    Intent intent = new Intent(BookDetailActivity.this, BookDetailActivity.class);
+                                    Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
                                     intent.putExtra("owner", user);
                                     hideDialog();
                                     startActivity(intent);
