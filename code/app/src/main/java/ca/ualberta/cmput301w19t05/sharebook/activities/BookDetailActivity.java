@@ -24,6 +24,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.fragments.RequestListFragment;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
@@ -41,6 +42,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private Button delete;
     private ProgressDialog progressDialog;
     private Boolean inProgress;
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -117,8 +119,24 @@ public class BookDetailActivity extends AppCompatActivity {
                             .show();
                 }
             });
+            setRequestList();
         } else {
-            delete.setVisibility(View.GONE);
+            delete.setText("request");
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(BookDetailActivity.this)
+                            .setMessage("Are you sure?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    firebaseHandler.sendRequest(book);
+                                    finish();
+                                }
+                            }).setNegativeButton("No", null)
+                            .show();
+                }
+            });
         }
 
         TextView ownerText = owner.findViewWithTag("content");
@@ -161,6 +179,12 @@ public class BookDetailActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setRequestList() {
+        RequestListFragment requestListFragment = new RequestListFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.request_content, requestListFragment)
+                .show(requestListFragment).commit();
     }
 
     private void initViews() {

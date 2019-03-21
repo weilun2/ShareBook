@@ -175,14 +175,7 @@ public class Book implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        /*    private String title;
-    private String author;
-    private String ISBN;
-    private User owner;
-    private String status;
-    private Location mLocation;
-    private String description;
-    private Uri photo;*/
+
 
         dest.writeString(title);
         dest.writeString(author);

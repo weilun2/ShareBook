@@ -114,7 +114,7 @@ public final class MyShelfFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Book temp = dataSnapshot.getValue(Book.class);
-                if (temp != null && temp.getStatus().equals(status)) {
+                if (temp != null && status.equals(temp.getStatus())) {
                     adapter.addBook(temp);
                 }
 
@@ -124,15 +124,17 @@ public final class MyShelfFragment extends Fragment {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 Book temp = dataSnapshot.getValue(Book.class);
-                if (temp.getStatus().equals(status)) {
-                    if (adapter.contains(temp)) {
-                        adapter.changeBook(temp);
+                if (temp != null) {
+                    if (status.equals(temp.getStatus())) {
+                        if (adapter.contains(temp)) {
+                            adapter.changeBook(temp);
+                        } else {
+                            adapter.addBook(temp);
+                        }
                     } else {
-                        adapter.addBook(temp);
-                    }
-                } else {
-                    if (adapter.contains(temp)) {
-                        adapter.removeBook(temp);
+                        if (adapter.contains(temp)) {
+                            adapter.removeBook(temp);
+                        }
                     }
                 }
                 //adapter.changeBook(temp);

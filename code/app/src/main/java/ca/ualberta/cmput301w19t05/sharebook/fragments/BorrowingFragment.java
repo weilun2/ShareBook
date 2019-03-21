@@ -53,7 +53,8 @@ public final class BorrowingFragment extends Fragment {
         initAdapter();
 
         initSearchview();
-        onlineDatabaseListener(adapter, "available");
+        String[] status = {"available", "requested"};
+        onlineDatabaseListener(adapter, status);
 
 
     }
@@ -107,7 +108,7 @@ public final class BorrowingFragment extends Fragment {
         });
     }
 
-    private void onlineDatabaseListener(final SearchBookAdapter adapter, final String status) {
+    private void onlineDatabaseListener(final SearchBookAdapter adapter, final String[] status) {
 
         DatabaseReference reference = firebaseHandler.getMyRef().child("books");
 
@@ -116,8 +117,14 @@ public final class BorrowingFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for (DataSnapshot it : dataSnapshot.getChildren()) {
                     Book temp = it.getValue(Book.class);
-                    if (temp.getStatus().equals(status) && !temp.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())) {
-                        adapter.addBook(temp);
+                    if (temp != null) {
+                        for (String a : status) {
+                            if (a.equals(temp.getStatus()) && !temp.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())) {
+                                adapter.addBook(temp);
+                                return;
+                            }
+                        }
+
                     }
                 }
 
@@ -127,16 +134,21 @@ public final class BorrowingFragment extends Fragment {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 Book temp = dataSnapshot.getValue(Book.class);
-                if (temp.getStatus().equals(status)) {
-                    if (adapter.contains(temp)) {
-                        adapter.changeBook(temp);
-                    } else {
-                        adapter.addBook(temp);
+
+                if (temp != null) {
+                    for (String a : status) {
+                        if (a.equals(temp.getStatus())) {
+                            if (adapter.contains(temp)) {
+                                adapter.changeBook(temp);
+                            } else {
+                                adapter.addBook(temp);
+                            }
+                            return;
+                        }
                     }
-                } else {
-                    if (adapter.contains(temp)) {
-                        adapter.removeBook(temp);
-                    }
+
+                    adapter.removeBook(temp);
+
                 }
                 //adapter.changeBook(temp);
             }

@@ -116,7 +116,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = mInflater.inflate(R.layout.book_list_vertical, parent, false);
+            View view = mInflater.inflate(R.layout.item_book_vertical, parent, false);
             return new BookViewHolder(view);
         } else {
             View view = mInflater.inflate(R.layout.item_loading, parent, false);
