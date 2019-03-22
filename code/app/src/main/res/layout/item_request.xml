@@ -23,11 +23,13 @@
         android:text="Place holder" />
 
     <Button
+        android:id="@+id/accept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="accept" />
 
     <Button
+        android:id="@+id/decline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="decline" />
