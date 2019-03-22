@@ -33,6 +33,8 @@ import ca.ualberta.cmput301w19t05.sharebook.models.User;
  * A userprofile screen that offers Username, useremail, userImage, and can be edited
  */
 public class UserProfile extends AppCompatActivity {
+
+
     private ImageView viewUserImage;
     private TextView viewUserName;
     private TextView viewUserEmail;

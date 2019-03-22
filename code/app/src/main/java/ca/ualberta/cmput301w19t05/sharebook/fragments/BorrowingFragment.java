@@ -78,7 +78,8 @@ public final class BorrowingFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 Log.d(TAG, "onItemClick: " + position);
                 Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-                intent.putExtra("book", searchBookAdapter.getItem(position));
+                intent.putExtra(BookDetailActivity.BOOK, searchBookAdapter.getItem(position));
+                intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.REQUEST);
                 startActivity(intent);
             }
         });
@@ -144,6 +145,10 @@ public final class BorrowingFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                String bookId = dataSnapshot.getKey();
+                if (bookId!= null){
+                    removeBookById(bookId);
+                }
 
             }
 
@@ -159,10 +164,32 @@ public final class BorrowingFragment extends Fragment {
         });
 
 
-
-
-
     }
+
+    private void removeBookById(final String bookId) {
+
+
+        firebaseHandler.getMyRef().child(getString(R.string.db_books))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot users: dataSnapshot.getChildren()){
+                            if (users.child(bookId).exists()){
+                                Book book = users.child(bookId).getValue(Book.class);
+                                searchBookAdapter.addBook(book);
+                                requestingBooks.remove(book);
+                                requestingAdapter.removeBook(book);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
 
     private void addBookById(final String bookId) {
 
