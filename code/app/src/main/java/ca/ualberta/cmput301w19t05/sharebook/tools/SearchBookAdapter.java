@@ -31,7 +31,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int VIEW_TYPE_LOADING = 1;
 
     private List<Book> bookList;
-    private List<Book> filteredBook;
+    private ArrayList<Book> filteredBook;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
@@ -89,27 +89,33 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void removeBook(Book book) {
         removeAdd(book);
         int index = 0;
-        for (Book it : filteredBook) {
-            if (it.getBookId().equals(book.getBookId())) {
-                filteredBook.remove(index);
-                notifyItemRemoved(index);
-                return;
-            } else {
-                index++;
+        if (filteredBook!= null){
+            for (Book it : filteredBook) {
+                if (it.getBookId().equals(book.getBookId())) {
+                    filteredBook.remove(index);
+                    notifyItemRemoved(index);
+                    return;
+                } else {
+                    index++;
+                }
             }
         }
+
     }
 
     private void removeAdd(Book book) {
         int index = 0;
-        for (Book it : bookList) {
-            if (it.getBookId().equals(book.getBookId())) {
-                bookList.remove(index);
-                return;
-            } else {
-                index++;
+        if (bookList!= null){
+            for (Book it : bookList) {
+                if (it.getBookId().equals(book.getBookId())) {
+                    bookList.remove(index);
+                    return;
+                } else {
+                    index++;
+                }
             }
         }
+
     }
 
     @NonNull
@@ -180,7 +186,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (constraintString.isEmpty()) {
                     filteredBook = new ArrayList<>();
                 } else {
-                    List<Book> FilteredList = new ArrayList<>();
+                    ArrayList<Book> FilteredList = new ArrayList<>();
                     for (Book it : bookList) {
                         if (it.getTitle().contains(constraintString) || it.getAuthor().contains(constraintString)) {
                             FilteredList.add(it);
