@@ -50,7 +50,7 @@
                     android:id="@+id/author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Auther" />
+                    android:hint="Author" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -65,15 +65,15 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/PhotoUpload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Upload Photograph" />
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/photoUploaded"
+                android:layout_width="150dp"
+                android:layout_height="300dp"
                 app:srcCompat="@android:drawable/ic_menu_report_image" />
 
         </LinearLayout>
