@@ -94,7 +94,8 @@ public final class MyShelfFragment extends Fragment {
                 Log.d(TAG, "setClickListener: clicked");
 
                 Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-                intent.putExtra("book", finalAdapter.getItem(position));
+                intent.putExtra(BookDetailActivity.BOOK, finalAdapter.getItem(position));
+                intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.DELETE);
                 startActivity(intent);
 
             }
@@ -108,7 +109,8 @@ public final class MyShelfFragment extends Fragment {
 
 
     private void onlineDatabaseListener(final MyRecyclerViewAdapter adapter, final String status) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("books").child(firebaseHandler.getCurrentUser().getUserID());
+
+        DatabaseReference reference = firebaseHandler.getMyRef().child("books").child(firebaseHandler.getCurrentUser().getUserID());
 
         reference.addChildEventListener(new ChildEventListener() {
             @Override

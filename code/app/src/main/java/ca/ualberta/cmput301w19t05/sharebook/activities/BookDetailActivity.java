@@ -38,6 +38,10 @@ import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
  * A book detial screen allow user to edit book
  */
 public class BookDetailActivity extends AppCompatActivity {
+    public final static int REQUEST = 1;
+    public final static int DELETE = 2;
+    public final static String FUNCTION = "function";
+    public final static String BOOK = "book";
     private RadioGroup title;
     private RadioGroup author;
     private RadioGroup owner;
@@ -48,6 +52,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private Button delete;
     private ProgressDialog progressDialog;
     private Boolean inProgress;
+    private int function;
 
 
 
@@ -96,8 +101,9 @@ public class BookDetailActivity extends AppCompatActivity {
         initViews();
 
         Intent intent = getIntent();
-        book = intent.getParcelableExtra("book");
+        book = intent.getParcelableExtra(BOOK);
         firebaseHandler = new FirebaseHandler(this);
+        function = intent.getIntExtra(FUNCTION,DELETE);
 
         setBookInfo();
         setClickListener();
@@ -106,11 +112,12 @@ public class BookDetailActivity extends AppCompatActivity {
     }
 
     private void setClickListener() {
-        title.setOnClickListener(onClickListener);
-        author.setOnClickListener(onClickListener);
-        description.setOnClickListener(onClickListener);
 
-        if (book.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())) {
+
+        if (function==DELETE) {
+            title.setOnClickListener(onClickListener);
+            author.setOnClickListener(onClickListener);
+            description.setOnClickListener(onClickListener);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -129,8 +136,8 @@ public class BookDetailActivity extends AppCompatActivity {
             });
             setRequestList();
 
+        } else if (function==REQUEST) {
 
-        } else {
             delete.setText("request");
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,46 +154,47 @@ public class BookDetailActivity extends AppCompatActivity {
                             .show();
                 }
             });
-        }
+            TextView ownerText = owner.findViewWithTag("content");
+            final String ownerName = ownerText.getText().toString();
+            owner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!inProgress) {
+                        showDialog();
+                        Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                                .orderByChild("username").equalTo(ownerName);
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() != null) {
+                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                        User user = data.getValue(User.class);
+                                        Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
+                                        intent.putExtra("owner", user);
+                                        hideDialog();
+                                        startActivity(intent);
 
-        TextView ownerText = owner.findViewWithTag("content");
-        final String ownerName = ownerText.getText().toString();
-        owner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!inProgress) {
-                    showDialog();
-                    Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
-                            .orderByChild("username").equalTo(ownerName);
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getValue() != null) {
-                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    User user = data.getValue(User.class);
-                                    Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
-                                    intent.putExtra("owner", user);
-                                    hideDialog();
-                                    startActivity(intent);
+                                    }
 
                                 }
-
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(BookDetailActivity.this, databaseError.toString(),
-                                    Toast.LENGTH_SHORT).show();
-                            hideDialog();
-                        }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(BookDetailActivity.this, databaseError.toString(),
+                                        Toast.LENGTH_SHORT).show();
+                                hideDialog();
+                            }
 
 
-                    });
+                        });
+                    }
+
                 }
+            });
+        }
 
-            }
-        });
+
 
 
     }

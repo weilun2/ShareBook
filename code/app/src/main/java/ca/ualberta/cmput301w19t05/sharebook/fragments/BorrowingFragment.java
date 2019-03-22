@@ -19,13 +19,17 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
+import ca.ualberta.cmput301w19t05.sharebook.tools.MyRecyclerViewAdapter;
 import ca.ualberta.cmput301w19t05.sharebook.tools.SearchBookAdapter;
 
 import static android.support.constraint.Constraints.TAG;
@@ -35,9 +39,11 @@ import static android.support.constraint.Constraints.TAG;
  */
 public final class BorrowingFragment extends Fragment {
     private EditText searchView;
-    private SearchBookAdapter adapter;
+    private SearchBookAdapter searchBookAdapter;
     private FirebaseHandler firebaseHandler;
     private RecyclerView recyclerView;
+    private MyRecyclerViewAdapter requestingAdapter;
+    private List<Book> requestingBooks;
 
     @Nullable
     @Override
@@ -53,20 +59,27 @@ public final class BorrowingFragment extends Fragment {
         initAdapter();
 
         initSearchview();
-        String[] status = {"available", "requested"};
-        onlineDatabaseListener(adapter, status);
+
+        ArrayList<String> status = new ArrayList<>();
+        status.add("available");
+        status.add("requested");
+        onlineDatabaseListener(searchBookAdapter, status);
+        requestingBooks = new ArrayList<>();
+        viewRequesting();
+
 
 
     }
 
     private void initAdapter() {
-        adapter = new SearchBookAdapter(getActivity(), new ArrayList<Book>());
-        adapter.setClickListener(new SearchBookAdapter.ItemClickListener() {
+        searchBookAdapter = new SearchBookAdapter(getActivity(), new ArrayList<Book>());
+        searchBookAdapter.setClickListener(new SearchBookAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Log.d(TAG, "onItemClick: " + position);
                 Intent intent = new Intent(getActivity(), BookDetailActivity.class);
-                intent.putExtra("book", adapter.getItem(position));
+                intent.putExtra(BookDetailActivity.BOOK, searchBookAdapter.getItem(position));
+                intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.REQUEST);
                 startActivity(intent);
             }
         });
@@ -75,7 +88,7 @@ public final class BorrowingFragment extends Fragment {
         recyclerView = getView().findViewById(R.id.search_res);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(verticalLayoutManager);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(searchBookAdapter);
     }
 
     private void initSearchview() {
@@ -98,7 +111,7 @@ public final class BorrowingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getFilter().filter(s.toString());
+                searchBookAdapter.getFilter().filter(s.toString());
             }
 
             @Override
@@ -108,9 +121,104 @@ public final class BorrowingFragment extends Fragment {
         });
     }
 
-    private void onlineDatabaseListener(final SearchBookAdapter adapter, final String[] status) {
+    private void viewRequesting(){
+        RecyclerView recyclerView;
+        recyclerView = getView().findViewById(R.id.borrowing_requested_list);
+        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(verticalLayoutManager);
+        requestingAdapter = new MyRecyclerViewAdapter(getActivity(), new ArrayList<Book>());
+        recyclerView.setAdapter(requestingAdapter);
+        firebaseHandler.getMyRef().child("requests").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot userId: dataSnapshot.getChildren()){
+                    if (firebaseHandler.getCurrentUser().getUserID().equals(userId.getKey())){
+                        addBookById(dataSnapshot.getKey());
+                    }
+                }
+            }
 
-        DatabaseReference reference = firebaseHandler.getMyRef().child("books");
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                String bookId = dataSnapshot.getKey();
+                if (bookId!= null){
+                    removeBookById(bookId);
+                }
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void removeBookById(final String bookId) {
+
+
+        firebaseHandler.getMyRef().child(getString(R.string.db_books))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot users: dataSnapshot.getChildren()){
+                            if (users.child(bookId).exists()){
+                                Book book = users.child(bookId).getValue(Book.class);
+                                searchBookAdapter.addBook(book);
+                                requestingBooks.remove(book);
+                                requestingAdapter.removeBook(book);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+
+    private void addBookById(final String bookId) {
+
+        firebaseHandler.getMyRef().child(getString(R.string.db_books))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot users: dataSnapshot.getChildren()){
+                            if (users.child(bookId).exists()){
+                                Book book = users.child(bookId).getValue(Book.class);
+                                requestingAdapter.addBook(book);
+                                requestingBooks.add(book);
+                                searchBookAdapter.removeBook(book);
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+    private void onlineDatabaseListener(final SearchBookAdapter adapter, final ArrayList<String> status) {
+
+        final DatabaseReference reference = firebaseHandler.getMyRef().child("books");
 
         reference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -118,14 +226,12 @@ public final class BorrowingFragment extends Fragment {
                 for (DataSnapshot it : dataSnapshot.getChildren()) {
                     Book temp = it.getValue(Book.class);
                     if (temp != null) {
-                        for (String a : status) {
-                            if (a.equals(temp.getStatus()) && !temp.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())) {
-                                adapter.addBook(temp);
-                                return;
-                            }
+                        if (!requestingBooks.contains(temp)&&status.contains(temp.getStatus())&&!temp.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())){
+                            adapter.addBook(temp);
                         }
 
                     }
+
                 }
 
             }
@@ -136,21 +242,18 @@ public final class BorrowingFragment extends Fragment {
                 Book temp = dataSnapshot.getValue(Book.class);
 
                 if (temp != null) {
-                    for (String a : status) {
-                        if (a.equals(temp.getStatus())) {
-                            if (adapter.contains(temp)) {
-                                adapter.changeBook(temp);
-                            } else {
-                                adapter.addBook(temp);
-                            }
-                            return;
-                        }
+                    if (requestingBooks.contains(temp)||!status.contains(temp.getStatus())){
+                        adapter.removeBook(temp);
+                        return;
+                    }
+                    if (adapter.contains(temp)) {
+                        adapter.changeBook(temp);
+                    } else {
+                        adapter.addBook(temp);
                     }
 
-                    adapter.removeBook(temp);
-
                 }
-                //adapter.changeBook(temp);
+
             }
 
             @Override

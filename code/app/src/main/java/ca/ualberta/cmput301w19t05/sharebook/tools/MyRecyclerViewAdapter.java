@@ -31,6 +31,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private Context mContext;
 
 
+
     // data is passed into the constructor
     public MyRecyclerViewAdapter(Context context, List<Book> books) {
         this.mInflater = LayoutInflater.from(context);
