@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +24,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +47,7 @@ public class BookDetailActivity extends AppCompatActivity {
     public final static int DELETE = 2;
     public final static String FUNCTION = "function";
     public final static String BOOK = "book";
+    private static final String TAG = "BookDetail";
     private RadioGroup title;
     private RadioGroup author;
     private RadioGroup owner;
@@ -118,6 +124,7 @@ public class BookDetailActivity extends AppCompatActivity {
             title.setOnClickListener(onClickListener);
             author.setOnClickListener(onClickListener);
             description.setOnClickListener(onClickListener);
+
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -232,8 +239,24 @@ public class BookDetailActivity extends AppCompatActivity {
         authorContent.setText(book.getAuthor());
         ownerContent.setText(book.getOwner().getUsername());
         desContent.setText(book.getDescription());
+        RequestListener mRequestListener = new RequestListener() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
+
+                Log.d(TAG, "onException: " + e.toString()+"  model:"+model+" isFirstResource: "+isFirstResource);
+                bookImage.setImageResource(R.mipmap.ic_launcher);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
+                Log.e(TAG,  "model:"+model+" isFirstResource: "+isFirstResource);
+                return false;
+            }
+        };
         //bookImage.setImageURI(Uri.parse(book.getPhoto()));
-        Glide.with(BookDetailActivity.this).load(Uri.parse(book.getPhoto()))
+        Glide.with(this).load(Uri.parse(book.getPhoto()))
+                .listener(mRequestListener)
                 .into(bookImage);
 
 

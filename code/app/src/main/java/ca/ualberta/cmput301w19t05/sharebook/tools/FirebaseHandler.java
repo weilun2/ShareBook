@@ -90,13 +90,6 @@ public class FirebaseHandler {
         UploadTask uploadTask = ref.putBytes(data);
 
 
-//        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                imageURL = uri.toString();
-//            }
-//        });
-
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -177,4 +170,7 @@ public class FirebaseHandler {
 
     }
 
+    public StorageReference getStorageRef() {
+        return storageRef;
+    }
 }

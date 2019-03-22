@@ -24,7 +24,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
@@ -45,6 +47,7 @@ public class AddBookActivity extends AppCompatActivity {
     private int flag = 0;
     private Uri Uri ;
     private Bitmap Uploadedgraph;
+    private Book book;
     //private int RESIZE_REQUEST_CODE =2;
 
 
@@ -105,36 +108,42 @@ public class AddBookActivity extends AppCompatActivity {
                 //check ok
                 if (valid) {
                     ISBN = "place holder";
-                    final Book book = new Book(titleText, authorText, ISBN, firebaseHandler.getCurrentUser());
-                    StorageReference reference = FirebaseStorage.getInstance().getReference().child("image/book_placeholder.png");
+                    book = new Book(titleText, authorText, ISBN, firebaseHandler.getCurrentUser());
+                    if (flag == 1){
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        Uploadedgraph.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] data = baos.toByteArray();
+                        String filenames = "image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png";
+                        final StorageReference ref = firebaseHandler.getStorageRef().child(filenames);
+                        UploadTask uploadTask = ref.putBytes(data);
 
-                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
 
-                            if(flag == 1){
-                                book.setPhoto(String.valueOf(Uri));}
-                            else if(flag == 0){
-                                book.setPhoto(String.valueOf(uri));
-                                //System.out.println(flag);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+
                             }
-                            if (!descriptionText.equals("")) {
-                                book.setDescription(descriptionText);
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                                getUriFrom(firebaseHandler.getStorageRef().child("image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png"));
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                // ...
                             }
-                            firebaseHandler.addBook(book);
-                            firebaseHandler.generateImageFromText(book.getTitle());
-                            if (flag == 1) {
-                                firebaseHandler.uploadImage(book.getTitle(), Uploadedgraph);
-                            }
-                            finish();
-                        }
-                    })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(AddBookActivity.this, e.toString(), Toast.LENGTH_LONG).show();
-                                }
-                            });
+                        });
+
+
+                    }
+                    else {
+                        getUriFrom(firebaseHandler.getStorageRef().child("image/book_placeholder.png"));
+
+                    }
+
+
+
 
                 }
 
@@ -143,6 +152,32 @@ public class AddBookActivity extends AppCompatActivity {
         });
 
     }
+
+    private void getUriFrom(StorageReference reference) {
+        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+
+                book.setPhoto(String.valueOf(uri));
+                //System.out.println(flag);
+
+                if (!descriptionText.equals("")) {
+                    book.setDescription(descriptionText);
+                }
+                firebaseHandler.addBook(book);
+                //firebaseHandler.generateImageFromText(book.getTitle());
+                finish();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AddBookActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -172,20 +207,6 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
 
-
-    /*public void resizeImage(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-
-        intent.putExtra("outputX", 200);
-        intent.putExtra("outputY", 200);
-        intent.putExtra("return-data", true);
-
-        startActivityForResult(intent, RESIZE_REQUEST_CODE);
-    }*/
     public Uri ShowresizedImage(Intent data){
         Uri uri = data.getData();
         return uri;
