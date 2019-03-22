@@ -128,7 +128,6 @@ public class AddBookActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-
                                 getUriFrom(firebaseHandler.getStorageRef().child("image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png"));
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                                 // ...

@@ -38,6 +38,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.book = book;
         this.requesters = users;
         this.mInflater = LayoutInflater.from(context);
+        this.firebaseHandler = new FirebaseHandler(context);
         //filteredBook = books;
     }
 

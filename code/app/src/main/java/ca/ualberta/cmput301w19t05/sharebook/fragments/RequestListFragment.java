@@ -40,6 +40,7 @@ public final class RequestListFragment extends Fragment {
     private RequestAdapter adapter;
     private FirebaseHandler firebaseHandler;
     private RecyclerView recyclerView;
+    private Book book;
 
 
     @Nullable
@@ -52,6 +53,9 @@ public final class RequestListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         firebaseHandler = new FirebaseHandler(getContext());
+        if (getArguments() != null) {
+            book = getArguments().getParcelable("book");
+        }
 
         initAdapter();
         onlineDatabaseListener(adapter);;
@@ -60,14 +64,11 @@ public final class RequestListFragment extends Fragment {
     }
 
     private void initAdapter() {
-        adapter = new RequestAdapter(getActivity(), new ArrayList<User>(), new Book());
+        adapter = new RequestAdapter(getActivity(), new ArrayList<User>(), book);
         adapter.setClickListener(new RequestAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Log.d(TAG, "onItemClick: " + position);
-                Intent intent = new Intent(getActivity(), UserProfile.class);
-                intent.putExtra("user", adapter.getItem(position));
-                startActivity(intent);
+
             }
         });
         recyclerView = getView().findViewById(R.id.requests_of_book);
@@ -83,13 +84,16 @@ public final class RequestListFragment extends Fragment {
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for (DataSnapshot it : dataSnapshot.getChildren()) {
+                if (book.getBookId().equals(dataSnapshot.getKey())){
+                    for (DataSnapshot it : dataSnapshot.getChildren()) {
 //                    if (it.getKey().equals(book.getBookId())) {
                         User temp = it.getValue(User.class);
                         adapter.addUser(temp);
-                        return;
+
 //                    }
+                    }
                 }
+
             }
 
             @Override

@@ -209,10 +209,17 @@ public class BookDetailActivity extends AppCompatActivity {
 
 
     private void setRequestList() {
+        Bundle bundle = new Bundle();
         RequestListFragment requestListFragment = new RequestListFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.place_holder, requestListFragment)
+
+        bundle.putParcelable("book",book);
+        requestListFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.place_holder, requestListFragment)
                 .show(requestListFragment).commit();
     }
+
+
 
     private void initViews() {
         title = findViewById(R.id.title);

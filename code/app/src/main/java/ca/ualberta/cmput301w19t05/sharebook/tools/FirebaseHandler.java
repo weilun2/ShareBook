@@ -176,13 +176,13 @@ public class FirebaseHandler {
                 .child("status").setValue("accepted");
         myRef.child("accepted")
                 .child(book.getBookId()).child(user.getUserID()).setValue(user);
-        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue("Null");
+        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
     }
 
     public void declineRequest(Book book, User user){
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("available");
-        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue("Null");
+        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
     }
 
 
