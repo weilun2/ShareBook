@@ -1,16 +1,46 @@
 package ca.ualberta.cmput301w19t05.sharebook.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.User;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
+import ca.ualberta.cmput301w19t05.sharebook.tools.MyRecyclerViewAdapter;
+import ca.ualberta.cmput301w19t05.sharebook.tools.RequestAdapter;
+import ca.ualberta.cmput301w19t05.sharebook.tools.SearchBookAdapter;
+
+import static android.support.constraint.Constraints.TAG;
 
 public final class RequestListFragment extends Fragment {
+
+    private RequestAdapter adapter;
+    private FirebaseHandler firebaseHandler;
+    private RecyclerView recyclerView;
+
 
     @Nullable
     @Override
@@ -21,6 +51,74 @@ public final class RequestListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        firebaseHandler = new FirebaseHandler(getContext());
+
+        initAdapter();
+        onlineDatabaseListener(adapter);;
+
 
     }
+
+    private void initAdapter() {
+        adapter = new RequestAdapter(getActivity(), new ArrayList<User>(), new Book());
+        adapter.setClickListener(new RequestAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.d(TAG, "onItemClick: " + position);
+                Intent intent = new Intent(getActivity(), UserProfile.class);
+                intent.putExtra("user", adapter.getItem(position));
+                startActivity(intent);
+            }
+        });
+        recyclerView = getView().findViewById(R.id.requests_of_book);
+        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(verticalLayoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void onlineDatabaseListener(final RequestAdapter adapter) {
+
+        DatabaseReference reference = firebaseHandler.getMyRef().child("requests");
+        final Book book = adapter.getBook();
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot it : dataSnapshot.getChildren()) {
+//                    if (it.getKey().equals(book.getBookId())) {
+                        User temp = it.getValue(User.class);
+                        adapter.addUser(temp);
+                        return;
+//                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                User temp = dataSnapshot.getValue(User.class);
+
+                if (temp != null) {
+                    adapter.addUser(temp);
+                }
+                    adapter.removeUser(temp);
+                }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                User temp = dataSnapshot.getValue(User.class);
+                adapter.removeUser(temp);
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
