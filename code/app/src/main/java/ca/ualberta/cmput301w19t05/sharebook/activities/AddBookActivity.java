@@ -157,30 +157,13 @@ public class AddBookActivity extends AppCompatActivity {
                     // get bitmap
                     Bitmap bitmap = BitmapFactory.decodeStream(cr
                             .openInputStream(uri));
-                    // get file path
-                    //String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-                    //Cursor cursor = cr.query(uri, filePathColumn, null, null,
-                            //null);
-
-                    // get the index of the photo user selected
-                    //int column_index = cursor
-                           // .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    //int column_index = cursor.getColumnIndex(filePathColumn[0]);
-                    // move the cursor to the begin
-                    //cursor.moveToFirst();
-                    // get the final path
-                    //final String filepath = cursor.getString(column_index);
-                   // Log.e("uri", filepath);
-                    //System.out.println(filepath);
                     photoUplaoded.setImageBitmap(bitmap);
                     Uri = uri;
                     flag =1;
 
 
                     Uploadedgraph = bitmap;
-                    //cursor.close();
-                    //firebaseHandler.uploadImage(book.getTitle(),bitmap);
+
                 } catch (Exception e) {
                     Log.e("Exception", e.getMessage(), e);
                 }
