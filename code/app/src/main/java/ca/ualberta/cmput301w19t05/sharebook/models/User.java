@@ -80,7 +80,7 @@ public class User implements Parcelable {
     public void sendRequest(Book book){
         book.setStatus("REQUESTED");
         sendMessage("Request", book.getOwner());
-        Record record = new Record(book,this,book.getOwner());
+        Record record = new Record(book,book.getOwner());
     }
     public Notification sendMessage( String message, User receiver){
         Notification notification = new Notification(message,this, receiver);

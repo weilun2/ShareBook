@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.Record;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
 import static android.support.constraint.Constraints.TAG;
@@ -167,6 +168,9 @@ public class FirebaseHandler {
                 .child(book.getBookId())
                 .child(getCurrentUser().getUserID())
                 .setValue(getCurrentUser());
+        Record record = new Record(book,book.getOwner());
+        myRef.child(mContext.getString(R.string.db_request_notification))
+                .child(book.getBookId()).child(getCurrentUser().getUserID()).setValue("1");
 
     }
 

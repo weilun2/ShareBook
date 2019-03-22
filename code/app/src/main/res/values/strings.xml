@@ -41,5 +41,6 @@
     <string name="prompt_signup_email">email</string>
     <string name="db_books">books</string>
     <string name="borrowed">Borrowed</string>
+    <string name="db_request_notification">request_notification</string>
 
 </resources>

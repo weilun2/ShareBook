@@ -1,26 +1,37 @@
 package ca.ualberta.cmput301w19t05.sharebook.models;
 
+import java.util.UUID;
+
 /**
  * each action made by user will generate a record which record book, owner, borrower
  */
 public class Record {
-    private Book book;
+    private String bookId;
     private User owner;
+    private String recordId;
     private User borrower;
+    private String status;
 
 
-    public Record(Book book, User owner, User borrower) {
-        this.book = book;
-        this.owner = owner;
+    public Record(Book book, User borrower) {
+        this.recordId = UUID.randomUUID().toString();
+        this.bookId = book.getBookId();
+        this.owner = book.getOwner();
         this.borrower = borrower;
+        this.status = "requested";
     }
 
-    public Book getBook() {
-        return book;
+
+
+    public Record() {
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
 
     public User getOwner() {
@@ -31,11 +42,27 @@ public class Record {
         this.owner = owner;
     }
 
+    public String getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(String recordId) {
+        this.recordId = recordId;
+    }
+
     public User getBorrower() {
         return borrower;
     }
 
     public void setBorrower(User borrower) {
         this.borrower = borrower;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
