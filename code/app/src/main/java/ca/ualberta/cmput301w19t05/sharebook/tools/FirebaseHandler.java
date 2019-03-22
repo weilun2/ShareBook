@@ -176,7 +176,6 @@ public class FirebaseHandler {
 
 
     public void acceptRequest(Book book, User user){
-
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("accepted");
         myRef.child("accepted")

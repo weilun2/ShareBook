@@ -102,10 +102,7 @@ public final class RequestListFragment extends Fragment {
                 User temp = dataSnapshot.getValue(User.class);
 
                 if (temp != null) {
-                    if (book.getBookId().equals(dataSnapshot.getKey())){
-                        adapter.addUser(temp);
-                    }
-
+                    adapter.addUser(temp);
                 }
                     adapter.removeUser(temp);
                 }

@@ -1,7 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook.tools;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -113,7 +112,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v){
                 firebaseHandler.acceptRequest(book,user);
-                removeUser(user);
             }
         });
 
@@ -121,7 +119,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v){
                 firebaseHandler.declineRequest(book,user);
-                removeUser(user);
             }
         });
     }
