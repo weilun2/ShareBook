@@ -1,13 +1,19 @@
 package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +53,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Boolean inProgress;
     private int function;
+
 
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -106,6 +113,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void setClickListener() {
 
+
         if (function==DELETE) {
             title.setOnClickListener(onClickListener);
             author.setOnClickListener(onClickListener);
@@ -127,7 +135,9 @@ public class BookDetailActivity extends AppCompatActivity {
                 }
             });
             setRequestList();
+
         } else if (function==REQUEST) {
+
             delete.setText("request");
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -189,6 +199,8 @@ public class BookDetailActivity extends AppCompatActivity {
 
     }
 
+
+
     private void setRequestList() {
         RequestListFragment requestListFragment = new RequestListFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.place_holder, requestListFragment)
@@ -202,6 +214,7 @@ public class BookDetailActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         bookImage = findViewById(R.id.book_cover);
         delete = findViewById(R.id.delete_book);
+
         progressDialog = new ProgressDialog(BookDetailActivity.this);
         progressDialog.setMessage("Searching user...");
         inProgress = false;
@@ -237,5 +250,7 @@ public class BookDetailActivity extends AppCompatActivity {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
     }
+
+
 
 }
