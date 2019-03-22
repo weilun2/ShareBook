@@ -90,13 +90,6 @@ public class FirebaseHandler {
         UploadTask uploadTask = ref.putBytes(data);
 
 
-//        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                imageURL = uri.toString();
-//            }
-//        });
-
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -177,6 +170,7 @@ public class FirebaseHandler {
 
     }
 
+
     public void acceptRequest(Book book, User user){
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("accepted");
@@ -189,6 +183,11 @@ public class FirebaseHandler {
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("available");
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue("Null");
+    }
+
+
+    public StorageReference getStorageRef() {
+        return storageRef;
     }
 
 }

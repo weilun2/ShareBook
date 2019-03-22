@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -125,7 +126,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
