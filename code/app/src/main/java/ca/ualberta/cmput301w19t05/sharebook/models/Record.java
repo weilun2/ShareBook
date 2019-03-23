@@ -1,61 +1,49 @@
 package ca.ualberta.cmput301w19t05.sharebook.models;
 
-import java.util.UUID;
-
 /**
  * each action made by user will generate a record which record book, owner, borrower
  */
 public class Record {
-    private String bookId;
-    private User owner;
-    private String recordId;
-    private User borrower;
+
+    private String ownerName;
+    private String bookName;
+    private String borrowerName;
     private String status;
+    private boolean seen;
 
-
-    public Record(Book book, User borrower) {
-        this.recordId = UUID.randomUUID().toString();
-        this.bookId = book.getBookId();
-        this.owner = book.getOwner();
-        this.borrower = borrower;
-        this.status = "requested";
+    public Record(String ownerName, String bookName, String borrowerName, String status, boolean seen) {
+        this.ownerName = ownerName;
+        this.bookName = bookName;
+        this.borrowerName = borrowerName;
+        this.status = status;
+        this.seen = seen;
     }
-
-
 
     public Record() {
     }
 
-    public String getBookId() {
-        return bookId;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setBookId(String bookId) {
-        this.bookId = bookId;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
-    public User getOwner() {
-        return owner;
+    public String getBookName() {
+        return bookName;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
-    public String getRecordId() {
-        return recordId;
+    public String getBorrowerName() {
+        return borrowerName;
     }
 
-    public void setRecordId(String recordId) {
-        this.recordId = recordId;
-    }
-
-    public User getBorrower() {
-        return borrower;
-    }
-
-    public void setBorrower(User borrower) {
-        this.borrower = borrower;
+    public void setBorrowerName(String borrowerName) {
+        this.borrowerName = borrowerName;
     }
 
     public String getStatus() {
@@ -64,5 +52,13 @@ public class Record {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

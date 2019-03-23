@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook.remote;
+package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

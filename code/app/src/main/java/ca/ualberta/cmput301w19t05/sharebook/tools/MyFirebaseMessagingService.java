@@ -27,6 +27,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "onMessageReceived: " + remoteMessage.getFrom());
         int a  = remoteMessage.getData().size();
         if (remoteMessage.getData().size()>0){
+            switch (remoteMessage.getData().get("requestType")){
+                case FirebaseHandler.REQUEST:
+                    setRequestNotification();
+                    break;
+                case FirebaseHandler.ACCEPT:
+                    setAcceptNotification();
+                    break;
+            }
 
             Log.d(TAG, "onMessageReceived: " + remoteMessage.getData());
         }
@@ -35,6 +43,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "onMessageReceived: " + remoteMessage.getNotification().getBody());
         }
     }
+
+    private void setAcceptNotification() {
+    }
+
+    private void setRequestNotification() {
+
+    }
+
     private void showNotification(String title, String body){
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

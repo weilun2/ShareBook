@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook.models;
+package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
 public class Data {
     public String bookId;

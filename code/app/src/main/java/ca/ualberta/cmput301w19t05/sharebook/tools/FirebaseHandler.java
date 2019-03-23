@@ -26,12 +26,15 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.APIServer;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Data;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.MyResponse;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Notification;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.RetroFitClient;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Sender;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
-import ca.ualberta.cmput301w19t05.sharebook.models.Data;
-import ca.ualberta.cmput301w19t05.sharebook.models.Notification;
+import ca.ualberta.cmput301w19t05.sharebook.models.Record;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
-import ca.ualberta.cmput301w19t05.sharebook.remote.APIServer;
-import ca.ualberta.cmput301w19t05.sharebook.remote.RetroFitClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,8 +53,8 @@ import static android.support.constraint.Constraints.TAG;
  *
  */
 public class FirebaseHandler {
-    private static final String REQUEST = "request";
-    private static final String ACCEPT = "accept";
+    public static final String REQUEST = "request_notification";
+    public static final String ACCEPT = "accept_notification";
     public static String token;
     private Context mContext;
     private FirebaseDatabase database;
@@ -218,6 +221,9 @@ public class FirebaseHandler {
     }
 
     private void sendNotification(final String notificationType, final Book book){
+        Record record = new Record(book.getOwner().getUsername(), book.getTitle(), getCurrentUser().getUsername(),notificationType, false);
+        myRef.child(notificationType).child(book.getOwner().getUserID()).child(book.getBookId())
+                .setValue(record);
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
                 .child(book.getOwner().getUserID()).child("token")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -268,5 +274,7 @@ public class FirebaseHandler {
     public StorageReference getStorageRef() {
         return storageRef;
     }
+
+
 
 }
