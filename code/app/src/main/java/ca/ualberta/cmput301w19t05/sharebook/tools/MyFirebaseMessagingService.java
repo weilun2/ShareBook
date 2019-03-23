@@ -9,8 +9,12 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
 
 import java.util.Random;
 
@@ -23,9 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
-
-
+        
         Log.d(TAG, "onMessageReceived: " + remoteMessage.getFrom());
         if (remoteMessage.getData().size()>0){
             Log.d(TAG, "onMessageReceived: " + remoteMessage.getData());
@@ -61,10 +63,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
+
     @Override
     public void onNewToken(String s) {
         Log.d(TAG, "onNewToken: " + s);
-        //sendRegistrationToServer(token);
+        sendRegistrationToServer(s);
+    }
+
+    private void sendRegistrationToServer(String s) {
+        FirebaseHandler firebaseHandler = new  FirebaseHandler();
+        firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                .child(firebaseHandler.getCurrentUser().getUserID()).child("token").setValue(s);
     }
 
 }
