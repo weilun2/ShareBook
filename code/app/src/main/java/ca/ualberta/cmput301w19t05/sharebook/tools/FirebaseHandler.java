@@ -63,6 +63,16 @@ public class FirebaseHandler {
         }
         Log.d(TAG, "handler instance created");
     }
+    public FirebaseHandler() {
+        this.database = FirebaseDatabase.getInstance();
+        this.myRef = database.getReference();
+        this.mAuth = FirebaseAuth.getInstance();
+        this.storageRef = FirebaseStorage.getInstance().getReference();
+        if (mAuth.getCurrentUser() != null) {
+            user = mAuth.getCurrentUser();
+        }
+        Log.d(TAG, "handler instance created");
+    }
 
     public DatabaseReference getMyRef() {
         return myRef;

@@ -43,6 +43,7 @@ public final class BorrowingFragment extends Fragment {
     private FirebaseHandler firebaseHandler;
     private RecyclerView recyclerView;
     private MyRecyclerViewAdapter requestingAdapter;
+    private MyRecyclerViewAdapter acceptedAdapter;
     private List<Book> requestingBooks;
 
     @Nullable
@@ -66,9 +67,53 @@ public final class BorrowingFragment extends Fragment {
         onlineDatabaseListener(searchBookAdapter, status);
         requestingBooks = new ArrayList<>();
         viewRequesting();
+        viewAccepted();
 
 
 
+    }
+
+    private void viewAccepted() {
+        RecyclerView recyclerView;
+        recyclerView = getView().findViewById(R.id.borrowing_accepted_list);
+        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(verticalLayoutManager);
+        acceptedAdapter = new MyRecyclerViewAdapter(getActivity(), new ArrayList<Book>());
+        recyclerView.setAdapter(acceptedAdapter);
+        firebaseHandler.getMyRef().child("accepted").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot userId: dataSnapshot.getChildren()){
+                    if (firebaseHandler.getCurrentUser().getUserID().equals(userId.getKey())){
+                        addBookById(dataSnapshot.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                String bookId = dataSnapshot.getKey();
+                if (bookId!= null){
+                    removeBookById(bookId);
+                }
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void initAdapter() {
