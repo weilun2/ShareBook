@@ -4,9 +4,9 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,11 +28,18 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.RequestListFragment;
@@ -59,6 +66,10 @@ public class BookDetailActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Boolean inProgress;
     private int function;
+    private Uri Uri ;
+    private boolean shortPress = false;
+    private Bitmap Uploadedgraph;
+    private StorageReference InitialPhoto;
 
 
 
@@ -115,6 +126,8 @@ public class BookDetailActivity extends AppCompatActivity {
         setClickListener();
 
 
+
+
     }
 
     private void setClickListener() {
@@ -124,6 +137,47 @@ public class BookDetailActivity extends AppCompatActivity {
             title.setOnClickListener(onClickListener);
             author.setOnClickListener(onClickListener);
             description.setOnClickListener(onClickListener);
+            bookImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent,1);
+                }
+
+
+
+            });
+            bookImage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    System.out.println("hold long");
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(BookDetailActivity.this);
+                    dialog.setMessage("Delete the current photo?");
+
+                    dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            System.out.println("yes pressed");
+                            InitialPhoto= firebaseHandler.getStorageRef().child("image/book_placeholder.png");
+                            getUriAndUpLoad(InitialPhoto);
+
+                        }
+                    });
+
+                    dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            System.out.println("no pressed");
+                        }
+                    });
+                    dialog.show();
+                    return true;
+                }
+                    ;
+            });
+
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -205,6 +259,90 @@ public class BookDetailActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if(data!= null){
+                Uri uri = data.getData();
+                Log.e("uri", uri.toString());
+                ContentResolver cr = this.getContentResolver();
+                try {
+                    // get bitmap
+                    Bitmap bitmap = BitmapFactory.decodeStream(cr
+                            .openInputStream(uri));
+                    //bookImage.setImageBitmap(bitmap);
+
+                    Uri = uri;
+                    Uploadedgraph = bitmap;
+                    bookImage.setImageBitmap(Uploadedgraph);
+
+
+                } catch (Exception e) {
+                    Log.e("Exception", e.getMessage(), e);
+                }
+                UploadPhoto();
+
+            }
+        }
+
+    }
+    private void UploadPhoto(){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Uploadedgraph.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        String filenames = "image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png";
+        final StorageReference ref = firebaseHandler.getStorageRef().child(filenames);
+        UploadTask uploadTask = ref.putBytes(data);
+
+
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                getUriAndUpLoad(firebaseHandler.getStorageRef().child("image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png"));
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+            }
+        });
+    }
+
+
+    private void getUriAndUpLoad(StorageReference reference) {
+        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+
+                book.setPhoto(String.valueOf(uri));
+                //System.out.println(String.valueOf(book.getBookId()));
+                //System.out.println(String.valueOf(uri));
+                //System.out.println(String.valueOf(book.getPhoto()));
+                DatabaseReference refB = firebaseHandler.getMyRef().child("books").child(book.getOwner().getUserID()).child(book.getBookId());
+                refB.child("photo").setValue(String.valueOf(uri));
+
+
+
+                //finish();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(BookDetailActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
 
 
 
@@ -259,7 +397,8 @@ public class BookDetailActivity extends AppCompatActivity {
                 .listener(mRequestListener)
                 .into(bookImage);
 
-
+        System.out.println(String.valueOf(book.getBookId()));
+        System.out.println(String.valueOf(book.getPhoto()));
     }
 
     private void showDialog() {
