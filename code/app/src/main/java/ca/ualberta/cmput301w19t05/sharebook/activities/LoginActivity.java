@@ -231,9 +231,11 @@ public class LoginActivity extends AppCompatActivity{
 
                                             // Get new Instance ID token
                                             String token = task.getResult().getToken();
+                                            FirebaseHandler.token = token;
                                             FirebaseHandler firebaseHandler = new  FirebaseHandler();
                                             firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
                                                     .child(firebaseHandler.getCurrentUser().getUserID()).child("token").setValue(token);
+
 
                                             // Log and toast
                                             Log.d(TAG, "Token: " + token);
