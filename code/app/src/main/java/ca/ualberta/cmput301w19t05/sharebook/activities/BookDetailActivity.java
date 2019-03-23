@@ -153,7 +153,7 @@ public class BookDetailActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("yes pressed");
                             initialPhoto = firebaseHandler.getStorageRef().child("image/book_placeholder.png");
-                            getUriAndUpLoad(initialPhoto);
+                            getUriAndUpLoad(initialPhoto, true);
 
                         }
                     });
@@ -268,7 +268,9 @@ public class BookDetailActivity extends AppCompatActivity {
 
                     Uri = uri;
                     Uploadedgraph = bitmap;
-                    bookImage.setImageBitmap(Uploadedgraph);
+                    Glide.with(BookDetailActivity.this).load(bitmap)
+                            .into(bookImage);
+                    //bookImage.setImageBitmap(Uploadedgraph);
 
 
 
@@ -302,7 +304,7 @@ public class BookDetailActivity extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
 
-                getUriAndUpLoad(firebaseHandler.getStorageRef().child("image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png"));
+                getUriAndUpLoad(firebaseHandler.getStorageRef().child("image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png"), false);
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 // ...
             }
@@ -310,7 +312,7 @@ public class BookDetailActivity extends AppCompatActivity {
     }
 
 
-    private void getUriAndUpLoad(StorageReference reference) {
+    private void getUriAndUpLoad(StorageReference reference, final boolean place_holder) {
         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -322,8 +324,11 @@ public class BookDetailActivity extends AppCompatActivity {
                 //System.out.println(String.valueOf(book.getPhoto()));
                 DatabaseReference refB = firebaseHandler.getMyRef().child("books").child(book.getOwner().getUserID()).child(book.getBookId());
                 refB.child("photo").setValue(String.valueOf(uri));
-                Glide.with(BookDetailActivity.this).load(Uri.parse(book.getPhoto()))
-                        .into(bookImage);
+                if (place_holder){
+                    Glide.with(BookDetailActivity.this).load(android.net.Uri.parse(book.getPhoto()))
+                            .into(bookImage);
+                }
+
 
 
 
