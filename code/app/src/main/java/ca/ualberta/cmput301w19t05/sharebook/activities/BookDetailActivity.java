@@ -6,12 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,10 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +32,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.RequestListFragment;
@@ -69,7 +61,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private Uri Uri ;
     private boolean shortPress = false;
     private Bitmap Uploadedgraph;
-    private StorageReference InitialPhoto;
+    private StorageReference initialPhoto;
 
 
 
@@ -160,8 +152,8 @@ public class BookDetailActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("yes pressed");
-                            InitialPhoto= firebaseHandler.getStorageRef().child("image/book_placeholder.png");
-                            getUriAndUpLoad(InitialPhoto);
+                            initialPhoto = firebaseHandler.getStorageRef().child("image/book_placeholder.png");
+                            getUriAndUpLoad(initialPhoto);
 
                         }
                     });
@@ -279,6 +271,7 @@ public class BookDetailActivity extends AppCompatActivity {
                     bookImage.setImageBitmap(Uploadedgraph);
 
 
+
                 } catch (Exception e) {
                     Log.e("Exception", e.getMessage(), e);
                 }
@@ -329,6 +322,8 @@ public class BookDetailActivity extends AppCompatActivity {
                 //System.out.println(String.valueOf(book.getPhoto()));
                 DatabaseReference refB = firebaseHandler.getMyRef().child("books").child(book.getOwner().getUserID()).child(book.getBookId());
                 refB.child("photo").setValue(String.valueOf(uri));
+                Glide.with(BookDetailActivity.this).load(Uri.parse(book.getPhoto()))
+                        .into(bookImage);
 
 
 
@@ -384,24 +379,10 @@ public class BookDetailActivity extends AppCompatActivity {
         authorContent.setText(book.getAuthor());
         ownerContent.setText(book.getOwner().getUsername());
         desContent.setText(book.getDescription());
-        RequestListener mRequestListener = new RequestListener() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
 
-                Log.d(TAG, "onException: " + e.toString()+"  model:"+model+" isFirstResource: "+isFirstResource);
-                bookImage.setImageResource(R.mipmap.ic_launcher);
-                return false;
-            }
-
-            @Override
-            public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
-                Log.e(TAG,  "model:"+model+" isFirstResource: "+isFirstResource);
-                return false;
-            }
-        };
         //bookImage.setImageURI(Uri.parse(book.getPhoto()));
         Glide.with(this).load(Uri.parse(book.getPhoto()))
-                .listener(mRequestListener)
+
                 .into(bookImage);
 
         System.out.println(String.valueOf(book.getBookId()));
