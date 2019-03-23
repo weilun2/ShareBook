@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.Data;
 import ca.ualberta.cmput301w19t05.sharebook.models.Notification;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.remote.APIServer;
@@ -49,8 +50,8 @@ import static android.support.constraint.Constraints.TAG;
  *
  */
 public class FirebaseHandler {
-    private static final int REQUEST = 1;
-    private static final int ACCEPT = 2;
+    private static final String REQUEST = "request";
+    private static final String ACCEPT = "accept";
     public static String token;
     private Context mContext;
     private FirebaseDatabase database;
@@ -74,6 +75,7 @@ public class FirebaseHandler {
         if (mAuth.getCurrentUser() != null) {
             user = mAuth.getCurrentUser();
         }
+        RetroFitClient.getClient(baseURL).create(APIServer.class);
         Log.d(TAG, "handler instance created");
     }
     public FirebaseHandler() {
@@ -84,6 +86,7 @@ public class FirebaseHandler {
         if (mAuth.getCurrentUser() != null) {
             user = mAuth.getCurrentUser();
         }
+        RetroFitClient.getClient(baseURL).create(APIServer.class);
         Log.d(TAG, "handler instance created");
     }
 
@@ -195,8 +198,6 @@ public class FirebaseHandler {
                 .child(book.getBookId())
                 .child(getCurrentUser().getUserID())
                 .setValue(getCurrentUser());
-        myRef.child(mContext.getString(R.string.db_request_notification))
-                .child(book.getBookId()).child(getCurrentUser().getUserID()).setValue("1");
         sendNotification(REQUEST, book);
 
     }
@@ -216,24 +217,25 @@ public class FirebaseHandler {
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
     }
 
-    private void sendNotification(final int notificationType, Book book){
+    private void sendNotification(final String notificationType, final Book book){
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
                 .child(book.getOwner().getUserID()).child("token")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String targetToken = dataSnapshot.getValue(String.class);
-                        Notification notification;
-                        if (notificationType==REQUEST){
-                            notification = new Notification("New request", "you get a request");
-                        }else if (notificationType==ACCEPT){
-                            notification = new Notification("Accepted", "your request has been accepted");
-                        }
-                        else {
-                            notification = new Notification("body", "title");
+                        Notification notification = null;
+                        Data data = new Data(book.getBookId(),notificationType);
+                        switch (notificationType) {
+                            case REQUEST:
+                                notification = new Notification("you receive a request", "Request");
+                                break;
+                            case ACCEPT:
+                                notification = new Notification("one request has been accepted", "Accepted");
+                                break;
                         }
 
-                        Sender sender = new Sender(notification,targetToken);
+                        Sender sender = new Sender(notification, data, targetToken);
                         getFCMClient().sendNotification(sender).enqueue(new Callback<MyResponse>() {
                             @Override
                             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
