@@ -28,7 +28,6 @@ import java.io.ByteArrayOutputStream;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.Notification;
-import ca.ualberta.cmput301w19t05.sharebook.models.Record;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.remote.APIServer;
 import ca.ualberta.cmput301w19t05.sharebook.remote.RetroFitClient;
@@ -50,6 +49,8 @@ import static android.support.constraint.Constraints.TAG;
  *
  */
 public class FirebaseHandler {
+    private static final int REQUEST = 1;
+    private static final int ACCEPT = 2;
     public static String token;
     private Context mContext;
     private FirebaseDatabase database;
@@ -194,16 +195,44 @@ public class FirebaseHandler {
                 .child(book.getBookId())
                 .child(getCurrentUser().getUserID())
                 .setValue(getCurrentUser());
-        Record record = new Record(book,book.getOwner());
         myRef.child(mContext.getString(R.string.db_request_notification))
                 .child(book.getBookId()).child(getCurrentUser().getUserID()).setValue("1");
+        sendNotification(REQUEST, book);
+
+    }
+
+
+    public void acceptRequest(Book book, User user){
+        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
+                .child("status").setValue("accepted");
+        myRef.child("accepted")
+                .child(book.getBookId()).child(user.getUserID()).setValue(user);
+        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+    }
+
+    public void declineRequest(Book book, User user){
+        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
+                .child("status").setValue("available");
+        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+    }
+
+    private void sendNotification(final int notificationType, Book book){
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
                 .child(book.getOwner().getUserID()).child("token")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String targetToken = dataSnapshot.getValue(String.class);
-                        Notification notification = new Notification("New request", "you get a request");
+                        Notification notification;
+                        if (notificationType==REQUEST){
+                            notification = new Notification("New request", "you get a request");
+                        }else if (notificationType==ACCEPT){
+                            notification = new Notification("Accepted", "your request has been accepted");
+                        }
+                        else {
+                            notification = new Notification("body", "title");
+                        }
+
                         Sender sender = new Sender(notification,targetToken);
                         getFCMClient().sendNotification(sender).enqueue(new Callback<MyResponse>() {
                             @Override
@@ -231,21 +260,6 @@ public class FirebaseHandler {
                     }
                 });
 
-    }
-
-
-    public void acceptRequest(Book book, User user){
-        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
-                .child("status").setValue("accepted");
-        myRef.child("accepted")
-                .child(book.getBookId()).child(user.getUserID()).setValue(user);
-        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
-    }
-
-    public void declineRequest(Book book, User user){
-        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
-                .child("status").setValue("available");
-        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
     }
 
 

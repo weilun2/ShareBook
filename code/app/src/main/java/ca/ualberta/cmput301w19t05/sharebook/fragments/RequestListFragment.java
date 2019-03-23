@@ -1,20 +1,14 @@
 package ca.ualberta.cmput301w19t05.sharebook.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,16 +18,10 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
-import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
-import ca.ualberta.cmput301w19t05.sharebook.tools.MyRecyclerViewAdapter;
 import ca.ualberta.cmput301w19t05.sharebook.tools.RequestAdapter;
-import ca.ualberta.cmput301w19t05.sharebook.tools.SearchBookAdapter;
-
-import static android.support.constraint.Constraints.TAG;
 
 public final class RequestListFragment extends Fragment {
 
@@ -102,10 +90,13 @@ public final class RequestListFragment extends Fragment {
                 User temp = dataSnapshot.getValue(User.class);
 
                 if (temp != null) {
-                    adapter.addUser(temp);
+                    if (book.getBookId().equals(dataSnapshot.getKey())){
+                        adapter.addUser(temp);
+                    }
+
                 }
-                    adapter.removeUser(temp);
-                }
+                adapter.removeUser(temp);
+            }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
