@@ -1,4 +1,3 @@
-
 package ca.ualberta.cmput301w19t05.sharebook.activities;
 
 import android.content.ContentResolver;
@@ -40,8 +39,9 @@ public class AddBookActivity extends AppCompatActivity {
 
     private String titleText;
     private String authorText;
+    private String ISBNText;
     private String descriptionText;
-    private String ISBN;
+
     private FirebaseHandler firebaseHandler;
     private int IMAGE_REQUEST_CODE = 1;
     private int flag = 0;
@@ -54,28 +54,23 @@ public class AddBookActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebaseHandler = new FirebaseHandler(AddBookActivity.this);
         setContentView(R.layout.activity_add_book_screen);
+
+        firebaseHandler = new FirebaseHandler(AddBookActivity.this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Button submitButton = findViewById(R.id.submit);
-        Button cancelButton = findViewById(R.id.cancel);
-        Button uploadButton = findViewById(R.id.PhotoUpload);
         final EditText editTitle = findViewById(R.id.title);
         final EditText editAuthor = findViewById(R.id.author);
+        final EditText editISBN = findViewById(R.id.ISBN);
         final EditText editDescription = findViewById(R.id.description);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        Button uploadButton = findViewById(R.id.PhotoUpload);
+        Button scanButton = findViewById(R.id.scan);
+        Button submitButton = findViewById(R.id.submit);
 
-       uploadButton.setOnClickListener(new View.OnClickListener() {
+        uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(
@@ -84,31 +79,46 @@ public class AddBookActivity extends AppCompatActivity {
                 startActivityForResult(intent, IMAGE_REQUEST_CODE);
             }
         });
+
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddBookActivity.this, ScanActivity.class);
+                startActivityForResult(intent, ScanActivity.SCAN_BOOK);
+            }
+        });
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 boolean valid = true;
 
                 //test case for empty blank
                 titleText = editTitle.getText().toString();
                 if (TextUtils.isEmpty(titleText)) {
-                    editTitle.setError("Need to fill");
+                    editTitle.setError("Please enter the Title");
                     valid = false;
                 }
 
                 authorText = editAuthor.getText().toString();
                 if (TextUtils.isEmpty(authorText)) {
-                    editAuthor.setError("Need to fill");
+                    editAuthor.setError("Please enter the Author");
                     valid = false;
                 }
+
+                ISBNText = editISBN.getText().toString();
+                if (TextUtils.isEmpty(ISBNText)) {
+                    editISBN.setError("Please enter the ISBN");
+                    valid = false;
+                }
+
                 descriptionText = editDescription.getText().toString();
 
                 //check ok
                 if (valid) {
-                    ISBN = "place holder";
-                    book = new Book(titleText, authorText, ISBN, firebaseHandler.getCurrentUser());
+                    ISBNText = "place holder";
+                    book = new Book(titleText, authorText, ISBNText, firebaseHandler.getCurrentUser());
                     if (flag == 1){
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         Uploadedgraph.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -141,9 +151,6 @@ public class AddBookActivity extends AppCompatActivity {
 
                     }
 
-
-
-
                 }
 
             }
@@ -156,7 +163,6 @@ public class AddBookActivity extends AppCompatActivity {
         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-
 
                 book.setPhoto(String.valueOf(uri));
                 //System.out.println(flag);
@@ -181,34 +187,40 @@ public class AddBookActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if(data!= null){
-                ImageView photoUplaoded = (ImageView)findViewById(R.id.photoUploaded);
-                Uri uri = ShowresizedImage(data);
-                Log.e("uri", uri.toString());
-                ContentResolver cr = this.getContentResolver();
-                try {
-                    // get bitmap
-                    Bitmap bitmap = BitmapFactory.decodeStream(cr
-                            .openInputStream(uri));
-                    photoUplaoded.setImageBitmap(bitmap);
-                    Uri = uri;
-                    flag =1;
+        if (requestCode == IMAGE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    ImageView photoUplaoded = (ImageView) findViewById(R.id.photoUploaded);
+                    Uri uri = ShowresizedImage(data);
+                    Log.e("uri", uri.toString());
+                    ContentResolver cr = this.getContentResolver();
+                    try {
+                        // get bitmap
+                        Bitmap bitmap = BitmapFactory.decodeStream(cr
+                                .openInputStream(uri));
+                        photoUplaoded.setImageBitmap(bitmap);
+                        Uri = uri;
+                        flag = 1;
 
+                        Uploadedgraph = bitmap;
 
-                    Uploadedgraph = bitmap;
-
-                } catch (Exception e) {
-                    Log.e("Exception", e.getMessage(), e);
+                    } catch (Exception e) {
+                        Log.e("Exception", e.getMessage(), e);
+                    }
                 }
             }
         }
-    }
+        else if (requestCode == ScanActivity.SCAN_BOOK) {
+            if (resultCode == RESULT_OK) {
+                String ISBN = data.getStringExtra("ISBN");
+                //ISBNText.setText(ISBN);
 
+            }
+        }
+    }
 
     public Uri ShowresizedImage(Intent data){
         Uri uri = data.getData();
         return uri;
     }
-
 }
