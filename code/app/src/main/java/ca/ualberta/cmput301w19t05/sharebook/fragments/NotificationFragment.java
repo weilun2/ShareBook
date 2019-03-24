@@ -59,17 +59,33 @@ public final class NotificationFragment extends Fragment {
 
                 Record temp = dataSnapshot.getValue(Record.class);
                 if ((temp == null ? null:temp.getBorrowerName()) !=null){
-                    adapter.addRecord(temp);
+                    if (!temp.isSeen()){
+                        adapter.addRecord(temp);
+                    }
+
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Record temp = dataSnapshot.getValue(Record.class);
+                if ((temp == null ? null:temp.getBorrowerName()) !=null){
+                    if (!temp.isSeen()){
+                        adapter.removeRecord(temp);
+                    }
+                    else {
+                        adapter.changeRecord(temp);
+                    }
+                }
 
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Record temp = dataSnapshot.getValue(Record.class);
+                if ((temp == null ? null:temp.getBorrowerName()) !=null){
+                    adapter.removeRecord(temp);
+                }
 
             }
 

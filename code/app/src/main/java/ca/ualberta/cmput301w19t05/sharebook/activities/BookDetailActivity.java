@@ -46,6 +46,7 @@ public class BookDetailActivity extends AppCompatActivity {
     public final static int DELETE = 2;
     public final static String FUNCTION = "function";
     public final static String BOOK = "book";
+    public final static String TEMP = "temp";
     private static final String TAG = "BookDetail";
     private RadioGroup title;
     private RadioGroup author;
@@ -188,6 +189,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 }
             });
             setRequestList();
+            return;
 
         } else if (function==REQUEST) {
 
@@ -207,6 +209,10 @@ public class BookDetailActivity extends AppCompatActivity {
                             .show();
                 }
             });
+        }
+        else{
+            delete.setVisibility(View.GONE);
+        }
             TextView ownerText = owner.findViewWithTag("content");
             final String ownerName = ownerText.getText().toString();
             owner.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +251,8 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 }
             });
-        }
+
+
 
 
 

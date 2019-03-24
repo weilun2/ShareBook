@@ -57,6 +57,34 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         mRecord.add(record);
     }
 
+    public void removeRecord(Record temp) {
+        int index = 0;
+        for (Record it: mRecord){
+            if (mRecord.get(index).equals(it)){
+                notifyItemChanged(index);
+                mRecord.remove(it);
+                return;
+            }
+            else{
+                index++;
+            }
+        }
+
+    }
+
+    public void changeRecord(Record temp) {
+        int index = 0;
+        for (Record it : mRecord) {
+            if (it.equals(temp)) {
+                mRecord.set(index, it);
+                notifyItemChanged(index);
+                return;
+            } else {
+                index++;
+            }
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView requesterName;
         public TextView notificationType;

@@ -1,5 +1,9 @@
 package ca.ualberta.cmput301w19t05.sharebook.models;
 
+import android.os.Build;
+
+import java.util.Objects;
+
 /**
  * each action made by user will generate a record which record book, owner, borrower
  */
@@ -60,5 +64,28 @@ public class Record {
 
     public void setSeen(boolean seen) {
         this.seen = seen;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Record record = (Record) o;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return seen == record.seen &&
+                    Objects.equals(ownerName, record.ownerName) &&
+                    Objects.equals(bookName, record.bookName) &&
+                    Objects.equals(borrowerName, record.borrowerName) &&
+                    Objects.equals(status, record.status);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return Objects.hash(ownerName, bookName, borrowerName, status, seen);
+        }
+        return 0;
     }
 }

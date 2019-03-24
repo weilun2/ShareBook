@@ -231,7 +231,7 @@ public class FirebaseHandler {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String targetToken = dataSnapshot.getValue(String.class);
                         Notification notification = null;
-                        Data data = new Data(book.getBookId(),notificationType);
+                        Data data = new Data(book.getBookId(),notificationType,getCurrentUser().getUserID(),book.getOwner().getUserID());
                         switch (notificationType) {
                             case REQUEST:
                                 notification = new Notification("you receive a request", "Request");
