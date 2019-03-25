@@ -1,7 +1,5 @@
-package ca.ualberta.cmput301w19t05.sharebook.remote;
+package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
-import ca.ualberta.cmput301w19t05.sharebook.tools.MyResponse;
-import ca.ualberta.cmput301w19t05.sharebook.tools.Sender;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;

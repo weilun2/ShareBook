@@ -22,12 +22,21 @@
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/PopupOverlay" />
 
-        </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:id="@+id/book_info_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
 
         <ScrollView
             android:id="@+id/book_info_form"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -106,6 +115,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Scan" />
+
+
+
+            <ImageView
+                android:id="@+id/photoUploaded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_report_image" />
 
             <Button
                 android:id="@+id/submit"

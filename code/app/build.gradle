@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
@@ -47,6 +49,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.camerakit:camerakit:1.0.0-beta3.11'
     implementation 'com.camerakit:jpegkit:0.1.0'
@@ -57,3 +60,6 @@ dependencies {
 
 }
 apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}

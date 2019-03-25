@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook.tools;
+package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
 import java.util.List;
 

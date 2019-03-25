@@ -2,9 +2,8 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.*;
 
-import ca.ualberta.cmput301w19t05.sharebook.models.Notification;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Notification;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
 public class NotificationTest {
