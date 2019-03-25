@@ -21,6 +21,8 @@ public class Book implements Parcelable {
     private String author;
     private String ISBN;
     private User owner;
+    public static final String REQUESTED = "requested";
+    public static final String ACCEPTED = "accepted";
 
     private String status;
     private Location mLocation;

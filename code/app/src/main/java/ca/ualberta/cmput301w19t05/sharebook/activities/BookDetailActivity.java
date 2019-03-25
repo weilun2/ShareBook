@@ -34,6 +34,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.fragments.AcceptedFragment;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.RequestListFragment;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
@@ -188,7 +189,18 @@ public class BookDetailActivity extends AppCompatActivity {
                             .show();
                 }
             });
-            setRequestList();
+            switch (book.getStatus()){
+                case Book.REQUESTED:{
+                    setRequestList();
+                    break;
+                }
+                case Book.ACCEPTED:{
+                    setAcceptedList();
+                }
+
+
+            }
+
             return;
 
         } else if (function==REQUEST) {
@@ -258,6 +270,19 @@ public class BookDetailActivity extends AppCompatActivity {
 
 
     }
+
+    private void setAcceptedList() {
+        Bundle bundle = new Bundle();
+        AcceptedFragment acceptedFragment = new AcceptedFragment();
+
+        bundle.putParcelable("book",book);
+        acceptedFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.place_holder, acceptedFragment)
+                .show(acceptedFragment).commit();
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
