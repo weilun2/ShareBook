@@ -55,6 +55,7 @@ import static android.support.constraint.Constraints.TAG;
 public class FirebaseHandler {
     public static final String REQUEST = "request_notification";
     public static final String ACCEPT = "accept_notification";
+    public static final String DECLINE = "decline_notification";
     public static String token;
     private Context mContext;
     private FirebaseDatabase database;
@@ -212,12 +213,14 @@ public class FirebaseHandler {
         myRef.child("accepted")
                 .child(book.getBookId()).child(user.getUserID()).setValue(user);
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+        sendNotification(ACCEPT,book);
     }
 
     public void declineRequest(Book book, User user){
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("available");
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+        sendNotification(DECLINE,book);
     }
 
     private void sendNotification(final String notificationType, final Book book){

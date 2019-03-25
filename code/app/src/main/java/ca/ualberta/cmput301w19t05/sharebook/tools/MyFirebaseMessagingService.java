@@ -40,7 +40,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     setRequestNotification(remoteMessage);
                     break;
                 case FirebaseHandler.ACCEPT:
-                    setAcceptNotification();
+                    setRequestNotification(remoteMessage);
                     break;
             }
 
@@ -49,8 +49,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    private void setAcceptNotification() {
-    }
+
 
     private void setRequestNotification(final RemoteMessage remoteMessage) {
         FirebaseHandler firebaseHandler = new FirebaseHandler(this);
