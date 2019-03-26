@@ -1,38 +1,30 @@
 package ca.ualberta.cmput301w19t05.sharebook.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.List;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
+import java.util.Arrays;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-import ca.ualberta.cmput301w19t05.sharebook.activities.MainActivity;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
-
-import static android.content.Context.LOCATION_SERVICE;
-
 public class AcceptedFragment extends Fragment {
+    private static final String TAG = "acce[ted fragment";
     private FirebaseHandler firebaseHandler;
     private Book book;
     private LocationManager locationManager;
@@ -68,71 +60,58 @@ public class AcceptedFragment extends Fragment {
             book = getArguments().getParcelable("book");
         }
 
-        AddLoc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> providers = locationManager.getProviders(true);
 
-                if(providers.contains(LocationManager.GPS_PROVIDER)){
-                    //For GPS
-                    locationProvider = LocationManager.GPS_PROVIDER;
-                }else if(providers.contains(LocationManager.NETWORK_PROVIDER)){
-                    //For Network
-                    locationProvider = LocationManager.NETWORK_PROVIDER;
-                }else{
-                    Toast.makeText(getActivity(), "No location providers available", Toast.LENGTH_SHORT).show();
-                    return ;
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getChildFragmentManager().findFragmentById(R.id.location_auto_search);
+
+
+
+// Set up a PlaceSelectionListener to handle the response.
+        if (autocompleteFragment != null) {
+            // Specify the types of place data to return.
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    // TODO: Get info about the selected place.
+                    positionView.setText(place.getName());
+                    //Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
                 }
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
+
+                @Override
+                public void onError(@NonNull Status status) {
+                    // TODO: Handle the error.
+                    //Log.i(TAG, "An error occurred: " + status);
+                }
+
+
+            });
+        }
+
+        /*        PlaceAutocompleteFragment  placeAutocompleteFragment = (PlaceAutocompleteFragment)
+                getActivity().getFragmentManager().findFragmentById(R.id.location_auto_search);
+
+
+
+// Set up a PlaceSelectionListener to handle the response.
+        if (placeAutocompleteFragment != null) {
+            // Specify the types of place data to return.
+
+            placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+                    positionView.setText(place.getName());
+                }
+
+                @Override
+                public void onError(Status status) {
 
                 }
-                Location location = locationManager.getLastKnownLocation(locationProvider);
-                if(location!=null){
-                    //set location:
-                    showLocation(location);
-                }else{
-                    LocationListener locationListener = new LocationListener() {
-                        public void onLocationChanged(Location location) {
-                        }
-
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-                        }
-
-                        public void onProviderEnabled(String provider) {
-                        }
-
-                        public void onProviderDisabled(String provider) {
-                        }
-                    };
-                    locationManager.requestLocationUpdates(locationProvider, 1000, 0, locationListener);
-                    location = locationManager.getLastKnownLocation(locationProvider);
-                    if(location!=null) {
-                        //set location:
-                        showLocation(location);
-                    }
-
-
-                }
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-
-            }
-
-
-
-        });
-
-
+            });
+        }*/
     }
-    private void showLocation(Location location){
-        String locationStr = "latitude：" + location.getLatitude() +"\n"
-                + "Longitude：" + location.getLongitude();
-        System.out.print(locationStr);
-        positionView.setText(locationStr);
-    }
+
 
 
 }
