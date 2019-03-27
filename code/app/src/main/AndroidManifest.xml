@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.ualberta.cmput301w19t05.sharebook">
+
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -8,14 +16,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +29,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.BookDetailActivity"></activity>
+
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".activities.MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
+        <activity android:name=".activities.BookDetailActivity" />
         <activity android:name=".activities.ScanActivity" />
         <activity
             android:name=".activities.AddBookActivity"
@@ -48,12 +69,15 @@
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_main" />
         <activity android:name=".activities.UserProfile" />
+
+
         <service android:name=".tools.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"
             android:value="false" />
@@ -61,14 +85,8 @@
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCbSE_0Li8h1OHDnmzgMEHrBbFj8QHNNcY" />
-        <meta-data
             android:name="firebase_analytics_collection_deactivated"
             android:value="true" />
-
-
-
     </application>
 
 </manifest>
