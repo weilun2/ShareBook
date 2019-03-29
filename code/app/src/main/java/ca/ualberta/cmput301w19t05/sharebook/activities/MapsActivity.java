@@ -1,13 +1,17 @@
 package ca.ualberta.cmput301w19t05.sharebook.activities;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,8 +47,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
     private Location mLastKnownLocation;
+    private LatLng resLocation;
     private LatLng mDefaultLocation;
     private Marker mapMaker;
+    private FloatingActionButton myLocation;
+    private Button submitLocation;
 
 
 
@@ -78,6 +85,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.location_auto_search);
 
+        initClick();
+
+
+
 
 
 // Set up a PlaceSelectionListener to handle the response.
@@ -94,6 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(res, DEFAULT_ZOOM));
                     if (res != null) {
                         mapMaker.setPosition(res);
+                        resLocation = res;
                     }
 
                     //Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
@@ -108,6 +120,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             });
         }
+    }
+
+    private void initClick() {
+        myLocation = findViewById(R.id.goto_my_location);
+        myLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDeviceLocation();
+            }
+        });
+        submitLocation = findViewById(R.id.submit_location);
+        submitLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putDouble("Latitude", mLastKnownLocation.getLatitude());
+                            bundle.putDouble("Longitude", mLastKnownLocation.getLongitude());
+                            intent.putExtras(bundle);
+                            setResult(0x10, intent);//返回值调用函数，返回值的标志*/
+                Intent intent = new Intent(MapsActivity.this,BookDetailActivity.class);
+                intent.putExtra("location",resLocation);
+                setResult(0x10,intent);
+                finish();
+
+            }
+        });
     }
 
     private void getLocationPermission() {
@@ -145,6 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 else{
                     mapMaker.setPosition(center);
                 }
+                resLocation = center;
 
             }
         });
@@ -207,7 +247,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     mLastKnownLocation.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     currentLocation, DEFAULT_ZOOM));
-                            mapMaker = mMap.addMarker(new MarkerOptions().position(currentLocation));
+                            if (mapMaker==null){
+                                mapMaker = mMap.addMarker(new MarkerOptions().position(currentLocation));
+                            }
+                            else{
+                                mapMaker.setPosition(currentLocation);
+                            }
+                            resLocation = currentLocation;
+/*                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putDouble("Latitude", mLastKnownLocation.getLatitude());
+                            bundle.putDouble("Longitude", mLastKnownLocation.getLongitude());
+                            intent.putExtras(bundle);
+                            setResult(0x10, intent);//返回值调用函数，返回值的标志*/
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());

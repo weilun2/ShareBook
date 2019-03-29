@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -143,6 +144,9 @@ public class FirebaseHandler {
     public void addBook(Book book) {
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId()).setValue(book);
 
+    }
+    public void addLocation(Book book, LatLng Location){
+        myRef.child("Location").child(book.getBookId()).setValue(Location);
     }
 
     public User getCurrentUser() {

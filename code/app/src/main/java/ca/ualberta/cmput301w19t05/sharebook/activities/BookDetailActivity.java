@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -120,9 +121,6 @@ public class BookDetailActivity extends AppCompatActivity {
 
         setBookInfo();
         setClickListener();
-
-
-
 
     }
 
@@ -315,6 +313,7 @@ public class BookDetailActivity extends AppCompatActivity {
             }
         }
 
+
     }
     private void UploadPhoto(){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -423,8 +422,6 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 .into(bookImage);
 
-        System.out.println(String.valueOf(book.getBookId()));
-        System.out.println(String.valueOf(book.getPhoto()));
     }
 
     private void showDialog() {
