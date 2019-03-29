@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/default_gap"
     android:columnCount="2"
     android:orientation="vertical"
     android:rowCount="6">
@@ -16,11 +17,14 @@
         android:layout_row="0"
         android:layout_column="1"
 
+
+
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:tag="prompt"
             android:text="Title:" />
 

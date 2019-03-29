@@ -42,8 +42,8 @@ public final class NotificationFragment extends Fragment {
     }
 
     private void initRequestNotification(NotificationAdapter adapter, RecyclerView recyclerView,String notificationType) {
-        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(verticalLayoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
         adapter = new NotificationAdapter(new ArrayList<Record>(),getContext());
         recyclerView.setAdapter(adapter);
         onlineDatabaseListener(adapter, notificationType);
