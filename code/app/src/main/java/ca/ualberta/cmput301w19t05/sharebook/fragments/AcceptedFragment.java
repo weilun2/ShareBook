@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.activities.MapsActivity;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
@@ -26,6 +28,7 @@ public class AcceptedFragment extends Fragment {
     private String locationProvider;
     private TextView positionView;
     Button addLocation;
+    private LatLng currentLocation;
 
 
     @Nullable
@@ -40,16 +43,14 @@ public class AcceptedFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-            //LayoutInflater inflater=getLayoutInflater();
-            //View v = inflater.inflate(R.layout.fragment_accepted, null);
-            final TextView positionView= (TextView) getActivity().findViewById(R.id.locationView);
-            final Context context = this.getContext();
-            addLocation = getActivity().findViewById(R.id.addLocBtn);
-            locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            Button AddLoc = (Button) getActivity().findViewById(R.id.addLocBtn);
-            System.out.print("created");
+        //LayoutInflater inflater=getLayoutInflater();
+        //View v = inflater.inflate(R.layout.fragment_accepted, null);
+        positionView = (TextView) getActivity().findViewById(R.id.locationView);
+        final Context context = this.getContext();
+        addLocation = getActivity().findViewById(R.id.addLocBtn);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-
+        System.out.print("created");
 
 
         firebaseHandler = new FirebaseHandler(getContext());
@@ -67,9 +68,20 @@ public class AcceptedFragment extends Fragment {
         });
 
 
-
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0x10 && requestCode == 0x09) {
+            if (data != null) {
+                currentLocation = data.getParcelableExtra("location");
+                positionView.setText(currentLocation.toString());
+
+            }
+        }
+
+    }
 
 }
