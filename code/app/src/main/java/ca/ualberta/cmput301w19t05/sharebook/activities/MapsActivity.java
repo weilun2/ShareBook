@@ -1,5 +1,6 @@
 package ca.ualberta.cmput301w19t05.sharebook.activities;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -201,6 +202,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     currentLocation, DEFAULT_ZOOM));
                             mapMaker = mMap.addMarker(new MarkerOptions().position(currentLocation));
+                            Intent intent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putDouble("Latitude", mLastKnownLocation.getLatitude());
+                            bundle.putDouble("Longitude", mLastKnownLocation.getLongitude());
+                            intent.putExtras(bundle);
+                            setResult(0x10, intent);//返回值调用函数，返回值的标志
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
