@@ -422,8 +422,6 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 .into(bookImage);
 
-        System.out.println(String.valueOf(book.getBookId()));
-        System.out.println(String.valueOf(book.getPhoto()));
     }
 
     private void showDialog() {

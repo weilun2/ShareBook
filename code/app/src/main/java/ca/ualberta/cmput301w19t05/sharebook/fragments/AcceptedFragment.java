@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.activities.MapsActivity;
@@ -27,7 +33,6 @@ public class AcceptedFragment extends Fragment {
     private LocationManager locationManager;
     private String locationProvider;
     private TextView positionView;
-    Button addLocation;
     private LatLng currentLocation;
 
 
@@ -45,21 +50,43 @@ public class AcceptedFragment extends Fragment {
 
         //LayoutInflater inflater=getLayoutInflater();
         //View v = inflater.inflate(R.layout.fragment_accepted, null);
-        positionView = (TextView) getActivity().findViewById(R.id.locationView);
+        positionView = getActivity().findViewById(R.id.locationView);
         final Context context = this.getContext();
-        addLocation = getActivity().findViewById(R.id.addLocBtn);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         System.out.print("created");
 
 
-        firebaseHandler = new FirebaseHandler(getContext());
+
         if (getArguments() != null) {
             book = getArguments().getParcelable("book");
         }
+        firebaseHandler = new FirebaseHandler(getContext());
+        firebaseHandler.getMyRef().child("Location").child(book.getBookId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Map<String, Double> temp = (Map<String, Double>) dataSnapshot.getValue();
+                if (temp != null) {
+                    positionView.setText("Latitude: " + temp.get("latitude") + "\nLongitude: " + temp.get("longitude"));
+                    //positionView.setText(temp.toString());
+
+                }else {
+                    positionView.setText("Click me to add location");
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         final Context fragment = getContext();
 
-        addLocation.setOnClickListener(new View.OnClickListener() {
+        positionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragment, MapsActivity.class);
@@ -77,7 +104,7 @@ public class AcceptedFragment extends Fragment {
         if (resultCode == 0x10 && requestCode == 0x09) {
             if (data != null) {
                 currentLocation = data.getParcelableExtra("location");
-                positionView.setText(currentLocation.toString());
+                firebaseHandler.addLocation(book,currentLocation);
             }
         }
 
