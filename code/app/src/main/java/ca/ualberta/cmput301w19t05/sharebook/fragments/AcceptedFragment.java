@@ -78,7 +78,6 @@ public class AcceptedFragment extends Fragment {
             if (data != null) {
                 currentLocation = data.getParcelableExtra("location");
                 positionView.setText(currentLocation.toString());
-
             }
         }
 
