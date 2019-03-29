@@ -43,16 +43,14 @@ public class AcceptedFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-            //LayoutInflater inflater=getLayoutInflater();
-            //View v = inflater.inflate(R.layout.fragment_accepted, null);
-            positionView = (TextView) getActivity().findViewById(R.id.locationView);
-            final Context context = this.getContext();
-            addLocation = getActivity().findViewById(R.id.addLocBtn);
-            locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        //LayoutInflater inflater=getLayoutInflater();
+        //View v = inflater.inflate(R.layout.fragment_accepted, null);
+        positionView = (TextView) getActivity().findViewById(R.id.locationView);
+        final Context context = this.getContext();
+        addLocation = getActivity().findViewById(R.id.addLocBtn);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-            System.out.print("created");
-
-
+        System.out.print("created");
 
 
         firebaseHandler = new FirebaseHandler(getContext());
@@ -70,26 +68,20 @@ public class AcceptedFragment extends Fragment {
         });
 
 
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Double Latitude;
-        Double Longitude;
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0x10 && requestCode == 0x09 ){
-            Bundle b = data.getExtras();
-            Latitude = b.getDouble("Longitude");
-            Longitude = b.getDouble("Longitude");
-            currentLocation = new LatLng(Latitude,Longitude);
-            positionView.setText(currentLocation.toString());
 
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0x10 && requestCode == 0x09) {
+            if (data != null) {
+                currentLocation = data.getParcelableExtra("location");
+                positionView.setText(currentLocation.toString());
+
+            }
         }
 
     }
-
-
-
 
 }
