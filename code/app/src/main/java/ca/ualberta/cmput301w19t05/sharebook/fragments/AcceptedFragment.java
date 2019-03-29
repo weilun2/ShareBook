@@ -68,27 +68,6 @@ public class AcceptedFragment extends Fragment {
 
 
 
-        /*        PlaceAutocompleteFragment  placeAutocompleteFragment = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.location_auto_search);
-
-
-
-// Set up a PlaceSelectionListener to handle the response.
-        if (placeAutocompleteFragment != null) {
-            // Specify the types of place data to return.
-
-            placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(Place place) {
-                    positionView.setText(place.getName());
-                }
-
-                @Override
-                public void onError(Status status) {
-
-                }
-            });
-        }*/
     }
 
 

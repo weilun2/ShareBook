@@ -137,8 +137,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
+
                 LatLng center = mMap.getCameraPosition().target;
-                mapMaker.setPosition(center);
+                if (mapMaker==null){
+                    mapMaker = mMap.addMarker(new MarkerOptions().position(center));
+                }
+                else{
+                    mapMaker.setPosition(center);
+                }
+
             }
         });
 

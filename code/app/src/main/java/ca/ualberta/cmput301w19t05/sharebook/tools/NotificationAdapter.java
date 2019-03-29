@@ -54,7 +54,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public void addRecord(Record record){
-        mRecord.add(record);
+        mRecord.add(0,record);
+        notifyItemInserted(0);
     }
 
     public void removeRecord(Record temp) {

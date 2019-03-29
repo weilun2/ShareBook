@@ -199,6 +199,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
                     case Book.ACCEPTED:
                         setAcceptedList();
+                        break;
 
                 }
 
@@ -224,6 +225,7 @@ public class BookDetailActivity extends AppCompatActivity {
                                 .show();
                     }
                 });
+                break;
             default:
                 delete.setVisibility(View.GONE);
             }
