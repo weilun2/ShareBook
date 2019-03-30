@@ -185,6 +185,7 @@ public class BookDetailActivity extends AppCompatActivity {
                         setAcceptedList();
                         break;
                     case Book.AVAILABLE:
+                        delete.setVisibility(View.VISIBLE);
                         delete.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -209,7 +210,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 return;
 
             case REQUEST:
-
+                delete.setVisibility(View.VISIBLE);
                 delete.setText("request");
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
