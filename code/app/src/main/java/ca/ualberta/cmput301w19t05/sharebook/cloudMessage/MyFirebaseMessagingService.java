@@ -36,15 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "onMessageReceived: " + remoteMessage.getFrom());
         int a  = remoteMessage.getData().size();
         if (remoteMessage.getData().size()>0){
-            switch (remoteMessage.getData().get("requestType")){
-                case FirebaseHandler.REQUEST:
-                    setRequestNotification(remoteMessage);
-                    break;
-                case FirebaseHandler.ACCEPT:
-                    setRequestNotification(remoteMessage);
-                    break;
-            }
-
+            setRequestNotification(remoteMessage);
             Log.d(TAG, "onMessageReceived: " + remoteMessage.getData());
         }
 
@@ -67,7 +59,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         Intent intent;
                         intent = new Intent(mContext, BookDetailActivity.class);
                         intent.putExtra(BookDetailActivity.BOOK, book);
-                        intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.DELETE);
+                        intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.NOTIFICATION);
                         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
                                 0,intent,PendingIntent.FLAG_ONE_SHOT);
                         if (remoteMessage.getNotification()!= null){

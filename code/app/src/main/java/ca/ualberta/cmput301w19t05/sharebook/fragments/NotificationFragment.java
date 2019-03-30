@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Record;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
+import ca.ualberta.cmput301w19t05.sharebook.tools.MyRecyclerViewAdapter;
 import ca.ualberta.cmput301w19t05.sharebook.tools.NotificationAdapter;
 
 /**
@@ -45,9 +46,14 @@ public final class NotificationFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new NotificationAdapter(new ArrayList<Record>(),getContext());
+        adapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
         onlineDatabaseListener(adapter, notificationType);
-
     }
 
     private void onlineDatabaseListener(final NotificationAdapter adapter, String notificationType) {

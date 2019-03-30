@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.Record;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
@@ -38,10 +39,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull NotificationAdapter.ViewHolder viewHolder, int i) {
-
-        viewHolder.requesterName.setText(mRecord.get(i).getBorrowerName());
-        viewHolder.notificationType.setText(mRecord.get(i).getStatus());
-        viewHolder.bookName.setText(mRecord.get(i).getBookName());
+        Record temp = mRecord.get(i);
+        if (FirebaseHandler.REQUEST.equals(temp.getStatus())){
+            viewHolder.requesterName.setText(temp.getBorrowerName()+" requested "+temp.getBookName());
+        }
+        else if (FirebaseHandler.ACCEPT.equals(temp.getStatus())){
+            viewHolder.requesterName.setText("your request of "+temp.getBookName()+" has been accepted");
+        }
     }
 
     @Override
@@ -88,14 +92,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView requesterName;
-        public TextView notificationType;
-        public TextView bookName;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            requesterName = itemView.findViewById(R.id.user_name);
-            notificationType = itemView.findViewById(R.id.notification_type);
-            bookName = itemView.findViewById(R.id.book_name);
+            requesterName = itemView.findViewById(R.id.notification_text);
             itemView.setOnClickListener(this);
         }
 

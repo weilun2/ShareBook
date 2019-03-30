@@ -47,6 +47,7 @@ public class BookDetailActivity extends AppCompatActivity {
     public final static int REQUEST = 1;
     public final static int DELETE = 2;
     public static final int ACCEPTED = 3;
+    public final static int NOTIFICATION = 4;
     public final static String FUNCTION = "function";
     public final static String BOOK = "book";
     public final static String TEMP = "temp";
@@ -125,7 +126,19 @@ public class BookDetailActivity extends AppCompatActivity {
     }
 
     private void setClickListener() {
+        if (function == NOTIFICATION){
+            if (book.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())){
+                function = DELETE;
 
+            }
+            else {
+                function = ACCEPTED;
+            }
+            firebaseHandler.getMyRef().child(FirebaseHandler.REQUEST)
+                    .child(book.getOwner().getUserID())
+                    .child(book.getBookId()).setValue(null);
+
+        }
         switch (function) {
             case DELETE:
                 title.setOnClickListener(onClickListener);
