@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -45,9 +46,11 @@ import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 public class BookDetailActivity extends AppCompatActivity {
     public final static int REQUEST = 1;
     public final static int DELETE = 2;
+    public static final int ACCEPTED = 3;
     public final static String FUNCTION = "function";
     public final static String BOOK = "book";
     public final static String TEMP = "temp";
+
     private static final String TAG = "BookDetail";
     private RadioGroup title;
     private RadioGroup author;
@@ -119,112 +122,112 @@ public class BookDetailActivity extends AppCompatActivity {
         setBookInfo();
         setClickListener();
 
-
-
-
     }
 
     private void setClickListener() {
 
+        switch (function) {
+            case DELETE:
+                title.setOnClickListener(onClickListener);
+                author.setOnClickListener(onClickListener);
+                description.setOnClickListener(onClickListener);
+                bookImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, 0x07);
+                    }
 
-        if (function==DELETE) {
-            title.setOnClickListener(onClickListener);
-            author.setOnClickListener(onClickListener);
-            description.setOnClickListener(onClickListener);
-            bookImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent,1);
-                }
 
+                });
+                bookImage.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        System.out.println("hold long");
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(BookDetailActivity.this);
+                        dialog.setMessage("Delete the current photo?");
 
+                        dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                System.out.println("yes pressed");
+                                initialPhoto = firebaseHandler.getStorageRef().child("image/book_placeholder.png");
+                                getUriAndUpLoad(initialPhoto, true);
 
-            });
-            bookImage.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    System.out.println("hold long");
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(BookDetailActivity.this);
-                    dialog.setMessage("Delete the current photo?");
+                            }
+                        });
 
-                    dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            System.out.println("yes pressed");
-                            initialPhoto = firebaseHandler.getStorageRef().child("image/book_placeholder.png");
-                            getUriAndUpLoad(initialPhoto, true);
+                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                System.out.println("no pressed");
+                            }
+                        });
+                        dialog.show();
+                        return true;
+                    }
 
-                        }
-                    });
-
-                    dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            System.out.println("no pressed");
-                        }
-                    });
-                    dialog.show();
-                    return true;
-                }
                     ;
-            });
+                });
 
 
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    firebaseHandler.getMyRef().child("books").child(book.getOwner()
-                                            .getUserID())
-                                            .child(book.getBookId()).setValue(null);
-                                    finish();
-                                }
-                            }).setNegativeButton("No", null)
-                            .show();
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        firebaseHandler.getMyRef().child("books").child(book.getOwner()
+                                                .getUserID())
+                                                .child(book.getBookId()).setValue(null);
+                                        finish();
+                                    }
+                                }).setNegativeButton("No", null)
+                                .show();
+                    }
+                });
+            case ACCEPTED:
+                switch (book.getStatus()) {
+                    case Book.REQUESTED:
+                        setRequestList();
+                        break;
+
+                    case Book.ACCEPTED:
+                        setAcceptedList();
+                        break;
+
                 }
-            });
-            switch (book.getStatus()){
-                case Book.REQUESTED:{
-                    setRequestList();
-                    break;
-                }
-                case Book.ACCEPTED:{
-                    setAcceptedList();
-                }
 
 
+
+                return;
+
+            case REQUEST:
+
+                delete.setText("request");
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(BookDetailActivity.this)
+                                .setMessage("Are you sure?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        firebaseHandler.sendRequest(book);
+                                        finish();
+                                    }
+                                }).setNegativeButton("No", null)
+                                .show();
+                    }
+                });
+                break;
+            default:
+                delete.setVisibility(View.GONE);
             }
 
-            return;
-
-        } else if (function==REQUEST) {
-
-            delete.setText("request");
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(BookDetailActivity.this)
-                            .setMessage("Are you sure?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    firebaseHandler.sendRequest(book);
-                                    finish();
-                                }
-                            }).setNegativeButton("No", null)
-                            .show();
-                }
-            });
-        }
-        else{
-            delete.setVisibility(View.GONE);
-        }
             TextView ownerText = owner.findViewWithTag("content");
             final String ownerName = ownerText.getText().toString();
             owner.setOnClickListener(new View.OnClickListener() {
@@ -265,10 +268,6 @@ public class BookDetailActivity extends AppCompatActivity {
             });
 
 
-
-
-
-
     }
 
     private void setAcceptedList() {
@@ -287,10 +286,10 @@ public class BookDetailActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK&&requestCode==0x07) {
             if(data!= null){
                 Uri uri = data.getData();
-                Log.e("uri", uri.toString());
+
                 ContentResolver cr = this.getContentResolver();
                 try {
                     // get bitmap
@@ -313,6 +312,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
             }
         }
+
 
     }
     private void UploadPhoto(){
@@ -422,8 +422,6 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 .into(bookImage);
 
-        System.out.println(String.valueOf(book.getBookId()));
-        System.out.println(String.valueOf(book.getPhoto()));
     }
 
     private void showDialog() {

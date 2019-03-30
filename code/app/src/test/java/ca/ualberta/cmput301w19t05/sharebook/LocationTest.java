@@ -1,9 +1,7 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-import ca.ualberta.cmput301w19t05.sharebook.models.Location;
 import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.*;
 
 public class LocationTest {
     private Location TestLocation;

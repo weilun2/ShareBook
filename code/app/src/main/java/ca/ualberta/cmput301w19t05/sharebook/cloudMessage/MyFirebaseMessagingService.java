@@ -1,4 +1,4 @@
-package ca.ualberta.cmput301w19t05.sharebook.tools;
+package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -23,6 +23,7 @@ import java.util.Random;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -66,7 +67,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         Intent intent;
                         intent = new Intent(mContext, BookDetailActivity.class);
                         intent.putExtra(BookDetailActivity.BOOK, book);
-                        intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.TEMP);
+                        intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.DELETE);
                         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
                                 0,intent,PendingIntent.FLAG_ONE_SHOT);
                         if (remoteMessage.getNotification()!= null){
@@ -75,8 +76,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             Log.d(TAG, "onMessageReceived: " +
                                     remoteMessage.getNotification().getBody());
                         }
-
-
 
                     }
                 }
