@@ -2,11 +2,15 @@ package ca.ualberta.cmput301w19t05.sharebook.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
@@ -107,15 +113,35 @@ public class AcceptedFragment extends Fragment {
             positionView.setText("The owner has not reset location");
         }
 
-
         firebaseHandler.getMyRef().child("Location").child(book.getBookId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                Map<String, Double> temp = (Map<String, Double>) dataSnapshot.getValue();
+                final Map<String, Double> temp = (Map<String, Double>) dataSnapshot.getValue();
                 if (temp != null) {
                     positionView.setText("Latitude: " + temp.get("latitude") + "\nLongitude: " + temp.get("longitude"));
-                    //positionView.setText(temp.toString());
+                    Geocoder geocoder = new Geocoder(getActivity());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(temp.get("latitude"), temp.get("longitude"),1);
+                        Address obj = addresses.get(0);
+                        String res = obj.getAddressLine(0);
+                        positionView.setText(res);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (!book.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())){
+                        positionView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Uri gmmIntentUri = Uri.parse("google.navigation:q="+temp.get("latitude")+","+temp.get("longitude"));
+                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                mapIntent.setPackage("com.google.android.apps.maps");
+                                if (mapIntent.resolveActivity(getActivity().getPackageManager())!=null){
+                                    startActivity(mapIntent);
+                                }
+                            }
+                        });
+
+                    }
 
                 }
 

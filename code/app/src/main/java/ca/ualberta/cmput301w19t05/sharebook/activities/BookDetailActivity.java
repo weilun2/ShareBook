@@ -244,7 +244,7 @@ public class BookDetailActivity extends AppCompatActivity {
                                 .orderByChild("username").equalTo(ownerName);
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.getValue() != null) {
                                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                                         User user = data.getValue(User.class);
