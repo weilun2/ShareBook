@@ -1,5 +1,7 @@
 package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
+import ca.ualberta.cmput301w19t05.sharebook.models.Data;
+
 public class Sender {
 
     public Notification notification;

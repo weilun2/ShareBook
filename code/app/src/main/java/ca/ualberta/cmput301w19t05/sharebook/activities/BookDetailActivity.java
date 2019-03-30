@@ -47,9 +47,11 @@ public class BookDetailActivity extends AppCompatActivity {
     public final static int REQUEST = 1;
     public final static int DELETE = 2;
     public static final int ACCEPTED = 3;
+    public final static int NOTIFICATION = 4;
     public final static String FUNCTION = "function";
     public final static String BOOK = "book";
     public final static String TEMP = "temp";
+    public static final String DELETE_NOTIFICATION = "delete_notification";
 
     private static final String TAG = "BookDetail";
     private RadioGroup title;
@@ -126,6 +128,8 @@ public class BookDetailActivity extends AppCompatActivity {
 
     private void setClickListener() {
 
+        firebaseHandler.clearNotification(book);
+
         switch (function) {
             case DELETE:
                 title.setOnClickListener(onClickListener);
@@ -172,24 +176,6 @@ public class BookDetailActivity extends AppCompatActivity {
                     ;
                 });
 
-
-                delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        firebaseHandler.getMyRef().child("books").child(book.getOwner()
-                                                .getUserID())
-                                                .child(book.getBookId()).setValue(null);
-                                        finish();
-                                    }
-                                }).setNegativeButton("No", null)
-                                .show();
-                    }
-                });
-            case ACCEPTED:
                 switch (book.getStatus()) {
                     case Book.REQUESTED:
                         setRequestList();
@@ -198,7 +184,25 @@ public class BookDetailActivity extends AppCompatActivity {
                     case Book.ACCEPTED:
                         setAcceptedList();
                         break;
-
+                    case Book.AVAILABLE:
+                        delete.setVisibility(View.VISIBLE);
+                        delete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                firebaseHandler.getMyRef().child("books").child(book.getOwner()
+                                                        .getUserID())
+                                                        .child(book.getBookId()).setValue(null);
+                                                finish();
+                                            }
+                                        }).setNegativeButton("No", null)
+                                        .show();
+                            }
+                        });
+                        break;
                 }
 
 
@@ -206,7 +210,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 return;
 
             case REQUEST:
-
+                delete.setVisibility(View.VISIBLE);
                 delete.setText("request");
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -224,8 +228,9 @@ public class BookDetailActivity extends AppCompatActivity {
                     }
                 });
                 break;
-            default:
+            case ACCEPTED:
                 delete.setVisibility(View.GONE);
+                setAcceptedList();
             }
 
             TextView ownerText = owner.findViewWithTag("content");
@@ -239,7 +244,7 @@ public class BookDetailActivity extends AppCompatActivity {
                                 .orderByChild("username").equalTo(ownerName);
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.getValue() != null) {
                                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                                         User user = data.getValue(User.class);
