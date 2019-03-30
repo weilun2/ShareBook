@@ -15,13 +15,6 @@
             android:layout_height="wrap_content"
             android:text="Notification:"
             android:textSize="30sp" />
-        <TextView
-            android:id="@+id/myshelf_requested"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="20sp"
-            android:text="requests" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/requested_list"
@@ -29,33 +22,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-        <TextView
-            android:id="@+id/myshelf_accepted"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="20sp"
-            android:text="@string/accepted" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/accepted_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-
-        <TextView
-            android:id="@+id/myshelf_borrowed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="20sp"
-            android:text="declined" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/borrowed_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
     </LinearLayout>
 
 

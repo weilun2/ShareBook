@@ -59,7 +59,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         Intent intent;
                         intent = new Intent(mContext, BookDetailActivity.class);
                         intent.putExtra(BookDetailActivity.BOOK, book);
-                        intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.NOTIFICATION);
+                        intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.DELETE);
                         PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
                                 0,intent,PendingIntent.FLAG_ONE_SHOT);
                         if (remoteMessage.getNotification()!= null){
@@ -77,11 +77,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 }
             });
+
         }
-
-
-
-
 
     }
 

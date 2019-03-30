@@ -51,6 +51,7 @@ public class BookDetailActivity extends AppCompatActivity {
     public final static String FUNCTION = "function";
     public final static String BOOK = "book";
     public final static String TEMP = "temp";
+    public static final String DELETE_NOTIFICATION = "delete_notification";
 
     private static final String TAG = "BookDetail";
     private RadioGroup title;
@@ -126,19 +127,9 @@ public class BookDetailActivity extends AppCompatActivity {
     }
 
     private void setClickListener() {
-        if (function == NOTIFICATION){
-            if (book.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())){
-                function = DELETE;
 
-            }
-            else {
-                function = ACCEPTED;
-            }
-            firebaseHandler.getMyRef().child(FirebaseHandler.REQUEST)
-                    .child(book.getOwner().getUserID())
-                    .child(book.getBookId()).setValue(null);
+        firebaseHandler.clearNotification(book);
 
-        }
         switch (function) {
             case DELETE:
                 title.setOnClickListener(onClickListener);
@@ -185,24 +176,6 @@ public class BookDetailActivity extends AppCompatActivity {
                     ;
                 });
 
-
-                delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        firebaseHandler.getMyRef().child("books").child(book.getOwner()
-                                                .getUserID())
-                                                .child(book.getBookId()).setValue(null);
-                                        finish();
-                                    }
-                                }).setNegativeButton("No", null)
-                                .show();
-                    }
-                });
-
                 switch (book.getStatus()) {
                     case Book.REQUESTED:
                         setRequestList();
@@ -211,7 +184,24 @@ public class BookDetailActivity extends AppCompatActivity {
                     case Book.ACCEPTED:
                         setAcceptedList();
                         break;
-
+                    case Book.AVAILABLE:
+                        delete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                firebaseHandler.getMyRef().child("books").child(book.getOwner()
+                                                        .getUserID())
+                                                        .child(book.getBookId()).setValue(null);
+                                                finish();
+                                            }
+                                        }).setNegativeButton("No", null)
+                                        .show();
+                            }
+                        });
+                        break;
                 }
 
 

@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-import ca.ualberta.cmput301w19t05.sharebook.models.Record;
+import ca.ualberta.cmput301w19t05.sharebook.models.Data;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.tools.MyRecyclerViewAdapter;
 import ca.ualberta.cmput301w19t05.sharebook.tools.NotificationAdapter;
@@ -39,57 +41,70 @@ public final class NotificationFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         firebaseHandler = new FirebaseHandler(getContext());
-        initRequestNotification(requestAdapter,(RecyclerView) getView().findViewById(R.id.requested_list), FirebaseHandler.REQUEST);
+        initRequestNotification(requestAdapter,(RecyclerView) getView().findViewById(R.id.requested_list));
     }
 
-    private void initRequestNotification(NotificationAdapter adapter, RecyclerView recyclerView,String notificationType) {
+    private void initRequestNotification(NotificationAdapter adapter, RecyclerView recyclerView) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new NotificationAdapter(new ArrayList<Record>(),getContext());
+        adapter = new NotificationAdapter(new ArrayList<Data>(),getContext());
+        final NotificationAdapter finalAdapter = adapter;
         adapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Query query= firebaseHandler.getMyRef()
+                        .child(finalAdapter.getItem(position).getRequestType())
+                        .child(firebaseHandler.getCurrentUser().getUserID())
+                        .orderByChild("bookName")
+                        .equalTo(finalAdapter.getItem(position).getBookId());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
             }
         });
         recyclerView.setAdapter(adapter);
-        onlineDatabaseListener(adapter, notificationType);
+        onlineDatabaseListener(adapter);
     }
 
-    private void onlineDatabaseListener(final NotificationAdapter adapter, String notificationType) {
-        firebaseHandler.getMyRef().child(notificationType)
+    private void onlineDatabaseListener(final NotificationAdapter adapter) {
+        firebaseHandler.getMyRef().child(FirebaseHandler.REQUEST)
                 .child(firebaseHandler.getCurrentUser().getUserID())
                 .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                Record temp = dataSnapshot.getValue(Record.class);
-                if ((temp == null ? null:temp.getBorrowerName()) !=null){
-                    if (!temp.isSeen()){
+                Data temp = dataSnapshot.getValue(Data.class);
+                if ((temp == null ? null:temp.getSender()) !=null){
+
                         adapter.addRecord(temp);
-                    }
 
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Record temp = dataSnapshot.getValue(Record.class);
-                if ((temp == null ? null:temp.getBorrowerName()) !=null){
-                    if (!temp.isSeen()){
+                Data temp = dataSnapshot.getValue(Data.class);
+                if ((temp == null ? null:temp.getSender()) !=null){
+
                         adapter.removeRecord(temp);
-                    }
-                    else {
-                        adapter.changeRecord(temp);
-                    }
+
                 }
 
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Record temp = dataSnapshot.getValue(Record.class);
-                if ((temp == null ? null:temp.getBorrowerName()) !=null){
+                Data temp = dataSnapshot.getValue(Data.class);
+                if ((temp == null ? null:temp.getSender()) !=null){
                     adapter.removeRecord(temp);
                 }
 
@@ -105,6 +120,94 @@ public final class NotificationFragment extends Fragment {
 
             }
         });
+        firebaseHandler.getMyRef().child(FirebaseHandler.ACCEPT)
+                .child(firebaseHandler.getCurrentUser().getUserID())
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        Data temp = dataSnapshot.getValue(Data.class);
+                        if ((temp == null ? null:temp.getSender()) !=null){
+
+                            adapter.addRecord(temp);
+
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        Data temp = dataSnapshot.getValue(Data.class);
+                        if ((temp == null ? null:temp.getSender()) !=null){
+
+                            adapter.removeRecord(temp);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                        Data temp = dataSnapshot.getValue(Data.class);
+                        if ((temp == null ? null:temp.getSender()) !=null){
+                            adapter.removeRecord(temp);
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+        firebaseHandler.getMyRef().child(FirebaseHandler.DECLINE)
+                .child(firebaseHandler.getCurrentUser().getUserID())
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        Data temp = dataSnapshot.getValue(Data.class);
+                        if ((temp == null ? null:temp.getSender()) !=null){
+
+                            adapter.addRecord(temp);
+
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        Data temp = dataSnapshot.getValue(Data.class);
+                        if ((temp == null ? null:temp.getSender()) !=null){
+
+                            adapter.removeRecord(temp);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                        Data temp = dataSnapshot.getValue(Data.class);
+                        if ((temp == null ? null:temp.getSender()) !=null){
+                            adapter.removeRecord(temp);
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
 }
