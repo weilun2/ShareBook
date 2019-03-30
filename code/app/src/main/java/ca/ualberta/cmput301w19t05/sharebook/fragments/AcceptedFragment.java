@@ -22,8 +22,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Map;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.MapsActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 public class AcceptedFragment extends Fragment {
@@ -61,7 +64,50 @@ public class AcceptedFragment extends Fragment {
         if (getArguments() != null) {
             book = getArguments().getParcelable("book");
         }
+
         firebaseHandler = new FirebaseHandler(getContext());
+        final Context fragment = getContext();
+        if (book.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())){
+            positionView.setText("Click me to add location");
+            positionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(fragment, MapsActivity.class);
+                    startActivityForResult(intent, 0x09);
+                }
+            });
+            final TextView requesterName =getActivity().findViewById(R.id.requester);
+            firebaseHandler.getMyRef().child("accepted").child(book.getBookId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot it : dataSnapshot.getChildren()){
+                        final User temp = it.getValue(User.class);
+                        if (temp!= null){
+                            requesterName.setVisibility(View.VISIBLE);
+                            requesterName.setText("requester: "+temp.getUsername());
+                            requesterName.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getContext(), UserProfile.class);
+                                    intent.putExtra("owner", temp);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else {
+            positionView.setText("The owner has not reset location");
+        }
+
+
         firebaseHandler.getMyRef().child("Location").child(book.getBookId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -71,11 +117,7 @@ public class AcceptedFragment extends Fragment {
                     positionView.setText("Latitude: " + temp.get("latitude") + "\nLongitude: " + temp.get("longitude"));
                     //positionView.setText(temp.toString());
 
-                }else {
-                    positionView.setText("Click me to add location");
                 }
-
-
 
             }
 
@@ -84,15 +126,10 @@ public class AcceptedFragment extends Fragment {
 
             }
         });
-        final Context fragment = getContext();
 
-        positionView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(fragment, MapsActivity.class);
-                startActivityForResult(intent, 0x09);
-            }
-        });
+
+
+
 
 
     }

@@ -44,6 +44,8 @@ public final class BorrowingFragment extends Fragment {
     private MyRecyclerViewAdapter requestingAdapter;
     private MyRecyclerViewAdapter acceptedAdapter;
     private List<Book> requestingBooks;
+    private static int REQUEST = 1;
+    private static int ACCEPTED = 2;
 
     @Nullable
     @Override
@@ -95,7 +97,7 @@ public final class BorrowingFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for (DataSnapshot userId: dataSnapshot.getChildren()){
                     if (firebaseHandler.getCurrentUser().getUserID().equals(userId.getKey())){
-                        addBookById(dataSnapshot.getKey());
+                        addBookById(ACCEPTED,dataSnapshot.getKey());
                     }
                 }
             }
@@ -188,7 +190,7 @@ public final class BorrowingFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for (DataSnapshot userId: dataSnapshot.getChildren()){
                     if (firebaseHandler.getCurrentUser().getUserID().equals(userId.getKey())){
-                        addBookById(dataSnapshot.getKey());
+                        addBookById(REQUEST,dataSnapshot.getKey());
                     }
                 }
             }
@@ -246,7 +248,7 @@ public final class BorrowingFragment extends Fragment {
     }
 
 
-    private void addBookById(final String bookId) {
+    private void addBookById(final int adapterType, final String bookId) {
 
         firebaseHandler.getMyRef().child(getString(R.string.db_books))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -255,8 +257,13 @@ public final class BorrowingFragment extends Fragment {
                         for (DataSnapshot users: dataSnapshot.getChildren()){
                             if (users.child(bookId).exists()){
                                 Book book = users.child(bookId).getValue(Book.class);
-                                requestingAdapter.addBook(book);
-                                requestingBooks.add(book);
+                                if (adapterType==REQUEST){
+                                    requestingAdapter.addBook(book);
+                                }
+                                else if (adapterType==ACCEPTED){
+                                    acceptedAdapter.addBook(book);
+                                }
+
                                 searchBookAdapter.removeBook(book);
 
                             }

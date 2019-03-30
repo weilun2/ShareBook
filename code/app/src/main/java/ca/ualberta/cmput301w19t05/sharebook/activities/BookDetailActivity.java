@@ -189,7 +189,7 @@ public class BookDetailActivity extends AppCompatActivity {
                                 .show();
                     }
                 });
-            case ACCEPTED:
+
                 switch (book.getStatus()) {
                     case Book.REQUESTED:
                         setRequestList();
@@ -224,8 +224,9 @@ public class BookDetailActivity extends AppCompatActivity {
                     }
                 });
                 break;
-            default:
+            case ACCEPTED:
                 delete.setVisibility(View.GONE);
+                setAcceptedList();
             }
 
             TextView ownerText = owner.findViewWithTag("content");
