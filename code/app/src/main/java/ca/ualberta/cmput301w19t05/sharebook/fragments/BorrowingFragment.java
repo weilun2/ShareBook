@@ -156,6 +156,7 @@ public final class BorrowingFragment extends Fragment {
                 if (hasFocus) {
                     recyclerView.setVisibility(View.VISIBLE);
                 } else {
+                    searchView.setText(null);
                     recyclerView.setVisibility(View.GONE);
                 }
             }
