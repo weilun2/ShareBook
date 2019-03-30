@@ -38,6 +38,7 @@ public class UserProfile extends AppCompatActivity {
     private ImageView viewUserImage;
     private TextView viewUserName;
     private TextView viewUserEmail;
+    private TextView viewRate;
     private FirebaseUser user;
     ProgressDialog progressDialog;
     private DatabaseReference reference;
@@ -178,16 +179,28 @@ public class UserProfile extends AppCompatActivity {
         viewUserImage = findViewById(R.id.UserImage);
         viewUserName = findViewById(R.id.UserName);
         viewUserEmail = findViewById(R.id.UserEmail);
+        viewRate = findViewById(R.id.rate);
+        TextView rateText = findViewById(R.id.textView2);
         Intent intent = getIntent();
         User owner = intent.getParcelableExtra("owner");
         if (owner != null) {
             viewUserName.setText(owner.getUsername());
             viewUserEmail.setText(owner.getEmail());
+            viewRate.setVisibility(View.VISIBLE);
+            rateText.setVisibility(View.VISIBLE);
+            if (Double.compare(owner.average(),-1.0)==0){
+                viewRate.setText("no rate");
+            }
+            else {
+                viewRate.setText(owner.average()+"");
+
+            }
         } else {
             viewUserName.setText(user.getDisplayName());
             viewUserEmail.setText(user.getEmail());
             viewUserEmail.setOnClickListener(onClickListener);
             viewUserName.setOnClickListener(onClickListener);
+
         }
 
 

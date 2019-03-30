@@ -6,13 +6,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Parcelable {
     private String userID;
     private String username;
     private String email;
     private Uri image;
-    private ArrayList<Book> myBooks;
+    private List<Integer> rate;
+
 
 
     public User(String userID, String username, String email, Uri image) {
@@ -20,16 +22,37 @@ public class User implements Parcelable {
         this.username = username;
         this.email = email;
         this.image = image;
+        this.rate = new ArrayList<>();
     }
 
     public User(String userID, String username, String email) {
         this.userID = userID;
         this.username = username;
         this.email = email;
+        this.rate = new ArrayList<>();
     }
 
     public User() {
 
+    }
+
+    public List<Integer> getRate() {
+        return rate;
+    }
+
+    public void setRate(List<Integer> rate) {
+        this.rate = rate;
+    }
+    public Double average(){
+        Integer sum = 0;
+        if (rate!=null && !rate.isEmpty()){
+            for (Integer it: rate){
+                sum+=it;
+                
+            }
+            return sum.doubleValue()/rate.size();
+        }
+        return -1.0;
     }
 
     public Uri getImage() {
@@ -62,18 +85,7 @@ public class User implements Parcelable {
         this.userID = userID;
     }
 
-    public ArrayList<Book> getShelf() {
-        return myBooks;
-    }
 
-
-
-
-    
-    public void  addShelf(Intent data){
-        Book book = (Book) data.getBundleExtra("B").getSerializable("getB");
-        myBooks.add(book);
-    }
 
     public void editShelf(Intent data){
 
@@ -96,6 +108,9 @@ public class User implements Parcelable {
         username = in.readString();
         email = in.readString();
         image = Uri.parse(in.readString());
+        rate = new ArrayList<Integer>();
+        in.readList(rate,Integer.class.getClassLoader());
+
 
 
     }
@@ -111,5 +126,6 @@ public class User implements Parcelable {
         dest.writeString(username);
         dest.writeString(email);
         dest.writeString(String.valueOf(image));
+        dest.writeList(rate);
     }
 }
