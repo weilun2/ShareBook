@@ -17,6 +17,7 @@ import java.util.UUID;
 
 public class Book implements Parcelable {
 
+    public static final String AVAILABLE = "available";
     private String title;
     private String author;
     private String ISBN;

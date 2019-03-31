@@ -1,5 +1,7 @@
 package ca.ualberta.cmput301w19t05.sharebook.activities;
 
+import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -54,6 +56,8 @@ public class AddBookActivity extends AppCompatActivity {
     private Uri Uri ;
     private Bitmap Uploadedgraph;
     private Book book;
+    private boolean inProgress = false;
+    private ProgressDialog progressDialog;
     //private int RESIZE_REQUEST_CODE =2;
 
     @Override
@@ -66,6 +70,9 @@ public class AddBookActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("adding book...");
 
         editTitle = findViewById(R.id.title);
         editAuthor = findViewById(R.id.author);
@@ -125,6 +132,7 @@ public class AddBookActivity extends AppCompatActivity {
                     ISBNText = "place holder";
                     book = new Book(titleText, authorText, ISBNText, firebaseHandler.getCurrentUser());
                     if (flag == 1){
+                        showDialog();
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         Uploadedgraph.compress(Bitmap.CompressFormat.PNG, 100, baos);
                         byte[] data = baos.toByteArray();
@@ -136,6 +144,7 @@ public class AddBookActivity extends AppCompatActivity {
                         uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
+                                hideDialog();
                                 // Handle unsuccessful uploads
 
                             }
@@ -177,12 +186,14 @@ public class AddBookActivity extends AppCompatActivity {
                 }
                 firebaseHandler.addBook(book);
                 //firebaseHandler.generateImageFromText(book.getTitle());
+                hideDialog();
                 finish();
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        hideDialog();
                         Toast.makeText(AddBookActivity.this, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -227,5 +238,15 @@ public class AddBookActivity extends AppCompatActivity {
     public Uri ShowresizedImage(Intent data){
         Uri uri = data.getData();
         return uri;
+    }
+    private void showDialog() {
+        inProgress = true;
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+    private void hideDialog() {
+        inProgress = false;
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 }
