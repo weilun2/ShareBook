@@ -129,7 +129,6 @@ public class AddBookActivity extends AppCompatActivity {
 
                 //check ok
                 if (valid) {
-                    ISBNText = "place holder";
                     book = new Book(titleText, authorText, ISBNText, firebaseHandler.getCurrentUser());
                     if (flag == 1){
                         showDialog();
