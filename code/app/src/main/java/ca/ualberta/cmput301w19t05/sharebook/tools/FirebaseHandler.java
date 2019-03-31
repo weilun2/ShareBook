@@ -227,7 +227,6 @@ public class FirebaseHandler {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userIdNode : dataSnapshot.getChildren()){
                     //todo: send notification
-                    userIdNode.getRef().removeValue();
                 }
             }
 
@@ -236,6 +235,8 @@ public class FirebaseHandler {
 
             }
         });
+
+        myRef.child(Book.REQUESTED).child(book.getBookId()).removeValue();
 
 
     }
