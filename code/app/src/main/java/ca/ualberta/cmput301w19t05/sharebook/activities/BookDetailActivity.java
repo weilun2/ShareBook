@@ -52,6 +52,7 @@ public class BookDetailActivity extends AppCompatActivity {
     public final static String BOOK = "book";
     public final static String TEMP = "temp";
     public static final String DELETE_NOTIFICATION = "delete_notification";
+    public static final int BORROWED = 5;
 
     private static final String TAG = "BookDetail";
     private RadioGroup title;
@@ -180,7 +181,9 @@ public class BookDetailActivity extends AppCompatActivity {
                     case Book.REQUESTED:
                         setRequestList();
                         break;
-
+                    case Book.BORROWED:
+                        setReturn();
+                        break;
                     case Book.ACCEPTED:
                         setAcceptedList();
                         break;
@@ -231,6 +234,10 @@ public class BookDetailActivity extends AppCompatActivity {
             case ACCEPTED:
                 delete.setVisibility(View.GONE);
                 setAcceptedList();
+                break;
+            case BORROWED:
+                setReturn();
+                break;
             }
 
             TextView ownerText = owner.findViewWithTag("content");
@@ -275,10 +282,21 @@ public class BookDetailActivity extends AppCompatActivity {
 
     }
 
+    private void setReturn() {
+        Bundle bundle = new Bundle();
+        AcceptedFragment acceptedFragment = new AcceptedFragment();
+        bundle.putString("type", "return");
+        bundle.putParcelable("book",book);
+        acceptedFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.place_holder, acceptedFragment)
+                .show(acceptedFragment).commit();
+    }
+
     private void setAcceptedList() {
         Bundle bundle = new Bundle();
         AcceptedFragment acceptedFragment = new AcceptedFragment();
-
+        bundle.putString("type", "accepted");
         bundle.putParcelable("book",book);
         acceptedFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()

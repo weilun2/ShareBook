@@ -67,7 +67,7 @@ public final class RequestListFragment extends Fragment {
 
     private void onlineDatabaseListener(final RequestAdapter adapter) {
 
-        DatabaseReference reference = firebaseHandler.getMyRef().child("requests");
+        DatabaseReference reference = firebaseHandler.getMyRef().child(Book.REQUESTED);
         final Book book = adapter.getBook();
         reference.addChildEventListener(new ChildEventListener() {
             @Override
