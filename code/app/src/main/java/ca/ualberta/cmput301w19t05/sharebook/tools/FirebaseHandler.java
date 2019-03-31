@@ -25,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.APIServer;
@@ -219,6 +220,24 @@ public class FirebaseHandler {
                 .child(book.getBookId()).child(user.getUserID()).setValue(user);
         myRef.child(Book.REQUESTED).child(book.getBookId()).child(user.getUserID()).setValue(null);
         sendNotification(ACCEPT,book, user);
+
+        myRef.child(Book.REQUESTED).child(book.getBookId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userIdNode : dataSnapshot.getChildren()){
+                    //todo: send notification
+                    userIdNode.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     public void declineRequest(Book book, User user){
