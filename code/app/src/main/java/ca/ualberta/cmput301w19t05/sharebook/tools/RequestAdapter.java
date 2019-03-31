@@ -109,6 +109,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onClick(View v){
                 firebaseHandler.acceptRequest(book,user);
                 removeUser(user);
+
             }
         });
 

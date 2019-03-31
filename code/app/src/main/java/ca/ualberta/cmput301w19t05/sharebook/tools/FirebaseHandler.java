@@ -56,6 +56,7 @@ public class FirebaseHandler {
     public static final String REQUEST = "request_notification";
     public static final String ACCEPT = "accept_notification";
     public static final String DECLINE = "decline_notification";
+    public static final String LENT_SCAN = "borrowing_notification";
 
     public static String token;
     private Context mContext;
@@ -196,31 +197,33 @@ public class FirebaseHandler {
     }
 
     public void sendRequest(Book book) {
-        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
-                .child("status").setValue("requested");
+        changeBookStatus(book,Book.REQUESTED);
 
-        myRef.child("requests")
+
+        myRef.child(Book.REQUESTED)
                 .child(book.getBookId())
                 .child(getCurrentUser().getUserID())
                 .setValue(getCurrentUser());
         sendNotification(REQUEST, book, book.getOwner());
 
     }
+    public void changeBookStatus(Book book, String status){
+        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
+                .child("status").setValue(status);
+    }
 
 
     public void acceptRequest(Book book, User user){
-        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
-                .child("status").setValue("accepted");
-        myRef.child("accepted")
+        changeBookStatus(book,Book.ACCEPTED);
+        myRef.child(Book.ACCEPTED)
                 .child(book.getBookId()).child(user.getUserID()).setValue(user);
-        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+        myRef.child(Book.REQUESTED).child(book.getBookId()).child(user.getUserID()).setValue(null);
         sendNotification(ACCEPT,book, user);
     }
 
     public void declineRequest(Book book, User user){
-        myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
-                .child("status").setValue("available");
-        myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+        changeBookStatus(book,Book.AVAILABLE);
+        myRef.child(Book.REQUESTED).child(book.getBookId()).child(user.getUserID()).setValue(null);
         sendNotification(DECLINE,book,user);
     }
 
@@ -285,18 +288,58 @@ public class FirebaseHandler {
 
     public void clearNotification(Book book) {
         if (book.getOwner().getUserID().equals(getCurrentUser().getUserID())){
-            getMyRef().child(FirebaseHandler.REQUEST)
+            myRef.child(FirebaseHandler.REQUEST)
                     .child(getCurrentUser().getUserID())
                     .child(book.getBookId()).setValue(null);
         }else {
-            getMyRef().child(FirebaseHandler.ACCEPT)
+            myRef.child(FirebaseHandler.ACCEPT)
                     .child(getCurrentUser().getUserID())
                     .child(book.getBookId()).setValue(null);
-            getMyRef().child(FirebaseHandler.DECLINE)
+            myRef.child(FirebaseHandler.DECLINE)
                     .child(getCurrentUser().getUserID())
                     .child(book.getBookId()).setValue(null);
         }
 
 
+    }
+
+    public void confirmBorrowing(final Book book) {
+        myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                .child(getCurrentUser().getUserID()).setValue(1);
+        myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount()==2){
+                            if (book.getStatus().equals(Book.ACCEPTED)){
+                                changeBookStatus(book,Book.BORROWED);
+                                myRef.child(Book.BORROWED)
+                                        .child(book.getBookId()).child(getCurrentUser().getUserID()).setValue(user);
+                                myRef.child(Book.ACCEPTED).child(book.getBookId()).setValue(null);
+                                myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                                        .setValue(null);
+                                myRef.child("Location").child(book.getBookId()).setValue(null);
+                            }
+                            else if (book.getStatus().equals(Book.BORROWED)){
+                                changeBookStatus(book,Book.AVAILABLE);
+                                myRef.child(Book.BORROWED).child(book.getBookId()).setValue(null);
+                                myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                                        .setValue(null);
+                            }
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    public void confirmLent(Book book) {
+        myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                .child(getCurrentUser().getUserID()).setValue(1);
     }
 }
