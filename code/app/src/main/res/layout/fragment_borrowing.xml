@@ -15,15 +15,15 @@
 
         <AutoCompleteTextView
             android:id="@+id/SearchBar"
-            style="@style/Base.Theme.MaterialComponents"
+            style="@android:style/Widget.DeviceDefault.AutoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@android:drawable/ic_menu_search"
-            android:drawableRight="@android:drawable/ic_menu_search"
+            android:drawableEnd="@drawable/quantum_ic_search_grey600_24"
+            android:drawableRight="@android:drawable/ic_search_category_default"
             android:hint="@android:string/search_go"
             android:imeOptions="actionDone"
             android:singleLine="true"
-            android:textSize="24sp" />
+            android:textSize="22sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/search_res"
