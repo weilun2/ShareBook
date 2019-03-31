@@ -66,26 +66,7 @@ public class User implements Parcelable {
         return myBooks;
     }
 
-    public void setShelf(ArrayList<Book> shelf) {
-        this.myBooks = shelf;
-    }
 
-    public void accept(Book book, Location mLocation){
-        book.setStatus("ACCEPTED");
-        sendMessage("accept", book.getOwner());
-    }
-    public void decline(Book book){
-        sendMessage("decline", book.getOwner());
-    }
-    public void sendRequest(Book book){
-        book.setStatus("REQUESTED");
-        sendMessage("Request", book.getOwner());
-        Record record = new Record(book,book.getOwner());
-    }
-    public Notification sendMessage( String message, User receiver){
-        Notification notification = new Notification(message,this, receiver);
-        return notification;
-    }
 
 
     

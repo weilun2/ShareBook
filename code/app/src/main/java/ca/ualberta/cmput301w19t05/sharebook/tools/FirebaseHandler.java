@@ -8,7 +8,9 @@ import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,7 +19,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -26,9 +27,18 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.APIServer;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Data;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.MyResponse;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Notification;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.RetroFitClient;
+import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Sender;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.Record;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -44,6 +54,10 @@ import static android.support.constraint.Constraints.TAG;
  *
  */
 public class FirebaseHandler {
+    public static final String REQUEST = "request_notification";
+    public static final String ACCEPT = "accept_notification";
+    public static final String DECLINE = "decline_notification";
+    public static String token;
     private Context mContext;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -51,6 +65,11 @@ public class FirebaseHandler {
     private FirebaseAuth mAuth;
     private StorageReference storageRef;
     private String imageURL;
+    private static String baseURL  = "https://fcm.googleapis.com/";
+
+    public static APIServer getFCMClient(){
+        return RetroFitClient.getClient(baseURL).create(APIServer.class);
+    }
 
     public FirebaseHandler(Context mContext) {
         this.mContext = mContext;
@@ -61,6 +80,18 @@ public class FirebaseHandler {
         if (mAuth.getCurrentUser() != null) {
             user = mAuth.getCurrentUser();
         }
+        RetroFitClient.getClient(baseURL).create(APIServer.class);
+        Log.d(TAG, "handler instance created");
+    }
+    public FirebaseHandler() {
+        this.database = FirebaseDatabase.getInstance();
+        this.myRef = database.getReference();
+        this.mAuth = FirebaseAuth.getInstance();
+        this.storageRef = FirebaseStorage.getInstance().getReference();
+        if (mAuth.getCurrentUser() != null) {
+            user = mAuth.getCurrentUser();
+        }
+        RetroFitClient.getClient(baseURL).create(APIServer.class);
         Log.d(TAG, "handler instance created");
     }
 
@@ -112,6 +143,10 @@ public class FirebaseHandler {
 
     public void addBook(Book book) {
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId()).setValue(book);
+
+    }
+    public void addLocation(Book book, LatLng Location){
+        myRef.child("Location").child(book.getBookId()).setValue(Location);
     }
 
     public User getCurrentUser() {
@@ -168,9 +203,7 @@ public class FirebaseHandler {
                 .child(book.getBookId())
                 .child(getCurrentUser().getUserID())
                 .setValue(getCurrentUser());
-        Record record = new Record(book,book.getOwner());
-        myRef.child(mContext.getString(R.string.db_request_notification))
-                .child(book.getBookId()).child(getCurrentUser().getUserID()).setValue("1");
+        sendNotification(REQUEST, book);
 
     }
 
@@ -181,17 +214,71 @@ public class FirebaseHandler {
         myRef.child("accepted")
                 .child(book.getBookId()).child(user.getUserID()).setValue(user);
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+        sendNotification(ACCEPT,book);
     }
 
     public void declineRequest(Book book, User user){
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("available");
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
+        sendNotification(DECLINE,book);
+    }
+
+    private void sendNotification(final String notificationType, final Book book){
+        Record record = new Record(book.getOwner().getUsername(), book.getTitle(), getCurrentUser().getUsername(),notificationType, false);
+        myRef.child(notificationType).child(book.getOwner().getUserID()).child(book.getBookId())
+                .setValue(record);
+        myRef.child(mContext.getString(R.string.db_username_email_tuple))
+                .child(book.getOwner().getUserID()).child("token")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String targetToken = dataSnapshot.getValue(String.class);
+                        Notification notification = null;
+                        Data data = new Data(book.getBookId(),notificationType,getCurrentUser().getUserID(),book.getOwner().getUserID());
+                        switch (notificationType) {
+                            case REQUEST:
+                                notification = new Notification("you receive a request", "Request");
+                                break;
+                            case ACCEPT:
+                                notification = new Notification("one request has been accepted", "Accepted");
+                                break;
+                        }
+
+                        Sender sender = new Sender(notification, data, targetToken);
+                        getFCMClient().sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                            @Override
+                            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                if ((response.body() != null ? response.body().success : 0) == 1){
+                                    Toast.makeText(mContext, "success", Toast.LENGTH_LONG).show();
+
+                                }
+                                else {
+                                    Toast.makeText(mContext, "fail", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<MyResponse> call, Throwable t) {
+                                Log.e(TAG, "onFailure: ", t);
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
 
     public StorageReference getStorageRef() {
         return storageRef;
     }
+
+
 
 }

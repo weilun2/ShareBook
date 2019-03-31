@@ -2,7 +2,6 @@ package ca.ualberta.cmput301w19t05.sharebook.tools;
 
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
@@ -112,6 +108,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v){
                 firebaseHandler.acceptRequest(book,user);
+                removeUser(user);
             }
         });
 
@@ -119,6 +116,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v){
                 firebaseHandler.declineRequest(book,user);
+                removeUser(user);
             }
         });
     }

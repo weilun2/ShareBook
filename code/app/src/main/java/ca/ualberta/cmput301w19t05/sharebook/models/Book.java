@@ -21,9 +21,10 @@ public class Book implements Parcelable {
     private String author;
     private String ISBN;
     private User owner;
+    public static final String REQUESTED = "requested";
+    public static final String ACCEPTED = "accepted";
 
     private String status;
-    private Location mLocation;
     private String description;
 
     private Uri photo;//todo: multiple photos support
@@ -129,13 +130,7 @@ public class Book implements Parcelable {
         this.status = status;
     }
 
-    public Location getmLocation() {
-        return mLocation;
-    }
 
-    public void setmLocation(Location mLocation) {
-        this.mLocation = mLocation;
-    }
 
     public String getDescription() {
         return description;

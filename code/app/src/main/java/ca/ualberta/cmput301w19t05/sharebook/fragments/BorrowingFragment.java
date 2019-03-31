@@ -19,7 +19,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ public final class BorrowingFragment extends Fragment {
     private FirebaseHandler firebaseHandler;
     private RecyclerView recyclerView;
     private MyRecyclerViewAdapter requestingAdapter;
+    private MyRecyclerViewAdapter acceptedAdapter;
     private List<Book> requestingBooks;
 
     @Nullable
@@ -66,9 +66,64 @@ public final class BorrowingFragment extends Fragment {
         onlineDatabaseListener(searchBookAdapter, status);
         requestingBooks = new ArrayList<>();
         viewRequesting();
+        viewAccepted();
 
 
 
+    }
+
+    private void viewAccepted() {
+        RecyclerView recyclerView;
+        recyclerView = getView().findViewById(R.id.borrowing_accepted_list);
+        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(verticalLayoutManager);
+        acceptedAdapter = new MyRecyclerViewAdapter(getActivity(), new ArrayList<Book>());
+        acceptedAdapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.d(TAG, "setClickListener: clicked");
+
+                Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                intent.putExtra(BookDetailActivity.BOOK, acceptedAdapter.getItem(position));
+                intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.ACCEPTED);
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(acceptedAdapter);
+        firebaseHandler.getMyRef().child("accepted").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot userId: dataSnapshot.getChildren()){
+                    if (firebaseHandler.getCurrentUser().getUserID().equals(userId.getKey())){
+                        addBookById(dataSnapshot.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                String bookId = dataSnapshot.getKey();
+                if (bookId!= null){
+                    removeBookById(bookId);
+                }
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void initAdapter() {

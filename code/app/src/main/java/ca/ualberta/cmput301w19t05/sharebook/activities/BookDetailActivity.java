@@ -4,14 +4,11 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,17 +21,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.fragments.AcceptedFragment;
 import ca.ualberta.cmput301w19t05.sharebook.fragments.RequestListFragment;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
@@ -45,8 +46,11 @@ import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 public class BookDetailActivity extends AppCompatActivity {
     public final static int REQUEST = 1;
     public final static int DELETE = 2;
+    public static final int ACCEPTED = 3;
     public final static String FUNCTION = "function";
     public final static String BOOK = "book";
+    public final static String TEMP = "temp";
+
     private static final String TAG = "BookDetail";
     private RadioGroup title;
     private RadioGroup author;
@@ -59,6 +63,10 @@ public class BookDetailActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Boolean inProgress;
     private int function;
+    private Uri Uri ;
+    private boolean shortPress = false;
+    private Bitmap Uploadedgraph;
+    private StorageReference initialPhoto;
 
 
 
@@ -114,53 +122,112 @@ public class BookDetailActivity extends AppCompatActivity {
         setBookInfo();
         setClickListener();
 
-
     }
 
     private void setClickListener() {
 
+        switch (function) {
+            case DELETE:
+                title.setOnClickListener(onClickListener);
+                author.setOnClickListener(onClickListener);
+                description.setOnClickListener(onClickListener);
+                bookImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, 0x07);
+                    }
 
-        if (function==DELETE) {
-            title.setOnClickListener(onClickListener);
-            author.setOnClickListener(onClickListener);
-            description.setOnClickListener(onClickListener);
 
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    firebaseHandler.getMyRef().child("books").child(book.getOwner()
-                                            .getUserID())
-                                            .child(book.getBookId()).setValue(null);
-                                    finish();
-                                }
-                            }).setNegativeButton("No", null)
-                            .show();
+                });
+                bookImage.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        System.out.println("hold long");
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(BookDetailActivity.this);
+                        dialog.setMessage("Delete the current photo?");
+
+                        dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                System.out.println("yes pressed");
+                                initialPhoto = firebaseHandler.getStorageRef().child("image/book_placeholder.png");
+                                getUriAndUpLoad(initialPhoto, true);
+
+                            }
+                        });
+
+                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                System.out.println("no pressed");
+                            }
+                        });
+                        dialog.show();
+                        return true;
+                    }
+
+                    ;
+                });
+
+
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(BookDetailActivity.this).setMessage("Are you sure?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        firebaseHandler.getMyRef().child("books").child(book.getOwner()
+                                                .getUserID())
+                                                .child(book.getBookId()).setValue(null);
+                                        finish();
+                                    }
+                                }).setNegativeButton("No", null)
+                                .show();
+                    }
+                });
+            case ACCEPTED:
+                switch (book.getStatus()) {
+                    case Book.REQUESTED:
+                        setRequestList();
+                        break;
+
+                    case Book.ACCEPTED:
+                        setAcceptedList();
+                        break;
+
                 }
-            });
-            setRequestList();
 
-        } else if (function==REQUEST) {
 
-            delete.setText("request");
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(BookDetailActivity.this)
-                            .setMessage("Are you sure?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    firebaseHandler.sendRequest(book);
-                                    finish();
-                                }
-                            }).setNegativeButton("No", null)
-                            .show();
-                }
-            });
+
+                return;
+
+            case REQUEST:
+
+                delete.setText("request");
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(BookDetailActivity.this)
+                                .setMessage("Are you sure?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        firebaseHandler.sendRequest(book);
+                                        finish();
+                                    }
+                                }).setNegativeButton("No", null)
+                                .show();
+                    }
+                });
+                break;
+            default:
+                delete.setVisibility(View.GONE);
+            }
+
             TextView ownerText = owner.findViewWithTag("content");
             final String ownerName = ownerText.getText().toString();
             owner.setOnClickListener(new View.OnClickListener() {
@@ -199,12 +266,115 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 }
             });
-        }
-
-
 
 
     }
+
+    private void setAcceptedList() {
+        Bundle bundle = new Bundle();
+        AcceptedFragment acceptedFragment = new AcceptedFragment();
+
+        bundle.putParcelable("book",book);
+        acceptedFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.place_holder, acceptedFragment)
+                .show(acceptedFragment).commit();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK&&requestCode==0x07) {
+            if(data!= null){
+                Uri uri = data.getData();
+
+                ContentResolver cr = this.getContentResolver();
+                try {
+                    // get bitmap
+                    Bitmap bitmap = BitmapFactory.decodeStream(cr
+                            .openInputStream(uri));
+                    //bookImage.setImageBitmap(bitmap);
+
+                    Uri = uri;
+                    Uploadedgraph = bitmap;
+                    Glide.with(BookDetailActivity.this).load(bitmap)
+                            .into(bookImage);
+                    //bookImage.setImageBitmap(Uploadedgraph);
+
+
+
+                } catch (Exception e) {
+                    Log.e("Exception", e.getMessage(), e);
+                }
+                UploadPhoto();
+
+            }
+        }
+
+
+    }
+    private void UploadPhoto(){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Uploadedgraph.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        String filenames = "image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png";
+        final StorageReference ref = firebaseHandler.getStorageRef().child(filenames);
+        UploadTask uploadTask = ref.putBytes(data);
+
+
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                getUriAndUpLoad(firebaseHandler.getStorageRef().child("image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png"), false);
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+            }
+        });
+    }
+
+
+    private void getUriAndUpLoad(StorageReference reference, final boolean place_holder) {
+        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+
+                book.setPhoto(String.valueOf(uri));
+                //System.out.println(String.valueOf(book.getBookId()));
+                //System.out.println(String.valueOf(uri));
+                //System.out.println(String.valueOf(book.getPhoto()));
+                DatabaseReference refB = firebaseHandler.getMyRef().child("books").child(book.getOwner().getUserID()).child(book.getBookId());
+                refB.child("photo").setValue(String.valueOf(uri));
+                if (place_holder){
+                    Glide.with(BookDetailActivity.this).load(android.net.Uri.parse(book.getPhoto()))
+                            .into(bookImage);
+                }
+
+
+
+
+                //finish();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(BookDetailActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
 
 
 
@@ -246,26 +416,11 @@ public class BookDetailActivity extends AppCompatActivity {
         authorContent.setText(book.getAuthor());
         ownerContent.setText(book.getOwner().getUsername());
         desContent.setText(book.getDescription());
-        RequestListener mRequestListener = new RequestListener() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
 
-                Log.d(TAG, "onException: " + e.toString()+"  model:"+model+" isFirstResource: "+isFirstResource);
-                bookImage.setImageResource(R.mipmap.ic_launcher);
-                return false;
-            }
-
-            @Override
-            public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
-                Log.e(TAG,  "model:"+model+" isFirstResource: "+isFirstResource);
-                return false;
-            }
-        };
         //bookImage.setImageURI(Uri.parse(book.getPhoto()));
         Glide.with(this).load(Uri.parse(book.getPhoto()))
-                .listener(mRequestListener)
-                .into(bookImage);
 
+                .into(bookImage);
 
     }
 

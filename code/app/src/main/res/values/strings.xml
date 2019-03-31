@@ -42,5 +42,6 @@
     <string name="db_books">books</string>
     <string name="borrowed">Borrowed</string>
     <string name="db_request_notification">request_notification</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

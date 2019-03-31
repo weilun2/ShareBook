@@ -30,6 +30,7 @@ import java.net.URI;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.tools.ISBNAdapter;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 /**
@@ -42,6 +43,11 @@ public class AddBookActivity extends AppCompatActivity {
     private String ISBNText;
     private String descriptionText;
 
+    private EditText editTitle;
+    private EditText editAuthor;
+    private EditText editISBN;
+    private EditText editDescription;
+
     private FirebaseHandler firebaseHandler;
     private int IMAGE_REQUEST_CODE = 1;
     private int flag = 0;
@@ -49,7 +55,6 @@ public class AddBookActivity extends AppCompatActivity {
     private Bitmap Uploadedgraph;
     private Book book;
     //private int RESIZE_REQUEST_CODE =2;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,10 +67,10 @@ public class AddBookActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final EditText editTitle = findViewById(R.id.title);
-        final EditText editAuthor = findViewById(R.id.author);
-        final EditText editISBN = findViewById(R.id.ISBN);
-        final EditText editDescription = findViewById(R.id.description);
+        editTitle = findViewById(R.id.title);
+        editAuthor = findViewById(R.id.author);
+        editISBN = findViewById(R.id.ISBN);
+        editDescription = findViewById(R.id.description);
         Button uploadButton = findViewById(R.id.PhotoUpload);
         Button scanButton = findViewById(R.id.scan);
         Button submitButton = findViewById(R.id.submit);
@@ -213,8 +218,8 @@ public class AddBookActivity extends AppCompatActivity {
         else if (requestCode == ScanActivity.SCAN_BOOK) {
             if (resultCode == RESULT_OK) {
                 String ISBN = data.getStringExtra("ISBN");
-                //ISBNText.setText(ISBN);
-
+                editISBN.setText(ISBN);
+                new ISBNAdapter(ISBN, editTitle, editAuthor, editDescription).execute(ISBN);
             }
         }
     }

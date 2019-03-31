@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,8 +17,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,8 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 /**
  * A login screen that offers login via email/password.
@@ -213,6 +219,31 @@ public class LoginActivity extends AppCompatActivity{
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
+
+                            FirebaseInstanceId.getInstance().getInstanceId()
+                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                            if (!task.isSuccessful()) {
+                                                Log.w(TAG, "getInstanceId failed", task.getException());
+                                                return;
+                                            }
+
+                                            // Get new Instance ID token
+                                            String token = task.getResult().getToken();
+                                            FirebaseHandler.token = token;
+                                            FirebaseHandler firebaseHandler = new  FirebaseHandler();
+                                            firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                                                    .child(firebaseHandler.getCurrentUser().getUserID()).child("token").setValue(token);
+
+
+                                            // Log and toast
+                                            Log.d(TAG, "Token: " + token);
+
+
+                                            //Toast.makeText(LoginActivity.this,token , Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                             hideDialog();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
