@@ -36,15 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "onMessageReceived: " + remoteMessage.getFrom());
         int a  = remoteMessage.getData().size();
         if (remoteMessage.getData().size()>0){
-            switch (remoteMessage.getData().get("requestType")){
-                case FirebaseHandler.REQUEST:
-                    setRequestNotification(remoteMessage);
-                    break;
-                case FirebaseHandler.ACCEPT:
-                    setRequestNotification(remoteMessage);
-                    break;
-            }
-
+            setRequestNotification(remoteMessage);
             Log.d(TAG, "onMessageReceived: " + remoteMessage.getData());
         }
 
@@ -85,11 +77,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 }
             });
+
         }
-
-
-
-
 
     }
 

@@ -28,13 +28,12 @@ import java.io.ByteArrayOutputStream;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.APIServer;
-import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Data;
+import ca.ualberta.cmput301w19t05.sharebook.models.Data;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.MyResponse;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Notification;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.RetroFitClient;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Sender;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
-import ca.ualberta.cmput301w19t05.sharebook.models.Record;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,6 +56,7 @@ public class FirebaseHandler {
     public static final String REQUEST = "request_notification";
     public static final String ACCEPT = "accept_notification";
     public static final String DECLINE = "decline_notification";
+
     public static String token;
     private Context mContext;
     private FirebaseDatabase database;
@@ -203,7 +203,7 @@ public class FirebaseHandler {
                 .child(book.getBookId())
                 .child(getCurrentUser().getUserID())
                 .setValue(getCurrentUser());
-        sendNotification(REQUEST, book);
+        sendNotification(REQUEST, book, book.getOwner());
 
     }
 
@@ -214,28 +214,27 @@ public class FirebaseHandler {
         myRef.child("accepted")
                 .child(book.getBookId()).child(user.getUserID()).setValue(user);
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
-        sendNotification(ACCEPT,book);
+        sendNotification(ACCEPT,book, user);
     }
 
     public void declineRequest(Book book, User user){
         myRef.child("books").child(book.getOwner().getUserID()).child(book.getBookId())
                 .child("status").setValue("available");
         myRef.child("requests").child(book.getBookId()).child(user.getUserID()).setValue(null);
-        sendNotification(DECLINE,book);
+        sendNotification(DECLINE,book,user);
     }
 
-    private void sendNotification(final String notificationType, final Book book){
-        Record record = new Record(book.getOwner().getUsername(), book.getTitle(), getCurrentUser().getUsername(),notificationType, false);
-        myRef.child(notificationType).child(book.getOwner().getUserID()).child(book.getBookId())
-                .setValue(record);
+    private void sendNotification(final String notificationType, final Book book, final User receiver){
+
+
         myRef.child(mContext.getString(R.string.db_username_email_tuple))
-                .child(book.getOwner().getUserID()).child("token")
+                .child(receiver.getUserID()).child("token")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String targetToken = dataSnapshot.getValue(String.class);
                         Notification notification = null;
-                        Data data = new Data(book.getBookId(),notificationType,getCurrentUser().getUserID(),book.getOwner().getUserID());
+                        Data data = new Data(book.getBookId(),notificationType,getCurrentUser().getUserID(),receiver.getUserID(),book.getTitle(),receiver.getUsername());
                         switch (notificationType) {
                             case REQUEST:
                                 notification = new Notification("you receive a request", "Request");
@@ -243,7 +242,11 @@ public class FirebaseHandler {
                             case ACCEPT:
                                 notification = new Notification("one request has been accepted", "Accepted");
                                 break;
+                            case DECLINE:
+                                notification = new Notification("one request has been declined","Declined");
                         }
+                        myRef.child(notificationType).child(receiver.getUserID()).child(book.getBookId())
+                                .setValue(data);
 
                         Sender sender = new Sender(notification, data, targetToken);
                         getFCMClient().sendNotification(sender).enqueue(new Callback<MyResponse>() {
@@ -280,5 +283,20 @@ public class FirebaseHandler {
     }
 
 
+    public void clearNotification(Book book) {
+        if (book.getOwner().getUserID().equals(getCurrentUser().getUserID())){
+            getMyRef().child(FirebaseHandler.REQUEST)
+                    .child(getCurrentUser().getUserID())
+                    .child(book.getBookId()).setValue(null);
+        }else {
+            getMyRef().child(FirebaseHandler.ACCEPT)
+                    .child(getCurrentUser().getUserID())
+                    .child(book.getBookId()).setValue(null);
+            getMyRef().child(FirebaseHandler.DECLINE)
+                    .child(getCurrentUser().getUserID())
+                    .child(book.getBookId()).setValue(null);
+        }
 
+
+    }
 }
