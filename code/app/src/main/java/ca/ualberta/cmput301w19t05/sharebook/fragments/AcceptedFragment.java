@@ -66,7 +66,6 @@ public class AcceptedFragment extends Fragment {
         System.out.print("created");
 
 
-
         if (getArguments() != null) {
             book = getArguments().getParcelable("book");
         }
