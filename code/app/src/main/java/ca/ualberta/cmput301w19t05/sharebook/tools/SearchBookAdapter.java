@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
@@ -177,18 +180,28 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
     }
+    public static boolean containsAllWords(String word, String ...keywords) {
+        if (word ==null || word.isEmpty()){
+            return false;
+        }
+        for (String k : keywords)
+            if (!word.contains(k)) return false;
+        return true;
+    }
 
     public Filter getFilter() {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 String constraintString = constraint.toString();
+                String[] constraintList = constraintString.split("\\s+");
+
                 if (constraintString.isEmpty()) {
                     filteredBook = new ArrayList<>();
                 } else {
                     ArrayList<Book> FilteredList = new ArrayList<>();
                     for (Book it : bookList) {
-                        if (it.getTitle().contains(constraintString) || it.getAuthor().contains(constraintString)) {
+                        if (containsAllWords(it.getDescription(),constraintList)){
                             FilteredList.add(it);
                         }
                     }
