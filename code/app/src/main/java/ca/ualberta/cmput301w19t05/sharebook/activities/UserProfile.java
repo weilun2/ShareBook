@@ -198,7 +198,7 @@ public class UserProfile extends AppCompatActivity {
                     List<Long> temp = (ArrayList<Long>)dataSnapshot.getValue();
                     if (temp!=null&&!temp.isEmpty()){
                         owner.setRates(temp);
-                        userScore.setText("rate: " + owner.average() + "/10 (" + owner.getRateCount()+")" );
+                        userScore.setText(String.format("rate: %.2f/10 (%d)", owner.average(), owner.getRateCount()));
                     }
                 }
 

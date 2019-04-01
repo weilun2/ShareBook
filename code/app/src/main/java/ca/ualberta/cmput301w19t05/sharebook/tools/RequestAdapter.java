@@ -2,6 +2,7 @@ package ca.ualberta.cmput301w19t05.sharebook.tools;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +11,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
@@ -29,12 +36,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private ItemClickListener mClickListener;
     final private Book book;
     private FirebaseHandler firebaseHandler;
+    private Context mContext;
 
     public RequestAdapter(Context context, List<User> users, Book book) {
         this.book = book;
         this.requesters = users;
         this.mInflater = LayoutInflater.from(context);
         this.firebaseHandler = new FirebaseHandler(context);
+        this.mContext = context;
         //filteredBook = books;
     }
 
@@ -106,6 +115,27 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private void populateItemRows(RequestAdapter.UserViewHolder holder, int position) {
         final User user = requesters.get(position);
         holder.userName.setText(user.getUsername());
+        holder.userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseHandler.getMyRef().child("username_email_tuple")
+                        .child(user.getUserID())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                User user = dataSnapshot.getValue(User.class);
+                                Intent intent = new Intent(mContext, UserProfile.class);
+                                intent.putExtra("owner", user);
+                                mContext.startActivity(intent);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        });
 
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override

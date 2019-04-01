@@ -260,33 +260,24 @@ public class BookDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!inProgress) {
                     showDialog();
-                    Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
-                            .orderByChild("username").equalTo(ownerName);
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                            .child(book.getOwner().getUserID())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getValue() != null) {
-                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    User user = data.getValue(User.class);
-                                    Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
-                                    intent.putExtra("owner", user);
-                                    hideDialog();
-                                    startActivity(intent);
-
-                                }
-
-                            }
+                            User user = dataSnapshot.getValue(User.class);
+                            Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
+                            intent.putExtra("owner", user);
+                            hideDialog();
+                            startActivity(intent);
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(BookDetailActivity.this, databaseError.toString(),
-                                    Toast.LENGTH_SHORT).show();
                             hideDialog();
                         }
-
-
                     });
+
                 }
 
             }
