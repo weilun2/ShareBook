@@ -26,7 +26,9 @@ import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 import static android.support.constraint.Constraints.TAG;
-
+/**
+ * Configure firebase messaging servive
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override

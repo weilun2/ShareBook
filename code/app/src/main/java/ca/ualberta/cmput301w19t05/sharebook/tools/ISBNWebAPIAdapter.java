@@ -8,6 +8,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * ISBNWebAdapter
+ * Tools for search ISBN from google apis
+ *
+ */
 public class ISBNWebAPIAdapter {
     private static final String TAG = "ISBNWebAPIAdapter";
     private static final String BASE_URL = "https://www.googleapis.com/books/v1/volumes?";

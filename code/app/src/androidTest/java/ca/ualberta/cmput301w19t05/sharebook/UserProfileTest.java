@@ -15,7 +15,9 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-
+/**
+ * Test for initializing the user profile
+ */
 public class UserProfileTest {
     private String userName;
     private String userEmail;

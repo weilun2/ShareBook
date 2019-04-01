@@ -10,7 +10,9 @@ import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
 import static org.junit.Assert.assertEquals;
-
+/**
+ * Test that setup, set constructor, set title, set author, s, setISBN, set status, set id, and set description of a book
+ */
 
 public class BookTest {
     private Book TestBook1;

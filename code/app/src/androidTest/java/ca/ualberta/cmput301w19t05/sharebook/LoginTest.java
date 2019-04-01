@@ -18,7 +18,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-
+/**
+ * Test for login
+ */
 public class LoginTest {
     private String loginEmail;
     private String password;

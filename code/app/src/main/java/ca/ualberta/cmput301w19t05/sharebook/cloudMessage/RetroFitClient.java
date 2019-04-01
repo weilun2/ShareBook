@@ -2,7 +2,9 @@ package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
+/**
+ * Configure retrofit client
+ */
 public class RetroFitClient {
 
     private static Retrofit retrofit =null;
