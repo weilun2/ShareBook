@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +53,7 @@ public class BookDetailActivity extends AppCompatActivity {
     public final static String BOOK = "book";
     public final static String TEMP = "temp";
     public static final String DELETE_NOTIFICATION = "delete_notification";
+    public static final int BORROWED = 5;
 
     private static final String TAG = "BookDetail";
     private RadioGroup title;
@@ -116,6 +118,16 @@ public class BookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
         initViews();
 
+        Toolbar toolbar = findViewById(R.id.toolbar_detail);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         Intent intent = getIntent();
         book = intent.getParcelableExtra(BOOK);
         firebaseHandler = new FirebaseHandler(this);
@@ -156,7 +168,6 @@ public class BookDetailActivity extends AppCompatActivity {
                         dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                System.out.println("yes pressed");
                                 initialPhoto = firebaseHandler.getStorageRef().child("image/book_placeholder.png");
                                 getUriAndUpLoad(initialPhoto, true);
 
@@ -180,7 +191,9 @@ public class BookDetailActivity extends AppCompatActivity {
                     case Book.REQUESTED:
                         setRequestList();
                         break;
-
+                    case Book.BORROWED:
+                        setReturn();
+                        break;
                     case Book.ACCEPTED:
                         setAcceptedList();
                         break;
@@ -231,54 +244,70 @@ public class BookDetailActivity extends AppCompatActivity {
             case ACCEPTED:
                 delete.setVisibility(View.GONE);
                 setAcceptedList();
-            }
+                break;
+            case BORROWED:
+                setReturn();
+                break;
+        }
 
-            TextView ownerText = owner.findViewWithTag("content");
-            final String ownerName = ownerText.getText().toString();
-            owner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!inProgress) {
-                        showDialog();
-                        Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
-                                .orderByChild("username").equalTo(ownerName);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue() != null) {
-                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                        User user = data.getValue(User.class);
-                                        Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
-                                        intent.putExtra("owner", user);
-                                        hideDialog();
-                                        startActivity(intent);
-
-                                    }
+        TextView ownerText = owner.findViewWithTag("content");
+        final String ownerName = ownerText.getText().toString();
+        owner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!inProgress) {
+                    showDialog();
+                    Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                            .orderByChild("username").equalTo(ownerName);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    User user = data.getValue(User.class);
+                                    Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
+                                    intent.putExtra("owner", user);
+                                    hideDialog();
+                                    startActivity(intent);
 
                                 }
+
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(BookDetailActivity.this, databaseError.toString(),
-                                        Toast.LENGTH_SHORT).show();
-                                hideDialog();
-                            }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(BookDetailActivity.this, databaseError.toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            hideDialog();
+                        }
 
 
-                        });
-                    }
-
+                    });
                 }
-            });
+
+            }
+        });
 
 
+
+    }
+
+    private void setReturn() {
+        Bundle bundle = new Bundle();
+        AcceptedFragment acceptedFragment = new AcceptedFragment();
+        bundle.putString("type", "return");
+        bundle.putParcelable("book",book);
+        acceptedFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.place_holder, acceptedFragment)
+                .show(acceptedFragment).commit();
     }
 
     private void setAcceptedList() {
         Bundle bundle = new Bundle();
         AcceptedFragment acceptedFragment = new AcceptedFragment();
-
+        bundle.putString("type", "accepted");
         bundle.putParcelable("book",book);
         acceptedFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
@@ -440,7 +469,5 @@ public class BookDetailActivity extends AppCompatActivity {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
     }
-
-
 
 }

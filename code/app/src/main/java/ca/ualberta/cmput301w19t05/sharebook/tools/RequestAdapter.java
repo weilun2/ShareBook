@@ -76,15 +76,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void removeUser(User user) {
         int index = 0;
-        for (User it : requesters) {
-            if (it.getUserID().equals(user.getUserID())) {
-                requesters.remove(index);
-                notifyItemRemoved(index);
-                return;
-            } else {
-                index++;
+        if(user.getUserID()!=null){
+            for (User it : requesters) {
+                if (user.getUserID().equals(it.getUserID())) {
+                    requesters.remove(index);
+                    notifyItemRemoved(index);
+                    return;
+                } else {
+                    index++;
+                }
             }
         }
+
     }
 
 
@@ -107,8 +110,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                firebaseHandler.acceptRequest(book,user);
-                removeUser(user);
+                for(User it: requesters){
+                    if (it.getUserID().equals(user.getUserID())){
+                        firebaseHandler.acceptRequest(book,user);
+                    }
+                    else {
+                        firebaseHandler.declineRequest(book,it);
+                    }
+                }
+
+
+
             }
         });
 
@@ -116,7 +128,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v){
                 firebaseHandler.declineRequest(book,user);
-                removeUser(user);
             }
         });
     }
