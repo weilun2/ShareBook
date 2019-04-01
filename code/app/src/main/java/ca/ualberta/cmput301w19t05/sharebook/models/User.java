@@ -7,6 +7,13 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * User
+ * this class stores user information, each instance refers to a user which contains userID, user name, email, image, and ratting by other users.
+ * <p>
+ * Public Methods:
+ * getters & setters
+ */
 
 public class User implements Parcelable {
     private String userID;

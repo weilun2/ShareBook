@@ -35,7 +35,9 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import java.util.Arrays;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-
+/**
+ * A map screen shows the location by google map
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String TAG = "onMap";

@@ -22,7 +22,9 @@ import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.tools.RequestAdapter;
-
+/**
+ * Fragment for a book 's request list
+ */
 public final class RequestListFragment extends Fragment {
 
     private RequestAdapter adapter;

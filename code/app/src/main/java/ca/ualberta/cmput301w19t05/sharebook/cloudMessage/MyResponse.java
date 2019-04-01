@@ -2,6 +2,9 @@ package ca.ualberta.cmput301w19t05.sharebook.cloudMessage;
 
 import java.util.List;
 
+/**
+ * Configure a response which contains information about mulicasr id, success or failure, caonical ids, and list of result
+ */
 public class MyResponse {
     public long multicast_id ;
     public int success ;

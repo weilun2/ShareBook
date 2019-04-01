@@ -5,7 +5,9 @@ import org.junit.Test;
 
 import ca.ualberta.cmput301w19t05.sharebook.models.Data;
 import static org.junit.Assert.assertEquals;
-
+/**
+ * Test that setup, set constructor, set book id, set request type,, set sender, set receiver, set book name, and set sender name of a data
+ */
 public class DataTest {
     private Data TestData1;
     private Data TestData2;
