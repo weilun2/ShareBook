@@ -250,7 +250,7 @@ public class FirebaseHandler {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getChildren() == null){
+                        if (!dataSnapshot.hasChildren()){
                              bookPath.child("status").setValue(Book.AVAILABLE);
                         }
 
