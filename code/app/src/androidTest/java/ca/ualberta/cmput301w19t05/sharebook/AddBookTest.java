@@ -2,59 +2,99 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.EditText;
 
+import com.robotium.solo.Solo;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ca.ualberta.cmput301w19t05.sharebook.activities.AddBookActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.ScanActivity;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
+public class AddBookTest extends ActivityTestRule<AddBookActivity>{
+    private Solo solo;
 
-public class AddBookTest {
-    private String title;
-    private String author;
-    private String description;
+    public AddBookTest(){
+        super(AddBookActivity.class, false,true);
+    }
 
     @Rule
-    public ActivityTestRule<AddBookActivity> activityRule
-            = new ActivityTestRule<>(AddBookActivity.class);
+    public ActivityTestRule<AddBookActivity> rule
+            = new ActivityTestRule<>(AddBookActivity.class, false, true);
 
     @Before
-    public void initValidString() {
-        // Specify a valid string.
-        title = "this is title";
-        author = "this is author";
-        description = "this is description";
+    public void setUp() {
+        solo = new Solo(getInstrumentation(), rule.getActivity());
+    }
+
+    @Test
+    public void testActivity() {
+        solo.assertCurrentActivity("Wrong Activity", AddBookActivity.class);
+    }
+
+    @Test
+    public void EmptyTitleCase(){
+        solo.enterText((EditText) solo.getView(R.id.title), "");
+        solo.enterText((EditText) solo.getView(R.id.author), "sam");
+        solo.enterText((EditText) solo.getView(R.id.ISBN), "1234567");
+        solo.enterText((EditText) solo.getView(R.id.description), "this is the sample description");
+        solo.clickOnText("Submit");
+        assertTrue(solo.waitForText("Please enter the Title",1,2000));
+    }
+
+    @Test
+    public void EmptyAuthorCase(){
+        solo.enterText((EditText) solo.getView(R.id.title), "testTile");
+        solo.enterText((EditText) solo.getView(R.id.author), "");
+        solo.enterText((EditText) solo.getView(R.id.ISBN), "1234567");
+        solo.enterText((EditText) solo.getView(R.id.description), "this is the sample description");
+        solo.clickOnText("Submit");
+        assertTrue(solo.waitForText("Please enter the Author",1,2000));
+    }
+
+    @Test
+    public void EmptyISBNCase(){
+        solo.enterText((EditText) solo.getView(R.id.title), "testTile");
+        solo.enterText((EditText) solo.getView(R.id.author), "sam");
+        solo.enterText((EditText) solo.getView(R.id.ISBN), "");
+        solo.enterText((EditText) solo.getView(R.id.description), "this is the sample description");
+        solo.clickOnText("Submit");
+        assertTrue(solo.waitForText("Please enter the ISBN",1,2000));
+    }
+
+    @Test
+    public void uploadPhotoCase(){
+        solo.clickOnText("Upload Photograph");
+    }
+
+    @Test
+    public void successAddCase() {
+//
+        solo.enterText((EditText) solo.getView(R.id.title), "testTile");
+        solo.enterText((EditText) solo.getView(R.id.author), "sam");
+        solo.enterText((EditText) solo.getView(R.id.ISBN), "1234567");
+        solo.enterText((EditText) solo.getView(R.id.description), "this is the sample description");
+        solo.clickOnText("Submit");
     }
 
 
     @Test
-    public void addText_sameActivity(){
-        onView(withId(R.id.title))
-                .perform(typeText(title));
-        onView(withId(R.id.author))
-                .perform(typeText(author));
-        onView(withId((R.id.description)))
-                .perform(typeText(description));
-
-        onView(withId(R.id.submit)).perform(click());
-
-        onView(withText(title)).check(matches(isDisplayed()));
-        onView(withText(author)).check(matches(isDisplayed()));
-        onView(withText(description)).check(matches(isDisplayed()));
-
-
+    public void scanCase(){
+        solo.clickOnText("Scan");
+        solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
     }
 
+
+    @After
+    public void tearDown() {
+        solo.finishOpenedActivities();
+    }
 }
