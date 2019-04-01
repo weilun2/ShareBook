@@ -12,16 +12,18 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.MainActivity;
+import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
-public class BookDetailBySearchTest extends ActivityTestRule<MainActivity> {
+public class SearchTest extends ActivityTestRule<MainActivity> {
     private Solo solo;
     private Activity activity;
 
-    public BookDetailBySearchTest(){
+    public SearchTest(){
         super(MainActivity.class,false,true);
     }
 
@@ -34,12 +36,34 @@ public class BookDetailBySearchTest extends ActivityTestRule<MainActivity> {
         solo = new Solo(getInstrumentation(), rule.getActivity());
         solo.clickOnText("Borrowing");
         solo.clickOnView(solo.getView(R.id.SearchBar));
-        solo.enterText((EditText) solo.getView(R.id.SearchBar),"xiao's book");
-        solo.clickOnText("xiap's book");
     }
 
     @Test
     public void start(){
         activity = rule.getActivity();
+    }
+
+    @Test
+    public void testIntoBookDeatil(){
+        solo.enterText((EditText) solo.getView(R.id.SearchBar),"x");
+        solo.clickOnText("The Hobbit");
+        solo.assertCurrentActivity("Wrong Activity", BookDetailActivity.class);
+    }
+
+    @Test
+    public void seeProfile(){
+        solo.enterText((EditText) solo.getView(R.id.SearchBar),"x");
+        solo.clickOnText("The Hobbit");
+        solo.clickOnText("Owner:");
+        solo.assertCurrentActivity("Wrong Activity", UserProfile.class);
+    }
+
+    @Test
+    public void requestBook(){
+        solo.enterText((EditText) solo.getView(R.id.SearchBar),"x");
+        solo.clickOnText("The Hobbit");
+        solo.clickOnText("request");
+        solo.clickOnText("Yes");
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }
 }
