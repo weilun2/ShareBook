@@ -1,132 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/default_gap"
-    android:columnCount="2"
-    android:orientation="vertical"
-    android:rowCount="6">
+    android:orientation="vertical">
 
-
-    <RadioGroup
-        android:id="@+id/title"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_row="0"
-        android:layout_column="1"
+        android:theme="@style/AppBarOverlay">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_detail"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/PopupOverlay"
+            app:title="Book Detail" />
+    </android.support.design.widget.AppBarLayout>
 
-
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:tag="prompt"
-            android:text="Title:" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag="content" />
-
-    </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_row="1"
-        android:layout_column="1">
-
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag="prompt"
-            android:text="Author:" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag="content" />
-    </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/owner_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_row="2"
-        android:layout_column="1">
-
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag="prompt"
-            android:text="Owner:" />
-
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-            android:tag="content" />
-
-    </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_row="3"
-        android:layout_column="1">
-
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag="prompt"
-            android:text="Description:" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag="content" />
-    </RadioGroup>
-
-
-    <ImageView
-        android:id="@+id/book_cover"
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_height"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="56dp"
-        android:layout_row="0"
-        android:layout_rowSpan="5"
-        android:layout_column="0"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <Button
-        android:id="@+id/delete_book"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_row="4"
-        android:layout_column="1"
-        android:text="delete"
-        android:visibility="gone" />
-
-    <FrameLayout
-        android:id="@+id/place_holder"
+    <ScrollView
+        android:id="@+id/book_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_row="5"
-        android:layout_column="0"
-        android:layout_columnSpan="2">
+        android:orientation="vertical">
 
-    </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
 
+            <RadioGroup
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
 
-</GridLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:tag="prompt"
+                    android:text="Title:"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="content"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:tag="prompt"
+                    android:text="Author:"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="content"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/owner_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:tag="prompt"
+                    android:text="Owner:"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="content"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:tag="prompt"
+                    android:text="Description:"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="content"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <ImageView
+                android:id="@+id/book_cover"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/book_detail">
+
+                <Button
+                    android:id="@+id/delete_book"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="delete"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/place_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

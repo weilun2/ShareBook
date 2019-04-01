@@ -19,12 +19,14 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
+
 public class UserProfileTest extends ActivityTestRule<UserProfile>{
     private Solo solo;
 
     public UserProfileTest(){
         super(UserProfile.class, false,true);
     }
+
 
     @Rule
     public ActivityTestRule<UserProfile> rule

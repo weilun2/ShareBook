@@ -15,8 +15,15 @@ import org.junit.runner.RunWith;
 import ca.ualberta.cmput301w19t05.sharebook.activities.AddBookActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.ScanActivity;
 
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertTrue;
+
+
+
+/**
+ * Test for adding book
+ */
 
 @RunWith(AndroidJUnit4.class)
 public class AddBookTest extends ActivityTestRule<AddBookActivity>{

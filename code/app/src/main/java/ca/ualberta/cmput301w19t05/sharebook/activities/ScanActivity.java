@@ -17,14 +17,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 
+/**
+ * A scan screen that open the camera to scan the ISBN of the book to search the information od the book.
+ */
+
 public class ScanActivity extends AppCompatActivity {
+
     public static final int SCAN_BOOK = 2;
 
     private CameraKitView cameraKitView;
@@ -38,6 +42,10 @@ public class ScanActivity extends AppCompatActivity {
         cameraKitView.onStart();
     }
 
+    /**
+     * Use camera
+     * Reference: https://camerakit.io/docs
+     */
     public void confirmScanOnClick(View view) {
         cameraKitView.captureImage(new CameraKitView.ImageCallback() {
             @Override
@@ -47,14 +55,14 @@ public class ScanActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Detect the Barcode
+     * Reference: https://firebase.google.com/docs/ml-kit/android/read-barcodes
+     */
     private void processBitMap(Bitmap bitmap){
         FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
-        FirebaseVisionBarcodeDetectorOptions options = new FirebaseVisionBarcodeDetectorOptions.Builder()
-                .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_ALL_FORMATS).build();
-        FirebaseVisionBarcodeDetector firebaseVisionBarcodeDetector = FirebaseVision.getInstance()
-                .getVisionBarcodeDetector(options);
-        firebaseVisionBarcodeDetector.detectInImage(firebaseVisionImage)
-                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+        FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance().getVisionBarcodeDetector();
+        detector.detectInImage(firebaseVisionImage).addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
                     @Override
                     public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
                         processResult(firebaseVisionBarcodes);
@@ -67,7 +75,11 @@ public class ScanActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Check the Barcode and return the ISBN
+     */
     private void processResult(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
+        // No Barcode was detected
         if (firebaseVisionBarcodes.size() == 0){
             Toast.makeText(this, "Cannot detect the Barcode. Please try again", Toast.LENGTH_SHORT).show();
         }
@@ -82,6 +94,8 @@ public class ScanActivity extends AppCompatActivity {
                 return;
             }
         }
+
+        // Other situation: The Barcode is not available
         Toast.makeText(this, "The Barcode is not available. Please try again", Toast.LENGTH_SHORT).show();
     }
 

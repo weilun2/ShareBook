@@ -19,13 +19,18 @@ import ca.ualberta.cmput301w19t05.sharebook.activities.Register;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertTrue;
 
+/**
+ * Test for register a new account
+ */
 @RunWith(AndroidJUnit4.class)
+
 public class RegisterTest extends ActivityTestRule<Register> {
     private Solo solo;
 
     public RegisterTest() {
         super(Register.class, false, true);
     }
+
 
     @Rule
     public ActivityTestRule<Register> rule

@@ -16,7 +16,11 @@ import org.junit.runner.RunWith;
 import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.MainActivity;
 
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+/**
+ * Test for initialize book detail
+ */
 
 @RunWith(AndroidJUnit4.class)
 public class BookDetailTest extends ActivityTestRule<MainActivity> {

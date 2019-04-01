@@ -22,7 +22,9 @@ import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 import ca.ualberta.cmput301w19t05.sharebook.tools.RequestAdapter;
-
+/**
+ * Fragment for a book 's request list
+ */
 public final class RequestListFragment extends Fragment {
 
     private RequestAdapter adapter;
@@ -67,20 +69,18 @@ public final class RequestListFragment extends Fragment {
 
     private void onlineDatabaseListener(final RequestAdapter adapter) {
 
-        DatabaseReference reference = firebaseHandler.getMyRef().child("requests");
+        DatabaseReference reference = firebaseHandler.getMyRef().child(Book.REQUESTED).child(book.getBookId());
         final Book book = adapter.getBook();
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if (book.getBookId().equals(dataSnapshot.getKey())){
-                    for (DataSnapshot it : dataSnapshot.getChildren()) {
+
+
 //                    if (it.getKey().equals(book.getBookId())) {
-                        User temp = it.getValue(User.class);
+                        User temp = dataSnapshot.getValue(User.class);
                         adapter.addUser(temp);
 
 //                    }
-                    }
-                }
 
             }
 

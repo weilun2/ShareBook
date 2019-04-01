@@ -17,6 +17,11 @@ import java.util.List;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Data;
 
+/**
+ * NotificationAdapter
+ * Tools for handling sending notification to specific user when an action of a book has taken
+ *
+ */
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
     private List<Data> mData;
@@ -46,10 +51,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         if (FirebaseHandler.REQUEST.equals(temp.getRequestType())) {
             viewHolder.requesterName.setText(temp.getSenderName() + " request " + temp.getBookName());
         }
-        else if (FirebaseHandler.ACCEPT.equals(temp.getRequestType())
-                ||FirebaseHandler.DECLINE.equals(temp.getRequestType())) {
+        else if (FirebaseHandler.ACCEPT.equals(temp.getRequestType())) {
 
             viewHolder.requesterName.setText("your request of " + temp.getBookName() + " has been accepted");
+        }
+        else if (FirebaseHandler.DECLINE.equals(temp.getRequestType())){
+            viewHolder.requesterName.setText("your request of " + temp.getBookName() + " has been declined");
         }
 
     }

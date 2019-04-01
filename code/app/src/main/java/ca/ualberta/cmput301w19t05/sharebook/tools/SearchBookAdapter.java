@@ -15,13 +15,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 /**
- * FirebaseHandler
+ * SearchBookAdapter
  * Tools for handling search book from book list
  *
  */
@@ -35,6 +38,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
+    private String constraintString;
 
 
     public SearchBookAdapter(Context context, List<Book> books) {
@@ -42,6 +46,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.bookList = books;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
+        constraintString = "";
         //filteredBook = books;
     }
 
@@ -49,7 +54,18 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (bookList == null) {
             bookList = new ArrayList<>();
         }
-        bookList.add(0, book);
+        if (!contains(book)){
+            bookList.add(0, book);
+            getFilter().filter(constraintString);
+        }
+
+    }
+    public void clear(){
+
+        bookList = new ArrayList<>();
+        filteredBook = new ArrayList<>();
+
+
     }
 
     public void changeBook(Book book) {
@@ -72,6 +88,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         for (Book it : bookList) {
             if (book.getBookId().equals(it.getBookId())) {
                 bookList.set(index, book);
+                return;
             }
         }
     }
@@ -177,18 +194,28 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
     }
+    public static boolean containsAllWords(String word, String ...keywords) {
+        if (word ==null || word.isEmpty()){
+            return false;
+        }
+        for (String k : keywords)
+            if (!word.contains(k)) return false;
+        return true;
+    }
 
     public Filter getFilter() {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                String constraintString = constraint.toString();
+                constraintString = constraint.toString();
+                String[] constraintList = constraintString.split("\\s+");
+
                 if (constraintString.isEmpty()) {
                     filteredBook = new ArrayList<>();
                 } else {
                     ArrayList<Book> FilteredList = new ArrayList<>();
                     for (Book it : bookList) {
-                        if (it.getTitle().contains(constraintString) || it.getAuthor().contains(constraintString)) {
+                        if (containsAllWords(it.getDescription(),constraintList)){
                             FilteredList.add(it);
                         }
                     }

@@ -6,30 +6,79 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
+/**
+ * User
+ * this class stores user information, each instance refers to a user which contains userID, user name, email, image, and ratting by other users.
+ * <p>
+ * Public Methods:
+ * getters & setters
+ */
 
 public class User implements Parcelable {
     private String userID;
     private String username;
     private String email;
     private Uri image;
-    private ArrayList<Book> myBooks;
-
-
+    public List<Long> rates;
     public User(String userID, String username, String email, Uri image) {
         this.userID = userID;
         this.username = username;
         this.email = email;
         this.image = image;
+
+
     }
+
+    public User(String userID, String username, String email, Uri image, int rate_count, double rate) {
+        this.userID = userID;
+        this.username = username;
+        this.email = email;
+        this.image = image;
+
+    }
+
 
     public User(String userID, String username, String email) {
         this.userID = userID;
         this.username = username;
         this.email = email;
+        this.rates = new ArrayList<>();
+    }
+
+    public List<Long> getRates() {
+        return rates;
+    }
+
+    public void setRates(List<Long> rates) {
+        if (rates==null){
+            this.rates = new ArrayList<>();
+        }else{
+            this.rates = rates;
+        }
+
     }
 
     public User() {
 
+    }
+    public double average(){
+        double sum = 0.0;
+        if(rates!=null && !rates.isEmpty()) {
+            for (Long mark : rates) {
+                sum += mark;
+            }
+            return sum / rates.size();
+        }
+        return sum;
+    }
+    public int getRateCount(){
+        if (rates==null){
+            return 0;
+        }
+        else {
+            return rates.size();
+        }
     }
 
     public Uri getImage() {
@@ -62,18 +111,6 @@ public class User implements Parcelable {
         this.userID = userID;
     }
 
-    public ArrayList<Book> getShelf() {
-        return myBooks;
-    }
-
-
-
-
-    
-    public void  addShelf(Intent data){
-        Book book = (Book) data.getBundleExtra("B").getSerializable("getB");
-        myBooks.add(book);
-    }
 
     public void editShelf(Intent data){
 

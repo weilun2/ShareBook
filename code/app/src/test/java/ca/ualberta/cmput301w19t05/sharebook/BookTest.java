@@ -3,14 +3,16 @@ package ca.ualberta.cmput301w19t05.sharebook;
 
 import android.net.Uri;
 
-
-import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
+import static org.junit.Assert.assertEquals;
+/**
+ * Test that setup, set constructor, set title, set author, s, setISBN, set status, set id, and set description of a book
+ */
 
 public class BookTest {
     private Book TestBook1;
@@ -69,6 +71,11 @@ public class BookTest {
     public void testSetId(){
         TestBook2.setBookId("Test Id");
         assertEquals("Test Id",TestBook2.getBookId());
+    }
+    @Test
+    public void testSetDes(){
+        TestBook2.setDescription("This is a test");
+        assertEquals("This is a test",TestBook2.getDescription());
     }
 
 

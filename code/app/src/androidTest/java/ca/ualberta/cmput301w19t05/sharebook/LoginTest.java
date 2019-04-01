@@ -18,8 +18,11 @@ import ca.ualberta.cmput301w19t05.sharebook.activities.MainActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.Register;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-
+/**
+ * Test for login
+ */
 @RunWith(AndroidJUnit4.class)
+
 public class LoginTest extends ActivityTestRule<LoginActivity> {
     private Solo solo;
 
