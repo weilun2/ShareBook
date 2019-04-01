@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
+import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.MapsActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.ScanActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
@@ -206,14 +207,43 @@ public class AcceptedFragment extends Fragment {
         else if (requestCode == ScanActivity.SCAN_BOOK&& resultCode == RESULT_OK){
             String ISBN = data.getStringExtra("ISBN");
             if (book.getISBN().equals(ISBN)){
-                if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())){
-                    firebaseHandler.confirmLent(book);
+                if (type.equals("return")){
+                    View view = View.inflate(getActivity(), R.layout.content_edit, null);
+                    final EditText userInput = view.findViewById(R.id.user_input);;
+                    new AlertDialog.Builder(getActivity()).setView(view)
+                            .setMessage("input your rate form 0 to 10")
+                            .setPositiveButton("submit", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                }
-                else {
-                    firebaseHandler.confirmBorrowing(book);
-                }
+                                    String a = userInput.getText().toString();
+                                    if (!"".equals(a)){
+                                        int res = Integer.valueOf(userInput.getText().toString());
+                                        if (res>=0&&res<=10){
+                                            if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())){
+                                                firebaseHandler.returnBook(book, res);
+                                            }else{
+                                                firebaseHandler.returned(book, res);
+                                            }
 
+                                        }
+                                    }
+
+                                }
+                            })
+                            .show();
+
+
+                }else {
+                    if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())) {
+                        firebaseHandler.confirmLent(book);
+                        getActivity().finish();
+
+                    } else {
+                        firebaseHandler.confirmBorrowing(book);
+                        getActivity().finish();
+                    }
+                }
 
 
             }

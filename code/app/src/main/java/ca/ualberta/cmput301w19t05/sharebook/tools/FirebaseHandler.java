@@ -25,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.APIServer;
@@ -273,7 +274,7 @@ public class FirebaseHandler {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.hasChildren()){
-                             bookPath.child("status").setValue(Book.AVAILABLE);
+                            bookPath.child("status").setValue(Book.AVAILABLE);
                         }
 
                     }
@@ -284,6 +285,7 @@ public class FirebaseHandler {
                     }
                 });
         sendNotification(DECLINE,book,user);
+
     }
 
     private void sendNotification(final String notificationType, final Book book, final User receiver){
@@ -370,7 +372,7 @@ public class FirebaseHandler {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount()==2){
-                            if (book.getStatus().equals(Book.ACCEPTED)){
+
                                 changeBookStatus(book,Book.BORROWED);
                                 myRef.child(Book.BORROWED)
                                         .child(book.getBookId()).child(getCurrentUser().getUserID()).setValue(user);
@@ -378,13 +380,8 @@ public class FirebaseHandler {
                                 myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
                                         .setValue(null);
                                 myRef.child("Location").child(book.getBookId()).setValue(null);
-                            }
-                            else if (book.getStatus().equals(Book.BORROWED)){
-                                changeBookStatus(book,Book.AVAILABLE);
-                                myRef.child(Book.BORROWED).child(book.getBookId()).setValue(null);
-                                myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
-                                        .setValue(null);
-                            }
+
+
 
 
                         }
@@ -400,5 +397,83 @@ public class FirebaseHandler {
     public void confirmLent(Book book) {
         myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
                 .child(getCurrentUser().getUserID()).setValue(1);
+    }
+
+    public void returned(final Book book, final int res) {
+        myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                .child(getCurrentUser().getUserID()).setValue(res);
+        myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(book.getOwner()
+                .getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User owner = dataSnapshot.getValue(User.class);
+                if (owner!=null && owner.getUserID()!=null){
+                    if (owner.getRates()==null){
+                        owner.setRates(new ArrayList<Long>());
+                        owner.getRates().add(Long.valueOf(res));
+                    }
+                    else {
+                        owner.getRates().add(Long.valueOf(res));
+                    }
+                    myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(book.getOwner()
+                            .getUserID()).setValue(owner);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void returnBook(final Book book, final int res) {
+        myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                .child(getCurrentUser().getUserID()).setValue(res);
+        myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount()==2){
+
+                                changeBookStatus(book,Book.AVAILABLE);
+                                myRef.child(Book.BORROWED).child(book.getBookId()).setValue(null);
+                                myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
+                                        .setValue(null);
+                                for(DataSnapshot it : dataSnapshot.getChildren()){
+                                    if (!book.getOwner().getUserID().equals(it.getKey())){
+                                        String requesterId = it.getKey();
+                                        myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(requesterId)
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                User owner = dataSnapshot.getValue(User.class);
+                                                if (owner!=null && owner.getUserID()!=null){
+                                                    if (owner.getRates()==null){
+                                                        owner.setRates(new ArrayList<Long>(res));
+                                                    }
+                                                    else {
+                                                        owner.getRates().add(Long.valueOf(res));
+                                                    }
+                                                    myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(book.getOwner()
+                                                            .getUserID()).setValue(owner);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+                                }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 }
