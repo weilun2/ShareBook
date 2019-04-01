@@ -49,14 +49,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull final NotificationAdapter.ViewHolder viewHolder, int i) {
         final Data temp = mData.get(i);
         if (FirebaseHandler.REQUEST.equals(temp.getRequestType())) {
-            viewHolder.requesterName.setText(temp.getSenderName() + " request " + temp.getBookName());
+            viewHolder.requesterName.setText(String.format("%s request %s", temp.getSenderName(), temp.getBookName()));
         }
         else if (FirebaseHandler.ACCEPT.equals(temp.getRequestType())) {
 
-            viewHolder.requesterName.setText("your request of " + temp.getBookName() + " has been accepted");
+            viewHolder.requesterName.setText(String.format("your request of %s has been accepted", temp.getBookName()));
         }
         else if (FirebaseHandler.DECLINE.equals(temp.getRequestType())){
-            viewHolder.requesterName.setText("your request of " + temp.getBookName() + " has been declined");
+            viewHolder.requesterName.setText(String.format("your request of %s has been declined", temp.getBookName()));
         }
 
     }
