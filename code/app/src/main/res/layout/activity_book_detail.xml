@@ -42,7 +42,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
                     android:tag="prompt"
                     android:text="Title:"
                     android:textSize="16sp"
@@ -65,7 +64,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
                     android:tag="prompt"
                     android:text="Author:"
                     android:textSize="16sp"
@@ -89,7 +87,6 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
                     android:tag="prompt"
                     android:text="Owner:"
                     android:textSize="16sp"
@@ -113,7 +110,6 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
                     android:tag="prompt"
                     android:text="Description:"
                     android:textSize="16sp"
@@ -137,22 +133,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/delete_book"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginBottom="8dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/book_detail">
-
-                <Button
-                    android:id="@+id/delete_book"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="delete"
-                    android:visibility="gone" />
-
-            </LinearLayout>
+                android:text="delete"
+                android:visibility="gone" />
 
             <FrameLayout
                 android:id="@+id/place_holder"
@@ -162,6 +150,7 @@
             </FrameLayout>
 
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

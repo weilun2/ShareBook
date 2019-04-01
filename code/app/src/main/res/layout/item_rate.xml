@@ -7,6 +7,8 @@
             android:id="@+id/rate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:inputType="numberDecimal" />
 
 </android.support.v7.widget.CardView>
