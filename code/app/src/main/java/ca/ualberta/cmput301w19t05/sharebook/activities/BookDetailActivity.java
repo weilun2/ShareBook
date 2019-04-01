@@ -248,27 +248,7 @@ public class BookDetailActivity extends AppCompatActivity {
             case BORROWED:
                 setReturn();
                 break;
-            }
-
-            TextView ownerText = owner.findViewWithTag("content");
-            final String ownerName = ownerText.getText().toString();
-            owner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!inProgress) {
-                        showDialog();
-                        Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
-                                .orderByChild("username").equalTo(ownerName);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue() != null) {
-                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                        User user = data.getValue(User.class);
-                                        Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
-                                        intent.putExtra("owner", user);
-                                        hideDialog();
-                                        startActivity(intent);
+        }
 
         TextView ownerText = owner.findViewWithTag("content");
         final String ownerName = ownerText.getText().toString();
@@ -308,7 +288,6 @@ public class BookDetailActivity extends AppCompatActivity {
 
             }
         });
-
 
 
 
@@ -490,5 +469,7 @@ public class BookDetailActivity extends AppCompatActivity {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
     }
+
+
 
 }
