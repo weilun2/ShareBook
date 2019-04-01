@@ -8,6 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * ISBNAdapter
+ * Tools for handling scan book's ISBN
+ *
+ */
 public class ISBNAdapter extends AsyncTask<String, Void, String> {
     private final String TAG = getClass().getSimpleName();
     private String ISBN;

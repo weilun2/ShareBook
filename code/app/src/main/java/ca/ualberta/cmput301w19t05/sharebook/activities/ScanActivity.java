@@ -23,6 +23,10 @@ import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 
+/**
+ * A scan screen that open the camera to scan the ISBN of the book to search the information od the book.
+ */
+
 public class ScanActivity extends AppCompatActivity {
 
     public static final int SCAN_BOOK = 2;

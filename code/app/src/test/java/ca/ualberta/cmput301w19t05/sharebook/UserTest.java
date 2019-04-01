@@ -12,7 +12,9 @@ import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
 import static org.junit.Assert.assertEquals;
-
+/**
+ * Test that setup, set constructor, set user id, set user name, ser user id, set email, set image, and set rate of a user
+ */
 public class UserTest {
     private User TestUser1;
     private User TestUser2;

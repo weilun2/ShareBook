@@ -19,7 +19,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-
+/**
+ * Test for register a new account
+ */
 public class RegisterTest {
     private String sign_up_name;
     private String sign_up_email;

@@ -24,7 +24,7 @@ import java.util.List;
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 /**
- * FirebaseHandler
+ * SearchBookAdapter
  * Tools for handling search book from book list
  *
  */

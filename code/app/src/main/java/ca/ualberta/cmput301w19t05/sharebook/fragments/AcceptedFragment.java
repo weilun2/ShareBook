@@ -39,7 +39,9 @@ import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 import static android.app.Activity.RESULT_OK;
-
+/**
+ * Fragment for a book's accepting condition
+ */
 public class AcceptedFragment extends Fragment {
     private static final String TAG = "accepted fragment";
     private FirebaseHandler firebaseHandler;

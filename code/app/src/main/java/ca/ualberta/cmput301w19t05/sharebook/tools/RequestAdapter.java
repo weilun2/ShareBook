@@ -18,7 +18,7 @@ import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
 /**
- * FirebaseHandler
+ * RequestAdapter
  * Tools for handling search book from book list
  *
  */
