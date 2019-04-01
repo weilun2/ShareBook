@@ -5,88 +5,79 @@ import android.net.Uri;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
-import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Notification;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class UserTest {
-    private User TestUser;
-    private Uri TestImage;
+    private User TestUser1;
+    private User TestUser2;
+
+    private Uri TestImage1;
+    private Uri TestImage2;
     private Book mBook;
-    private Location mLocation;
+    private List<Long> Rates;
+
     private User owner;
     private User borrower;
 
-    public UserTest(){
-        mLocation = new Location(12,13,"edmonton", "123ASD", "bedroom");
-        owner = new User("gsz", "gg", "gg@gg.com");
-        borrower = new User("lzz", "zz", "zz@zz.com");
-        mBook = new Book("art of poop", "hwl", "fakeISBN", owner);
-        mBook.setStatus("AVAILABLE");
-    }
+
     @Before
     public void setup(){
-        TestUser = new User("TestID","TestUserName","Test@email.com",TestImage);
+        TestUser1 = new User("TestID","TestUserName","Test@email.com", TestImage1);
+        Rates = new ArrayList<>();
+        Rates.add( 1l);
+        Rates.add( 2l);
+        Rates.add( 3l);
+        TestUser2 = new User("TestID2","TestUserName2","Test2@email.com", TestImage2,3,456);
+        TestUser2.setRates(Rates);
     }
     @Test
     public void testConstructor(){
-      assertEquals("TestID",TestUser.getUserID());
-      assertEquals("TestUserName",TestUser.getUsername());
-      assertEquals("Test@email.com",TestUser.getEmail());
-      assertEquals(TestImage,TestUser.getImage());
+      assertEquals("TestID", TestUser1.getUserID());
+      assertEquals("TestUserName", TestUser1.getUsername());
+      assertEquals("Test@email.com", TestUser1.getEmail());
+      assertEquals(TestImage1, TestUser1.getImage());
+      assertEquals(3,TestUser2.getRateCount());
+      assertEquals(Rates,TestUser2.getRates());
     }
     @Test
     public void testSetUserID(){
-        TestUser.setUserID("TestID");
-        assertEquals("TestID",TestUser.getUserID());
+        TestUser1.setUserID("TestID");
+        assertEquals("TestID", TestUser1.getUserID());
     }
     @Test
     public void testSetUserName(){
-        TestUser.setUsername("TestUserName");
-        assertEquals("TestUserName",TestUser.getUsername());
+        TestUser1.setUsername("TestUserName");
+        assertEquals("TestUserName", TestUser1.getUsername());
     }
     @Test
     public void testSetEmail(){
-        TestUser.setEmail("Test@email.com");
-        assertEquals("Test@email.com",TestUser.getEmail());
+        TestUser1.setEmail("Test@email.com");
+        assertEquals("Test@email.com", TestUser1.getEmail());
     }
     @Test
     public void testSetImage(){
-        TestUser.setUserimage(TestImage);
-        assertEquals(TestImage,TestUser.getImage());
+        TestUser1.setUserimage(TestImage1);
+        assertEquals(TestImage1, TestUser1.getImage());
     }
 
     @Test
-    public void sendMessageTest(){
-        Notification mNotification = owner.sendMessage("Testing message: 1.", borrower);
-        assertTrue(mNotification.getMessage().equals("Testing message: 1."));
-        assertTrue(mNotification.getReceiver().equals(borrower));
-        assertTrue(mNotification.getSender().equals(owner));
-        assertTrue(mNotification.getSeen().equals(false));
+    public void testSetRates(){
+        TestUser1.setRates(Rates);
+        assertEquals(Rates,TestUser1.getRates());
+
     }
 
-    @Test
-    public void sendRequestTest(){
-        String ori_status = mBook.getStatus();
-        borrower.sendRequest(mBook);
-        assertTrue(ori_status != mBook.getStatus());
-    }
 
-    @Test
-    public void acceptTest(){
-        String ori_status = mBook.getStatus();
-        assertTrue(ori_status.equals("REQUESTED"));
-        owner.accept(mBook, mLocation);
-        assertTrue(mBook.getStatus().equals("ACCEPTED"));
-    }
 
-    @Test
-    public void declineTest(){
-        String ori_status = mBook.getStatus();
-        borrower.sendRequest(mBook);
-        assertTrue(ori_status != mBook.getStatus());
-    }
+
+
+
+
+
 }
