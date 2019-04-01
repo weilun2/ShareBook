@@ -22,7 +22,6 @@
                 android:id="@+id/myshelf_available"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
                 android:text="@string/available"
                 android:textSize="20sp" />
@@ -37,7 +36,6 @@
                 android:id="@+id/myshelf_requested"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
                 android:text="@string/requested"
                 android:textSize="20sp" />
@@ -52,7 +50,6 @@
                 android:id="@+id/myshelf_accepted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
                 android:text="@string/accepted"
                 android:textSize="20sp" />
@@ -67,7 +64,6 @@
                 android:id="@+id/myshelf_borrowed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
                 android:text="@string/borrowed"
                 android:textSize="20sp" />
@@ -92,7 +88,7 @@
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="@color/reply_orange"
-        app:maxImageSize="50dp"
+        app:maxImageSize="40dp"
         app:srcCompat="@drawable/vector_drawable_filter" />
 
 </FrameLayout>

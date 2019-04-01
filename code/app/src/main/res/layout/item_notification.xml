@@ -11,9 +11,11 @@
             android:id="@+id/notification_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
-            android:text="username" />
-
+            android:text="username"
+            android:textColor="@color/checkedTab"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
