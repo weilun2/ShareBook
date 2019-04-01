@@ -1,95 +1,57 @@
 package ca.ualberta.cmput301w19t05.sharebook;
 
-import android.app.Activity;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.EditText;
 
-import com.robotium.solo.Solo;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 import ca.ualberta.cmput301w19t05.sharebook.activities.Register;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static junit.framework.TestCase.assertTrue;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+@RunWith(AndroidJUnit4.class)
 /**
  * Test for register a new account
  */
-@RunWith(AndroidJUnit4.class)
-
-public class RegisterTest extends ActivityTestRule<Register> {
-    private Solo solo;
-
-    public RegisterTest() {
-        super(Register.class, false, true);
-    }
-
+public class RegisterTest {
+    private String sign_up_name;
+    private String sign_up_email;
+    private String sign_up_password;
+    private String second_password;
 
     @Rule
-    public ActivityTestRule<Register> rule
-            = new ActivityTestRule<>(Register.class, false, true);
+    public ActivityTestRule<Register> activityTestRule
+            = new ActivityTestRule<>(Register.class);
 
     @Before
-    public void setUp() {
-        solo = new Solo(getInstrumentation(), rule.getActivity());
+    public void initVaildString(){
+        sign_up_name = "abc";
+        sign_up_email = "abc@abc.com";
+        sign_up_password = "1234567";
+        second_password = "1234567";
     }
 
     @Test
-    public void start()  {
-        Activity activity = rule.getActivity();
-    }
+    public void addText_sameAcitivity(){
+        onView(withId(R.id.signup_input_name)).perform(typeText(sign_up_name));
+        onView(withId(R.id.signup_input_email)).perform(typeText(sign_up_email));
+        onView(withId(R.id.signup_input_password)).perform(typeText(sign_up_password));
+        onView(withId(R.id.second_input_password)).perform(typeText(second_password));
 
-    @Test
-    public void testActivity() {
-        solo.assertCurrentActivity("Wrong Activity", Register.class);
-    }
+        onView(withId(R.id.submut_register)).perform(click());
 
-
-    @Test
-    public void userNameExistCase() {
-//
-        solo.enterText((EditText) solo.getView(R.id.signup_input_name), "samxiao");
-        solo.enterText((EditText) solo.getView(R.id.signup_input_email), "sample@gmail.com");
-        solo.enterText((EditText) solo.getView(R.id.signup_input_password), "1234567");
-        solo.enterText((EditText) solo.getView(R.id.second_input_password), "1234567");
-        solo.clickOnText("Register Now");
-        assertTrue(solo.waitForText("username exists",1,2000));
-
-    }
-
-    @Test
-    public void passwordNotMatchCase() {
-//
-        solo.enterText((EditText) solo.getView(R.id.signup_input_name), "testName");
-        solo.enterText((EditText) solo.getView(R.id.signup_input_email), "sample@gmail.com");
-        solo.enterText((EditText) solo.getView(R.id.signup_input_password), "1234567");
-        solo.enterText((EditText) solo.getView(R.id.second_input_password), "234567");
-        solo.clickOnText("Register Now");
-        assertTrue(solo.waitForText("two passwors do not match",1,2000));
-
-    }
-
-    @Test
-    public void successRegisterCase() {
-//
-        solo.enterText((EditText) solo.getView(R.id.signup_input_name), "9343");
-        solo.enterText((EditText) solo.getView(R.id.signup_input_email), "xiaosam@gmail.com");
-        solo.enterText((EditText) solo.getView(R.id.signup_input_password), "1234567");
-        solo.enterText((EditText) solo.getView(R.id.second_input_password), "1234567");
-        solo.clickOnText("Register Now");
-        assertTrue(solo.waitForText("Adding you ...",1,2000));
-    }
-
-
-    @After
-    public void tearDown() {
-        solo.finishOpenedActivities();
+        onView(withText(sign_up_name)).check(matches(isDisplayed()));
+        onView(withText(sign_up_email)).check(matches(isDisplayed()));
+        onView(withText(sign_up_password)).check(matches(isDisplayed()));
+        onView(withText(second_password)).check(matches(isDisplayed()));
     }
 }

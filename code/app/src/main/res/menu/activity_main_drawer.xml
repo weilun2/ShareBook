@@ -5,6 +5,10 @@
 
     <group android:checkableBehavior="single">
         <item
+        android:id="@+id/nav_manage"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Edit Email" />
+        <item
         android:id="@+id/log_out"
         android:icon="@drawable/sign_out____"
         android:title="Log out" />
