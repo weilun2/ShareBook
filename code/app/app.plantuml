@@ -1,0 +1,355 @@
+@startuml
+
+title __APP's Class Diagram__\n
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.cloudMessage {
+      interface APIServer {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.fragments {
+      class AcceptedFragment {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class AddBookActivity {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    class AddBookTest {
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.models {
+      class Book {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class BookDetailActivity {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    class BookDetailTest {
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.fragments {
+      class BorrowingFragment {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    class BuildConfig {
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.models {
+      class Data {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    class ExampleInstrumentedTest {
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.tools {
+      class FirebaseHandler {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.tools {
+      class ISBNAdapter {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.tools {
+      class ISBNWebAPIAdapter {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class LoginActivity {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    class LoginTest {
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class MainActivity {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class MapsActivity {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.cloudMessage {
+      class MyFirebaseMessagingService {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.tools {
+      class MyRecyclerViewAdapter {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.cloudMessage {
+      class MyResponse {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.fragments {
+      class MyShelfFragment {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.cloudMessage {
+      class Notification {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.tools {
+      class NotificationAdapter {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.fragments {
+      class NotificationFragment {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class Register {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    class RegisterTest {
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.tools {
+      class RequestAdapter {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.fragments {
+      class RequestListFragment {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.cloudMessage {
+      class Result {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.cloudMessage {
+      class RetroFitClient {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class ScanActivity {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.tools {
+      class SearchBookAdapter {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.cloudMessage {
+      class Sender {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.models {
+      class User {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    package ca.ualberta.cmput301w19t05.sharebook.activities {
+      class UserProfile {
+      }
+    }
+  }
+  
+
+  package ca.ualberta.cmput301w19t05.sharebook {
+    class UserProfileTest {
+    }
+  }
+  
+
+  AcceptedFragment -up-|> Fragment
+  AcceptedFragment o-- FirebaseHandler : firebaseHandler
+  AcceptedFragment o-- Book : book
+  AddBookActivity -up-|> AppCompatActivity
+  AddBookActivity o-- FirebaseHandler : firebaseHandler
+  AddBookActivity o-- Book : book
+  Book -up-|> Parcelable
+  Book o-- User : owner
+  BookDetailActivity -up-|> AppCompatActivity
+  BookDetailActivity o-- Book : book
+  BookDetailActivity o-- FirebaseHandler : firebaseHandler
+  BorrowingFragment -up-|> Fragment
+  BorrowingFragment o-- SearchBookAdapter : searchBookAdapter
+  BorrowingFragment o-- FirebaseHandler : firebaseHandler
+  BorrowingFragment o-- MyRecyclerViewAdapter : requestingAdapter
+  BorrowingFragment o-- MyRecyclerViewAdapter : acceptedAdapter
+  BorrowingFragment o-- MyRecyclerViewAdapter : borrowedAdapter
+  ISBNAdapter -up-|> AsyncTask
+  LoginActivity -up-|> AppCompatActivity
+  MainActivity -up-|> OnNavigationItemSelectedListener
+  MainActivity -up-|> AppCompatActivity
+  MainActivity o-- MyShelfFragment : myShelfFragment
+  MainActivity o-- BorrowingFragment : borrowingFragment
+  MainActivity o-- NotificationFragment : notificationFragment
+  MapsActivity -up-|> OnMapReadyCallback
+  MapsActivity -up-|> FragmentActivity
+  MyFirebaseMessagingService -up-|> FirebaseMessagingService
+  MyRecyclerViewAdapter -up-|> Adapter
+  MyRecyclerViewAdapter o-- ItemClickListener : mClickListener
+  MyShelfFragment -up-|> Fragment
+  MyShelfFragment o-- MyRecyclerViewAdapter : availableAdapter
+  MyShelfFragment o-- MyRecyclerViewAdapter : requestedAdapter
+  MyShelfFragment o-- MyRecyclerViewAdapter : acceptedAdapter
+  MyShelfFragment o-- MyRecyclerViewAdapter : borrowedAdapter
+  MyShelfFragment o-- FirebaseHandler : firebaseHandler
+  NotificationAdapter -up-|> Adapter
+  NotificationAdapter o-- ItemClickListener : mClickListener
+  NotificationAdapter o-- FirebaseHandler : firebaseHandler
+  NotificationFragment -up-|> Fragment
+  NotificationFragment o-- FirebaseHandler : firebaseHandler
+  NotificationFragment o-- NotificationAdapter : requestAdapter
+  Register -up-|> AppCompatActivity
+  Register o-- FirebaseHandler : firebaseHandler
+  RequestAdapter -up-|> Adapter
+  RequestAdapter o-- ItemClickListener : mClickListener
+  RequestAdapter o-- Book : book
+  RequestAdapter o-- FirebaseHandler : firebaseHandler
+  RequestListFragment -up-|> Fragment
+  RequestListFragment o-- RequestAdapter : adapter
+  RequestListFragment o-- FirebaseHandler : firebaseHandler
+  RequestListFragment o-- Book : book
+  ScanActivity -up-|> AppCompatActivity
+  SearchBookAdapter -up-|> Adapter
+  SearchBookAdapter o-- ItemClickListener : mClickListener
+  Sender o-- Notification : notification
+  Sender o-- Data : data
+  User -up-|> Parcelable
+  UserProfile -up-|> AppCompatActivity
+  UserProfile o-- FirebaseHandler : firebaseHandler
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
