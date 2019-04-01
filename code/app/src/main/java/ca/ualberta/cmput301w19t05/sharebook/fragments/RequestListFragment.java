@@ -80,8 +80,6 @@ public final class RequestListFragment extends Fragment {
 
 //                    }
 
-
-
             }
 
             @Override

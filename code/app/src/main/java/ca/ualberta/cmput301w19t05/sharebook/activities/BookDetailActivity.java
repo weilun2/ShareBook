@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -116,6 +117,16 @@ public class BookDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
         initViews();
+
+        Toolbar toolbar = findViewById(R.id.toolbar_detail);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         book = intent.getParcelableExtra(BOOK);
@@ -237,46 +248,46 @@ public class BookDetailActivity extends AppCompatActivity {
             case BORROWED:
                 setReturn();
                 break;
-            }
+        }
 
-            TextView ownerText = owner.findViewWithTag("content");
-            final String ownerName = ownerText.getText().toString();
-            owner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!inProgress) {
-                        showDialog();
-                        Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
-                                .orderByChild("username").equalTo(ownerName);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue() != null) {
-                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                        User user = data.getValue(User.class);
-                                        Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
-                                        intent.putExtra("owner", user);
-                                        hideDialog();
-                                        startActivity(intent);
-
-                                    }
+        TextView ownerText = owner.findViewWithTag("content");
+        final String ownerName = ownerText.getText().toString();
+        owner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!inProgress) {
+                    showDialog();
+                    Query query = firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                            .orderByChild("username").equalTo(ownerName);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null) {
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    User user = data.getValue(User.class);
+                                    Intent intent = new Intent(BookDetailActivity.this, UserProfile.class);
+                                    intent.putExtra("owner", user);
+                                    hideDialog();
+                                    startActivity(intent);
 
                                 }
+
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(BookDetailActivity.this, databaseError.toString(),
-                                        Toast.LENGTH_SHORT).show();
-                                hideDialog();
-                            }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(BookDetailActivity.this, databaseError.toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            hideDialog();
+                        }
 
 
-                        });
-                    }
-
+                    });
                 }
-            });
+
+            }
+        });
 
 
 

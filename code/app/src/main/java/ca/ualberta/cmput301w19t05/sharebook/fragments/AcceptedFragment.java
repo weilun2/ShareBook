@@ -81,7 +81,7 @@ public class AcceptedFragment extends Fragment {
             case "accepted":
                 positionView.setVisibility(View.VISIBLE);
                 if (book.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())){
-                    positionView.setText("Click me to add location");
+                    positionView.setText("Set Location");
                     positionView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -97,7 +97,7 @@ public class AcceptedFragment extends Fragment {
                                 final User temp = it.getValue(User.class);
                                 if (temp!= null){
                                     requesterName.setVisibility(View.VISIBLE);
-                                    requesterName.setText("requester: "+temp.getUsername());
+                                    requesterName.setText("Requester: "+temp.getUsername());
                                     requesterName.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -117,7 +117,7 @@ public class AcceptedFragment extends Fragment {
                     });
                 }
                 else {
-                    positionView.setText("The owner has not reset location");
+                    positionView.setText("Location not set yet");
                 }
 
                 firebaseHandler.getMyRef().child("Location").child(book.getBookId()).addValueEventListener(new ValueEventListener() {

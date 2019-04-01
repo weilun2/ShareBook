@@ -2,39 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="16dp"
     android:orientation="vertical">
-
 
     <TextView
         android:id="@+id/requester"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:layout_weight="1"
         android:text="TextView"
-        android:visibility="gone"/>
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/locationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:layout_weight="1"
         android:visibility="gone"
         android:text="location:"
-        android:textSize="@dimen/place_autocomplete_progress_size" />
-
+        android:textColor="@color/place_autocomplete_prediction_primary_text"
+        android:textSize="@dimen/place_autocomplete_progress_size"/>
 
     <Button
         android:id="@+id/scan_book_button"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="scan book" />
+        android:text="Scan" />
+
     <TextView
         android:id="@+id/scan_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:layout_weight="1"
         android:text="book scanned successfully"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:orientation="vertical">
 
@@ -23,9 +22,10 @@
                 android:id="@+id/myshelf_available"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="20sp"
-                android:text="@string/available" />
+                android:text="@string/available"
+                android:textSize="20sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/available_list"
@@ -37,9 +37,10 @@
                 android:id="@+id/myshelf_requested"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="20sp"
-                android:text="@string/requested" />
+                android:text="@string/requested"
+                android:textSize="20sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/requested_list"
@@ -51,9 +52,10 @@
                 android:id="@+id/myshelf_accepted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="20sp"
-                android:text="@string/accepted" />
+                android:text="@string/accepted"
+                android:textSize="20sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/accepted_list"
@@ -65,9 +67,10 @@
                 android:id="@+id/myshelf_borrowed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="20sp"
-                android:text="@string/borrowed" />
+                android:text="@string/borrowed"
+                android:textSize="20sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/borrowed_list"
