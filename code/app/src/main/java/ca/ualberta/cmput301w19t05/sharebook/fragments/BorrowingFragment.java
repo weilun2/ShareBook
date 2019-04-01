@@ -73,8 +73,6 @@ public final class BorrowingFragment extends Fragment {
         viewAccepted();
         viewBorrowed();
 
-
-
     }
 
     private void viewBorrowed() {
@@ -242,6 +240,16 @@ public final class BorrowingFragment extends Fragment {
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(verticalLayoutManager);
         requestingAdapter = new MyRecyclerViewAdapter(getActivity(), new ArrayList<Book>());
+        requestingAdapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.d(TAG, "setClickListener: clicked");
+                Intent intent = new Intent(getActivity(), BookDetailActivity.class);
+                intent.putExtra(BookDetailActivity.BOOK, requestingAdapter.getItem(position));
+                intent.putExtra(BookDetailActivity.FUNCTION,BookDetailActivity.REQUEST);
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(requestingAdapter);
         firebaseHandler.getMyRef().child(Book.REQUESTED).addChildEventListener(new ChildEventListener() {
             @Override
@@ -264,12 +272,10 @@ public final class BorrowingFragment extends Fragment {
                 if (bookId!= null){
                     removeBookById(REQUEST, bookId);
                 }
-
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
@@ -278,11 +284,9 @@ public final class BorrowingFragment extends Fragment {
             }
         });
 
-
     }
 
     private void removeBookById(final int adapterType,final String bookId) {
-
 
         firebaseHandler.getMyRef().child(getString(R.string.db_books))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
