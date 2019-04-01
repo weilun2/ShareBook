@@ -242,8 +242,25 @@ public class FirebaseHandler {
     }
 
     public void declineRequest(Book book, User user){
-        changeBookStatus(book,Book.AVAILABLE);
         myRef.child(Book.REQUESTED).child(book.getBookId()).child(user.getUserID()).setValue(null);
+        final DatabaseReference bookPath = myRef.child("books").child(book.getOwner().getUserID())
+                .child(book.getBookId());
+
+        myRef.child(Book.REQUESTED).child(book.getBookId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildren() == null){
+                             bookPath.child("status").setValue(Book.AVAILABLE);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
         sendNotification(DECLINE,book,user);
     }
 
