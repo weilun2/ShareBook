@@ -97,7 +97,7 @@ public class AcceptedFragment extends Fragment {
                                 final User temp = it.getValue(User.class);
                                 if (temp!= null){
                                     requesterName.setVisibility(View.VISIBLE);
-                                    requesterName.setText("Requester : "+temp.getUsername());
+                                    requesterName.setText("Requester: "+temp.getUsername());
                                     requesterName.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
