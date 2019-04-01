@@ -256,7 +256,7 @@ public class FirebaseHandler {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String targetToken = dataSnapshot.getValue(String.class);
                         Notification notification = null;
-                        Data data = new Data(book.getBookId(),notificationType,getCurrentUser().getUserID(),receiver.getUserID(),book.getTitle(),receiver.getUsername());
+                        Data data = new Data(book.getBookId(),notificationType,getCurrentUser().getUserID(),receiver.getUserID(),book.getTitle(),getCurrentUser().getUsername());
                         switch (notificationType) {
                             case REQUEST:
                                 notification = new Notification("you receive a request", "Request");
@@ -368,10 +368,10 @@ public class FirebaseHandler {
                 if (owner!=null && owner.getUserID()!=null){
                     if (owner.getRates()==null){
                         owner.setRates(new ArrayList<Long>());
-                        owner.getRates().add(Long.valueOf(res));
+                        owner.getRates().add((long) res);
                     }
                     else {
-                        owner.getRates().add(Long.valueOf(res));
+                        owner.getRates().add((long) res);
                     }
                     myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(book.getOwner()
                             .getUserID()).setValue(owner);

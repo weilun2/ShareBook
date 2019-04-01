@@ -212,28 +212,44 @@ public class AcceptedFragment extends Fragment {
                 if (type.equals("return")){
                     View view = View.inflate(getActivity(), R.layout.content_edit, null);
                     final EditText userInput = view.findViewById(R.id.user_input);;
-                    new AlertDialog.Builder(getActivity()).setView(view)
+                    AlertDialog dialog= new AlertDialog.Builder(getActivity()).setView(view)
                             .setMessage("input your rate form 0 to 10")
-                            .setPositiveButton("submit", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("submit", null)
+                            .create();
+                    dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                            String a = userInput.getText().toString();
+                            button.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
+                                public void onClick(View v) {
                                     String a = userInput.getText().toString();
                                     if (!"".equals(a)){
                                         int res = Integer.valueOf(userInput.getText().toString());
                                         if (res>=0&&res<=10){
                                             if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())){
                                                 firebaseHandler.returnBook(book, res);
+                                                if(getActivity()!=null)
+                                                    getActivity().finish();
                                             }else{
                                                 firebaseHandler.returned(book, res);
+                                                if(getActivity()!=null)
+                                                    getActivity().finish();
                                             }
 
                                         }
+                                        else {
+                                            userInput.setError("rate must be an integer from 0 to 10");
+                                            userInput.requestFocus();
+                                        }
                                     }
-
                                 }
-                            })
-                            .show();
+                            });
+
+                        }
+                    });
+                    dialog.show();
 
 
                 }else {
