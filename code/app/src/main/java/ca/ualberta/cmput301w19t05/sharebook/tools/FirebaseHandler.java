@@ -222,7 +222,7 @@ public class FirebaseHandler {
         sendNotification(ACCEPT,book, user);
     }
 
-    public void declineRequest(Book book, User user){
+    public void declineRequest(Book book, User user, final boolean flag){
         myRef.child(Book.REQUESTED).child(book.getBookId()).child(user.getUserID()).setValue(null);
         final DatabaseReference bookPath = myRef.child("books").child(book.getOwner().getUserID())
                 .child(book.getBookId());
@@ -232,6 +232,7 @@ public class FirebaseHandler {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.hasChildren()){
+                            if (flag)
                             bookPath.child("status").setValue(Book.AVAILABLE);
                         }
 

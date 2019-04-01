@@ -115,7 +115,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         firebaseHandler.acceptRequest(book,user);
                     }
                     else {
-                        firebaseHandler.declineRequest(book,it);
+                        firebaseHandler.declineRequest(book,it,false);
                     }
                 }
 
@@ -127,7 +127,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                firebaseHandler.declineRequest(book,user);
+                firebaseHandler.declineRequest(book,user, true);
             }
         });
     }

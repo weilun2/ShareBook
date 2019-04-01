@@ -284,7 +284,7 @@ public final class BorrowingFragment extends Fragment {
     private void removeBookById(final int adapterType,final String bookId) {
 
 
-        firebaseHandler.getMyRef().child(getString(R.string.db_books))
+        firebaseHandler.getMyRef().child("books")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -322,7 +322,7 @@ public final class BorrowingFragment extends Fragment {
 
     private void addBookById(final int adapterType, final String bookId) {
 
-        firebaseHandler.getMyRef().child(getString(R.string.db_books))
+        firebaseHandler.getMyRef().child("books")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
