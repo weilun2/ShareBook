@@ -376,27 +376,31 @@ public final class BorrowingFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                Book temp = dataSnapshot.getValue(Book.class);
+                adapter.clear();
+                for (DataSnapshot it : dataSnapshot.getChildren()) {
+                    Book temp = it.getValue(Book.class);
 
-                if (temp != null) {
-                    if (requestingBooks.contains(temp)||!status.contains(temp.getStatus())){
-                        adapter.removeBook(temp);
-                        return;
-                    }
-                    if (adapter.contains(temp)) {
-                        adapter.changeBook(temp);
-                    } else {
-                        adapter.addBook(temp);
-                    }
 
+                    if (temp != null) {
+                        if (requestingBooks.contains(temp) || !status.contains(temp.getStatus())) {
+                            adapter.removeBook(temp);
+                            continue;
+                        }
+                        else {
+                            adapter.addBook(temp);
+                        }
+
+                    }
                 }
 
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Book temp = dataSnapshot.getValue(Book.class);
-                adapter.removeBook(temp);
+                for (DataSnapshot it : dataSnapshot.getChildren()) {
+                    Book temp = it.getValue(Book.class);
+                    adapter.removeBook(temp);
+                }
             }
 
             @Override

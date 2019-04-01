@@ -38,6 +38,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
+    private String constraintString;
 
 
     public SearchBookAdapter(Context context, List<Book> books) {
@@ -45,6 +46,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.bookList = books;
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
+        constraintString = "";
         //filteredBook = books;
     }
 
@@ -52,7 +54,18 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (bookList == null) {
             bookList = new ArrayList<>();
         }
-        bookList.add(0, book);
+        if (!contains(book)){
+            bookList.add(0, book);
+            getFilter().filter(constraintString);
+        }
+
+    }
+    public void clear(){
+
+        bookList = new ArrayList<>();
+        filteredBook = new ArrayList<>();
+
+
     }
 
     public void changeBook(Book book) {
@@ -75,6 +88,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         for (Book it : bookList) {
             if (book.getBookId().equals(it.getBookId())) {
                 bookList.set(index, book);
+                return;
             }
         }
     }
@@ -193,7 +207,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                String constraintString = constraint.toString();
+                constraintString = constraint.toString();
                 String[] constraintList = constraintString.split("\\s+");
 
                 if (constraintString.isEmpty()) {
