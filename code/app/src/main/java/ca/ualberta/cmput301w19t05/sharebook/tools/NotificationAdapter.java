@@ -46,10 +46,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         if (FirebaseHandler.REQUEST.equals(temp.getRequestType())) {
             viewHolder.requesterName.setText(temp.getSenderName() + " request " + temp.getBookName());
         }
-        else if (FirebaseHandler.ACCEPT.equals(temp.getRequestType())
-                ||FirebaseHandler.DECLINE.equals(temp.getRequestType())) {
+        else if (FirebaseHandler.ACCEPT.equals(temp.getRequestType())) {
 
             viewHolder.requesterName.setText("your request of " + temp.getBookName() + " has been accepted");
+        }
+        else if (FirebaseHandler.DECLINE.equals(temp.getRequestType())){
+            viewHolder.requesterName.setText("your request of " + temp.getBookName() + " has been declined");
         }
 
     }
