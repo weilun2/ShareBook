@@ -157,7 +157,6 @@ public class BookDetailActivity extends AppCompatActivity {
                         dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                System.out.println("yes pressed");
                                 initialPhoto = firebaseHandler.getStorageRef().child("image/book_placeholder.png");
                                 getUriAndUpLoad(initialPhoto, true);
 
@@ -278,6 +277,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
                 }
             });
+
 
 
     }

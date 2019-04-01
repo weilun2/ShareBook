@@ -26,8 +26,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
+import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 /**
  * A userprofile screen that offers Username, useremail, userImage, and can be edited
@@ -41,6 +45,7 @@ public class UserProfile extends AppCompatActivity {
     private FirebaseUser user;
     ProgressDialog progressDialog;
     private DatabaseReference reference;
+    private FirebaseHandler firebaseHandler;
     private String TAG;
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -173,22 +178,46 @@ public class UserProfile extends AppCompatActivity {
                 .child(getString(R.string.db_username_email_tuple));
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
+        firebaseHandler = new FirebaseHandler(UserProfile.this);
 
 
         viewUserImage = findViewById(R.id.UserImage);
         viewUserName = findViewById(R.id.UserName);
         viewUserEmail = findViewById(R.id.UserEmail);
         Intent intent = getIntent();
-        User owner = intent.getParcelableExtra("owner");
+        final User owner = intent.getParcelableExtra("owner");
         if (owner != null) {
             viewUserName.setText(owner.getUsername());
             viewUserEmail.setText(owner.getEmail());
+            final TextView userScore = findViewById(R.id.UserRate);
+            userScore.setVisibility(View.VISIBLE);
+            firebaseHandler.getMyRef().child(getString(R.string.db_username_email_tuple))
+                    .child(owner.getUserID()).child("rates").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    List<Long> temp = (ArrayList<Long>)dataSnapshot.getValue();
+                    if (temp!=null&&!temp.isEmpty()){
+                        owner.setRates(temp);
+                        userScore.setText("rate: " + owner.average() + "/10 (" + owner.getRateCount()+")" );
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+
         } else {
             viewUserName.setText(user.getDisplayName());
             viewUserEmail.setText(user.getEmail());
             viewUserEmail.setOnClickListener(onClickListener);
             viewUserName.setOnClickListener(onClickListener);
         }
+
+
 
 
     }

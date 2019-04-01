@@ -77,7 +77,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void removeUser(User user) {
         int index = 0;
         for (User it : requesters) {
-            if (it.getUserID().equals(user.getUserID())) {
+            if (user.getUserID().equals(it.getUserID())) {
                 requesters.remove(index);
                 notifyItemRemoved(index);
                 return;
