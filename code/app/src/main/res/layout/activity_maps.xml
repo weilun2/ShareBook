@@ -4,21 +4,20 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
 
-
-    >
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.MapsActivity" />
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginTop="5dp">
+        android:layout_margin="8dp">
+
         <fragment
             android:id="@+id/location_auto_search"
             android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
@@ -29,34 +28,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="end|bottom">
+        android:layout_gravity="bottom|end"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/submit_location"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_gap"
-            android:text="submit"
-            android:layout_gravity="center"
-            />
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="submit" />
 
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/goto_my_location"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-
+            android:layout_margin="@dimen/default_gap"
+            android:layout_weight="1"
             android:background="@android:color/black"
             android:clickable="true"
-            android:layout_margin="@dimen/default_gap"
+            android:focusable="true"
             map:backgroundTint="@android:color/white"
-            map:srcCompat="@drawable/vector_drawable_target"
-            android:focusable="true" />
+            map:srcCompat="@drawable/vector_drawable_target" />
 
     </LinearLayout>
 
