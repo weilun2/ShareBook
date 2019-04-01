@@ -224,8 +224,12 @@ public class AcceptedFragment extends Fragment {
                                         if (res>=0&&res<=10){
                                             if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())){
                                                 firebaseHandler.returnBook(book, res);
+                                                if(getActivity()!=null)
+                                                    getActivity().finish();
                                             }else{
                                                 firebaseHandler.returned(book, res);
+                                                if(getActivity()!=null)
+                                                getActivity().finish();
                                             }
 
                                         }

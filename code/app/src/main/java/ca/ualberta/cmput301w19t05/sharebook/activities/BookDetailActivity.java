@@ -453,7 +453,6 @@ public class BookDetailActivity extends AppCompatActivity {
 
         //bookImage.setImageURI(Uri.parse(book.getPhoto()));
         Glide.with(this).load(Uri.parse(book.getPhoto()))
-
                 .into(bookImage);
 
     }
