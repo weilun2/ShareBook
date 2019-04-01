@@ -237,9 +237,11 @@ public class AcceptedFragment extends Fragment {
                 }else {
                     if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())) {
                         firebaseHandler.confirmLent(book);
+                        getActivity().finish();
 
                     } else {
                         firebaseHandler.confirmBorrowing(book);
+                        getActivity().finish();
                     }
                 }
 
