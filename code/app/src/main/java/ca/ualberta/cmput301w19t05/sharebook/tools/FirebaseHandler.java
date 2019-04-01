@@ -213,29 +213,52 @@ public class FirebaseHandler {
     }
 
 
-    public void acceptRequest(Book book, User user){
+    public void acceptRequest(final Book book, User user){
         changeBookStatus(book,Book.ACCEPTED);
         myRef.child(Book.ACCEPTED)
                 .child(book.getBookId()).child(user.getUserID()).setValue(user);
         myRef.child(Book.REQUESTED).child(book.getBookId()).child(user.getUserID()).setValue(null);
         sendNotification(ACCEPT,book, user);
 
+
         myRef.child(Book.REQUESTED).child(book.getBookId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userIdNode : dataSnapshot.getChildren()){
-                    //todo: send notification
+                for (DataSnapshot userId : dataSnapshot.getChildren()){
+                    String targetToken = userId.getValue(String.class);
+                    Notification notification = new Notification("The owner has accepted other user's request.", "Declined");
+                    Data data = new Data(book.getBookId(),DECLINE,getCurrentUser().getUserID(),targetToken,book.getTitle(),book.getOwner().getUsername());
+
+                    Sender sender = new Sender(notification, data, targetToken);
+                    getFCMClient().sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                        @Override
+                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                            if ((response.body() != null ? response.body().success : 0) == 1){
+                                Toast.makeText(mContext, "success", Toast.LENGTH_LONG).show();
+
+                            }
+                            else {
+                                Toast.makeText(mContext, "fail", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                            myRef.child(Book.REQUESTED).child(book.getBookId()).removeValue();
+                        }
+                    });
+
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                myRef.child(Book.REQUESTED).child(book.getBookId()).removeValue();
             }
         });
-
         myRef.child(Book.REQUESTED).child(book.getBookId()).removeValue();
+
 
 
     }
