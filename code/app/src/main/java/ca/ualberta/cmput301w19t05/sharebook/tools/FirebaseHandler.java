@@ -358,7 +358,7 @@ public class FirebaseHandler {
                 .child(getCurrentUser().getUserID()).setValue(1);
     }
 
-    public void returned(final Book book, final int res) {
+    public void returnBook(final Book book, final int res) {
         myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
                 .child(getCurrentUser().getUserID()).setValue(res);
         myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(book.getOwner()
@@ -386,7 +386,7 @@ public class FirebaseHandler {
         });
     }
 
-    public void returnBook(final Book book, final int res) {
+    public void returned(final Book book, final int res) {
         myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
                 .child(getCurrentUser().getUserID()).setValue(res);
         myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())

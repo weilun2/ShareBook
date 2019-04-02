@@ -225,15 +225,15 @@ public class AcceptedFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     String a = userInput.getText().toString();
-                                    if (!"".equals(a)){
-                                        int res = Integer.valueOf(userInput.getText().toString());
+                                    if (!"".equals(a)&&!a.contains(".")){
+                                        int res = Integer.valueOf(a);
                                         if (res>=0&&res<=10){
                                             if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())){
-                                                firebaseHandler.returnBook(book, res);
+                                                firebaseHandler.returned(book, res);
                                                 if(getActivity()!=null)
                                                     getActivity().finish();
                                             }else{
-                                                firebaseHandler.returned(book, res);
+                                                firebaseHandler.returnBook(book, res);
                                                 if(getActivity()!=null)
                                                     getActivity().finish();
                                             }
