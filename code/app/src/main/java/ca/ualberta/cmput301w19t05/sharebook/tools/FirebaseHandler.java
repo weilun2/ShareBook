@@ -361,29 +361,16 @@ public class FirebaseHandler {
     public void returnBook(final Book book, final int res) {
         myRef.child(FirebaseHandler.LENT_SCAN).child(book.getBookId())
                 .child(getCurrentUser().getUserID()).setValue(res);
+        User owner = book.getOwner();
+        if (owner.getRates()==null){
+            owner.setRates(new ArrayList<Long>());
+            owner.getRates().add((long) res);
+        }
+        else {
+            owner.getRates().add((long) res);
+        }
         myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(book.getOwner()
-                .getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User owner = dataSnapshot.getValue(User.class);
-                if (owner!=null && owner.getUserID()!=null){
-                    if (owner.getRates()==null){
-                        owner.setRates(new ArrayList<Long>());
-                        owner.getRates().add((long) res);
-                    }
-                    else {
-                        owner.getRates().add((long) res);
-                    }
-                    myRef.child(mContext.getString(R.string.db_username_email_tuple)).child(book.getOwner()
-                            .getUserID()).setValue(owner);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+                .getUserID()).setValue(owner);
     }
 
     public void returned(final Book book, final int res) {
