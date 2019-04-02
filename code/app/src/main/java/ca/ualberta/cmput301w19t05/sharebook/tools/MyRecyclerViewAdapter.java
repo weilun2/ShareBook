@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +34,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private Context mContext;
 
 
+
     // data is passed into the constructor
     public MyRecyclerViewAdapter(Context context, List<Book> books) {
         this.mInflater = LayoutInflater.from(context);
         mContext = context;
         this.mbooks = books;
 
+
     }
 
-    public void addBook(Book book) {
+    public void addBook(final Book book) {
         if (mbooks == null) {
             mbooks = new ArrayList<>();
         }
         mbooks.add(0, book);
         notifyItemInserted(0);
+
     }
 
     public void changeBook(Book book) {

@@ -49,8 +49,9 @@ public class AcceptedFragment extends Fragment {
     private TextView positionView;
     private LatLng currentLocation;
     private Button scan;
-    TextView scan_done;
-    String type;
+    private TextView scan_done;
+    private String type;
+    private AlertDialog dialog;
 
 
     @Nullable
@@ -212,13 +213,13 @@ public class AcceptedFragment extends Fragment {
                 if (type.equals("return")){
                     View view = View.inflate(getActivity(), R.layout.content_edit, null);
                     final EditText userInput = view.findViewById(R.id.user_input);;
-                    AlertDialog dialog= new AlertDialog.Builder(getActivity()).setView(view)
+                    dialog= new AlertDialog.Builder(getActivity()).setView(view)
                             .setMessage("input your rate form 0 to 10")
                             .setPositiveButton("submit", null)
                             .create();
                     dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
-                        public void onShow(DialogInterface dialog) {
+                        public void onShow(final DialogInterface dialog) {
                             Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
                             String a = userInput.getText().toString();
                             button.setOnClickListener(new View.OnClickListener() {
@@ -230,12 +231,18 @@ public class AcceptedFragment extends Fragment {
                                         if (res>=0&&res<=10){
                                             if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())){
                                                 firebaseHandler.returned(book, res);
-                                                if(getActivity()!=null)
+                                                if(getActivity()!=null){
+                                                    dialog.dismiss();
                                                     getActivity().finish();
+                                                }
+
                                             }else{
                                                 firebaseHandler.returnBook(book, res);
-                                                if(getActivity()!=null)
+                                                if(getActivity()!=null){
+                                                    dialog.dismiss();
                                                     getActivity().finish();
+                                                }
+
                                             }
 
                                         }
@@ -252,14 +259,21 @@ public class AcceptedFragment extends Fragment {
                     dialog.show();
 
 
+
+
                 }else {
                     if (firebaseHandler.getCurrentUser().getUserID().equals(book.getOwner().getUserID())) {
                         firebaseHandler.confirmLent(book);
-                        getActivity().finish();
+                        if(getActivity()!=null){
+                            getActivity().finish();
+                        }
 
                     } else {
                         firebaseHandler.confirmBorrowing(book);
-                        getActivity().finish();
+                        if(getActivity()!=null){
+
+                            getActivity().finish();
+                        }
                     }
                 }
 
@@ -272,4 +286,11 @@ public class AcceptedFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStop() {
+        if (dialog!=null&&dialog.isShowing()){
+            dialog.dismiss();
+        }
+        super.onStop();
+    }
 }

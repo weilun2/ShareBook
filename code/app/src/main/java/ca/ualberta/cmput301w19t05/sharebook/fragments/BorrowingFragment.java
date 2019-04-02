@@ -140,6 +140,9 @@ public final class BorrowingFragment extends Fragment {
         acceptedAdapter.setClickListener(new MyRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                if (position<0||position>=acceptedAdapter.getItemCount()){
+                    return;
+                }
                 Log.d(TAG, "setClickListener: clicked");
 
                 Intent intent = new Intent(getActivity(), BookDetailActivity.class);
@@ -190,6 +193,9 @@ public final class BorrowingFragment extends Fragment {
         searchBookAdapter.setClickListener(new SearchBookAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                if (position<0||position>=searchBookAdapter.getItemCount()){
+                    return;
+                }
                 Log.d(TAG, "onItemClick: " + position);
                 Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                 intent.putExtra(BookDetailActivity.BOOK, searchBookAdapter.getItem(position));
@@ -293,7 +299,6 @@ public final class BorrowingFragment extends Fragment {
                                 Book book = users.child(bookId).getValue(Book.class);
                                 switch (adapterType){
                                     case REQUEST:{
-                                        searchBookAdapter.addBook(book);
                                         requestingBooks.remove(book);
                                         requestingAdapter.removeBook(book);
                                         break;
@@ -304,9 +309,12 @@ public final class BorrowingFragment extends Fragment {
                                     }
                                     case BORROWED:{
                                         borrowedAdapter.removeBook(book);
+                                        requestingBooks.remove(book);
+
                                         break;
                                     }
                                 }
+                                searchBookAdapter.addBook(book);
 
                             }
                         }

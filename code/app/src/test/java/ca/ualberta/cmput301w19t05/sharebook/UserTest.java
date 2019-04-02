@@ -30,20 +30,18 @@ public class UserTest {
 
     @Before
     public void setup(){
-        TestUser1 = new User("TestID","TestUserName","Test@email.com", TestImage1);
+        TestUser1 = new User("TestID","TestUserName","Test@email.com");
         Rates = new ArrayList<>();
         Rates.add( 1l);
         Rates.add( 2l);
         Rates.add( 3l);
         TestUser2 = new User("TestID2","TestUserName2","Test2@email.com", TestImage2,3,456);
-        TestUser2.setRates(Rates);
     }
     @Test
     public void testConstructor(){
       assertEquals("TestID", TestUser1.getUserID());
       assertEquals("TestUserName", TestUser1.getUsername());
       assertEquals("Test@email.com", TestUser1.getEmail());
-      assertEquals(TestImage1, TestUser1.getImage());
       assertEquals(3,TestUser2.getRateCount());
       assertEquals(Rates,TestUser2.getRates());
     }
@@ -62,18 +60,8 @@ public class UserTest {
         TestUser1.setEmail("Test@email.com");
         assertEquals("Test@email.com", TestUser1.getEmail());
     }
-    @Test
-    public void testSetImage(){
-        TestUser1.setUserimage(TestImage1);
-        assertEquals(TestImage1, TestUser1.getImage());
-    }
 
-    @Test
-    public void testSetRates(){
-        TestUser1.setRates(Rates);
-        assertEquals(Rates,TestUser1.getRates());
 
-    }
 
 
 

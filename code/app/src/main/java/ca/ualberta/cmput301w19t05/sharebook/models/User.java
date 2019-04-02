@@ -5,8 +5,13 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /**
  * User
  * this class stores user information, each instance refers to a user which contains userID, user name, email, image, and ratting by other users.
@@ -19,25 +24,14 @@ public class User implements Parcelable {
     private String userID;
     private String username;
     private String email;
-    private Uri image;
-    public List<Long> rates;
-    public User(String userID, String username, String email, Uri image) {
-        this.userID = userID;
-        this.username = username;
-        this.email = email;
-        this.image = image;
+    private List<Long> rates;
 
-
-    }
 
     public User(String userID, String username, String email, Uri image, int rate_count, double rate) {
         this.userID = userID;
         this.username = username;
         this.email = email;
-        this.image = image;
-
     }
-
 
     public User(String userID, String username, String email) {
         this.userID = userID;
@@ -50,7 +44,8 @@ public class User implements Parcelable {
         return rates;
     }
 
-    public void setRates(List<Long> rates) {
+
+    public void setRates(ArrayList<Long> rates) {
         if (rates==null){
             this.rates = new ArrayList<>();
         }else{
@@ -72,22 +67,7 @@ public class User implements Parcelable {
         }
         return sum;
     }
-    public int getRateCount(){
-        if (rates==null){
-            return 0;
-        }
-        else {
-            return rates.size();
-        }
-    }
 
-    public Uri getImage() {
-        return image;
-    }
-
-    public void setUserimage(Uri image) {
-        this.image = image;
-    }
 
     public String getUsername() { return username; }
 
@@ -112,9 +92,6 @@ public class User implements Parcelable {
     }
 
 
-    public void editShelf(Intent data){
-
-    }
 
     public static final Parcelable.Creator<User> CREATOR = new Creator<User>() {
         @Override
@@ -132,8 +109,6 @@ public class User implements Parcelable {
         userID = in.readString();
         username = in.readString();
         email = in.readString();
-        image = Uri.parse(in.readString());
-
 
     }
 
@@ -147,6 +122,15 @@ public class User implements Parcelable {
         dest.writeString(userID);
         dest.writeString(username);
         dest.writeString(email);
-        dest.writeString(String.valueOf(image));
+
+    }
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("email",email);
+        result.put("userID",userID);
+        result.put("username",username);
+        result.put("rates",rates);
+        return result;
     }
 }

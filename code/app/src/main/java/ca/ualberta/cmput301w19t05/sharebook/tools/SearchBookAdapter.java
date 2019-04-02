@@ -54,7 +54,8 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (bookList == null) {
             bookList = new ArrayList<>();
         }
-        if (!contains(book)){
+        if (!contains(book)&&(Book.AVAILABLE.equals(book.getStatus())||Book.REQUESTED
+                .equals(book.getStatus()))){
             bookList.add(0, book);
             getFilter().filter(constraintString);
         }
