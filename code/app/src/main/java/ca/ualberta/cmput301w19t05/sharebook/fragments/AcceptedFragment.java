@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.MapsActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.ScanActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
@@ -172,7 +171,7 @@ public class AcceptedFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Integer a = dataSnapshot.getValue(Integer.class);
-                        if (a!=null && a==1){
+                        if (a != null && a >= 0 && a <= 10) {
                             scan.setVisibility(View.GONE);
                             scan_done.setVisibility(View.VISIBLE);
                         }
