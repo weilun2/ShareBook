@@ -16,7 +16,7 @@
     <string name="prompt_password_again">re-enter password</string>
     <string name="back">back</string>
     <string name="username_string">username</string>
-    <string name="error_two_password_not_match">two passwors do not match</string>
+    <string name="error_two_password_not_match">two passwords do not match</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

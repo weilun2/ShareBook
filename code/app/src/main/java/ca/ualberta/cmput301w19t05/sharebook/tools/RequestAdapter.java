@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
-import ca.ualberta.cmput301w19t05.sharebook.activities.BookDetailActivity;
 import ca.ualberta.cmput301w19t05.sharebook.activities.UserProfile;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
@@ -32,7 +31,7 @@ import ca.ualberta.cmput301w19t05.sharebook.models.User;
  */
 public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<User> requesters;
+    private List<User> requester;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     final private Book book;
@@ -41,7 +40,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public RequestAdapter(Context context, List<User> users, Book book) {
         this.book = book;
-        this.requesters = users;
+        this.requester = users;
         this.mInflater = LayoutInflater.from(context);
         this.firebaseHandler = new FirebaseHandler(context);
         this.mContext = context;
@@ -53,19 +52,19 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void addUser(User user) {
-        if (requesters == null) {
-            requesters = new ArrayList<>();
+        if (requester == null) {
+            requester = new ArrayList<>();
         }
-        requesters.add(0, user);
+        requester.add(0, user);
         notifyItemInserted(0);
     }
 
     public void changeUser(User user) {
 
         int index = 0;
-        for (User it : requesters) {
+        for (User it : requester) {
             if (it.getUserID().equals(user.getUserID())) {
-                requesters.set(index, user);
+                requester.set(index, user);
                 notifyItemChanged(index);
                 return;
             } else {
@@ -76,7 +75,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public boolean contains(User user) {
 
-        for (User it : requesters) {
+        for (User it : requester) {
             if (it.getUserID().equals(user.getUserID())) {
                 return true;
             }
@@ -87,9 +86,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void removeUser(User user) {
         int index = 0;
         if(user.getUserID()!=null){
-            for (User it : requesters) {
+            for (User it : requester) {
                 if (user.getUserID().equals(it.getUserID())) {
-                    requesters.remove(index);
+                    requester.remove(index);
                     notifyItemRemoved(index);
                     return;
                 } else {
@@ -114,7 +113,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private void populateItemRows(RequestAdapter.UserViewHolder holder, int position) {
-        final User user = requesters.get(position);
+        final User user = requester.get(position);
         holder.userName.setText(user.getUsername());
         holder.userName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +140,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                for(User it: requesters){
+                for(User it: requester){
                     if (it.getUserID().equals(user.getUserID())){
                         firebaseHandler.acceptRequest(book,user);
                     }
@@ -167,11 +166,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public User getItem(int position) {
-        return requesters.get(position);
+        return requester.get(position);
     }
     @Override
     public int getItemCount() {
-        return requesters.size();
+        return requester.size();
     }
 
     public interface ItemClickListener {

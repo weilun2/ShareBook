@@ -2,8 +2,8 @@ package ca.ualberta.cmput301w19t05.sharebook.models;
 
 /**
  * Data
- * this class stores data information, each instance refers to a data which offers a share book record, incude
- * bookID, requestTyoe, sender, receiver, book name and sender name.
+ * this class stores data information, each instance refers to a data which offers a share book record, include
+ * bookID, requestType, sender, receiver, book name and sender name.
  * <p>
  * Public Methods:
  * getters & setters

@@ -44,7 +44,7 @@ public class SearchTest extends ActivityTestRule<MainActivity> {
     }
 
     @Test
-    public void testIntoBookDeatil(){
+    public void testIntoBookDetail(){
         solo.enterText((EditText) solo.getView(R.id.SearchBar),"x");
         solo.clickOnText("The Hobbit");
         solo.assertCurrentActivity("Wrong Activity", BookDetailActivity.class);

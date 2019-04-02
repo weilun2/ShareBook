@@ -97,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (autocompleteFragment != null) {
             // Specify the types of place data to return.
             autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID,
-                    Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS));;
+                    Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS));
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(@NonNull Place place) {

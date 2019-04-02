@@ -64,8 +64,8 @@ public class ScanActivity extends AppCompatActivity {
         FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance().getVisionBarcodeDetector();
         detector.detectInImage(firebaseVisionImage).addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
                     @Override
-                    public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
-                        processResult(firebaseVisionBarcodes);
+                    public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcode) {
+                        processResult(firebaseVisionBarcode);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -78,13 +78,13 @@ public class ScanActivity extends AppCompatActivity {
     /**
      * Check the Barcode and return the ISBN
      */
-    private void processResult(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
+    private void processResult(List<FirebaseVisionBarcode> firebaseVisionBarcode) {
         // No Barcode was detected
-        if (firebaseVisionBarcodes.size() == 0){
+        if (firebaseVisionBarcode.size() == 0){
             Toast.makeText(this, "Cannot detect the Barcode. Please try again", Toast.LENGTH_SHORT).show();
         }
 
-        for (FirebaseVisionBarcode barcode : firebaseVisionBarcodes){
+        for (FirebaseVisionBarcode barcode : firebaseVisionBarcode){
             if (barcode.getValueType() == FirebaseVisionBarcode.TYPE_ISBN){
                 Intent intent = new Intent();
                 intent.putExtra("ISBN", barcode.getDisplayValue());

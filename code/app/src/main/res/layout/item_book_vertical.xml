@@ -22,7 +22,7 @@
             android:layout_marginRight="8dp">
 
             <ImageView
-                android:id="@+id/rearch_res_cover"
+                android:id="@+id/reach_res_cover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
@@ -39,7 +39,7 @@
             android:text="Title" />
 
         <TextView
-            android:id="@+id/rearch_res_title"
+            android:id="@+id/reach_res_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title_text"
@@ -53,13 +53,13 @@
             android:id="@+id/author_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rearch_res_title"
+            android:layout_below="@+id/reach_res_title"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@+id/layout_cover"
             android:text="Author" />
 
         <TextView
-            android:id="@+id/rearch_res_author"
+            android:id="@+id/reach_res_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/author_text"
@@ -73,13 +73,13 @@
             android:id="@+id/owner_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rearch_res_author"
+            android:layout_below="@+id/reach_res_author"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@+id/layout_cover"
             android:text="Owner" />
 
         <TextView
-            android:id="@+id/rearch_res_owner"
+            android:id="@+id/reach_res_owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/owner_text"

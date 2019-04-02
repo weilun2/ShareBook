@@ -1,15 +1,12 @@
 package ca.ualberta.cmput301w19t05.sharebook.activities;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,12 +20,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.net.URI;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
@@ -54,7 +49,7 @@ public class AddBookActivity extends AppCompatActivity {
     private int IMAGE_REQUEST_CODE = 1;
     private int flag = 0;
     private Uri Uri ;
-    private Bitmap Uploadedgraph;
+    private Bitmap Uploaded;
     private Book book;
     private boolean inProgress = false;
     private ProgressDialog progressDialog;
@@ -133,7 +128,7 @@ public class AddBookActivity extends AppCompatActivity {
                     if (flag == 1){
                         showDialog();
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        Uploadedgraph.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        Uploaded.compress(Bitmap.CompressFormat.PNG, 100, baos);
                         byte[] data = baos.toByteArray();
                         String filenames = "image/" + firebaseHandler.getCurrentUser().getUserID() + "/" + book.getBookId().hashCode() + ".png";
                         final StorageReference ref = firebaseHandler.getStorageRef().child(filenames);
@@ -205,19 +200,19 @@ public class AddBookActivity extends AppCompatActivity {
         if (requestCode == IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
-                    ImageView photoUplaoded = (ImageView) findViewById(R.id.photoUploaded);
-                    Uri uri = ShowresizedImage(data);
+                    ImageView photoUploaded = findViewById(R.id.photoUploaded);
+                    Uri uri = ShowResizedImage(data);
                     Log.e("uri", uri.toString());
                     ContentResolver cr = this.getContentResolver();
                     try {
                         // get bitmap
                         Bitmap bitmap = BitmapFactory.decodeStream(cr
                                 .openInputStream(uri));
-                        photoUplaoded.setImageBitmap(bitmap);
+                        photoUploaded.setImageBitmap(bitmap);
                         Uri = uri;
                         flag = 1;
 
-                        Uploadedgraph = bitmap;
+                        Uploaded = bitmap;
 
                     } catch (Exception e) {
                         Log.e("Exception", e.getMessage(), e);
@@ -234,7 +229,8 @@ public class AddBookActivity extends AppCompatActivity {
         }
     }
 
-    public Uri ShowresizedImage(Intent data){
+    public Uri ShowResizedImage(Intent data){
+
         Uri uri = data.getData();
         return uri;
     }

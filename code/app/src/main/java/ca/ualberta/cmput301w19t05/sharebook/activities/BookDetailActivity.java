@@ -44,7 +44,7 @@ import ca.ualberta.cmput301w19t05.sharebook.models.Book;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 /**
- * A book detial screen allow user to edit book
+ * A book detail screen allow user to edit book
  */
 public class BookDetailActivity extends AppCompatActivity {
     public final static int REQUEST = 1;
@@ -73,6 +73,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private boolean shortPress = false;
     private Bitmap Uploadedgraph;
     private StorageReference initialPhoto;
+
 
 
 
@@ -187,7 +188,6 @@ public class BookDetailActivity extends AppCompatActivity {
                         return true;
                     }
 
-                    ;
                 });
 
                 switch (book.getStatus()) {
@@ -329,7 +329,7 @@ public class BookDetailActivity extends AppCompatActivity {
                     Uploadedgraph = bitmap;
                     Glide.with(BookDetailActivity.this).load(bitmap)
                             .into(bookImage);
-                    //bookImage.setImageBitmap(Uploadedgraph);
+                    //bookImage.setImageBitmap(Uploaded);
 
 
 
@@ -446,7 +446,7 @@ public class BookDetailActivity extends AppCompatActivity {
         desContent.setText(book.getDescription());
 
         //bookImage.setImageURI(Uri.parse(book.getPhoto()));
-        Glide.with(this).load(Uri.parse(book.getPhoto()))
+        Glide.with(this).load(android.net.Uri.parse(book.getPhoto()))
                 .into(bookImage);
 
     }

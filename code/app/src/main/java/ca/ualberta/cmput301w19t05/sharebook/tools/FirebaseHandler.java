@@ -46,7 +46,7 @@ import static android.support.constraint.Constraints.TAG;
 
 /**
  * FirebaseHandler
- * Handle firebase for storaging data
+ * Handle firebase for storage data
  * Public Methods:
  *      addUsernameEmailTuple (String, String) -> void :
  *          create an extra table to help distinguish occupied email and support email login feature

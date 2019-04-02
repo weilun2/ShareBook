@@ -15,10 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
@@ -248,10 +245,10 @@ public class SearchBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
-            cover = itemView.findViewById(R.id.rearch_res_cover);
-            title = itemView.findViewById(R.id.rearch_res_title);
-            author = itemView.findViewById(R.id.rearch_res_author);
-            owner = itemView.findViewById(R.id.rearch_res_owner);
+            cover = itemView.findViewById(R.id.reach_res_cover);
+            title = itemView.findViewById(R.id.reach_res_title);
+            author = itemView.findViewById(R.id.reach_res_author);
+            owner = itemView.findViewById(R.id.reach_res_owner);
             itemView.setOnClickListener(this);
 
         }

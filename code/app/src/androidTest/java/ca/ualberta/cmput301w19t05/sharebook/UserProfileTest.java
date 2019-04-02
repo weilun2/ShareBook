@@ -83,7 +83,7 @@ public class UserProfileTest extends ActivityTestRule<UserProfile>{
     }
 
     @After
-    public void tearDown() throws Exception{
+    public void tearDown() {
         solo.finishOpenedActivities();
     }
 

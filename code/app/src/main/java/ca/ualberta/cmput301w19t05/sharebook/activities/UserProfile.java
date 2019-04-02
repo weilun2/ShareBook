@@ -34,7 +34,7 @@ import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import ca.ualberta.cmput301w19t05.sharebook.tools.FirebaseHandler;
 
 /**
- * A userprofile screen that offers Username, useremail, userImage, and can be edited
+ * A userProfile screen that offers Username, userEmail, userImage, and can be edited
  */
 public class UserProfile extends AppCompatActivity {
 

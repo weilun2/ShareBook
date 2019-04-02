@@ -212,7 +212,7 @@ public class AcceptedFragment extends Fragment {
             if (book.getISBN().equals(ISBN)){
                 if (type.equals("return")){
                     View view = View.inflate(getActivity(), R.layout.content_edit, null);
-                    final EditText userInput = view.findViewById(R.id.user_input);;
+                    final EditText userInput = view.findViewById(R.id.user_input);
                     dialog= new AlertDialog.Builder(getActivity()).setView(view)
                             .setMessage("input your rate form 0 to 10")
                             .setPositiveButton("submit", null)

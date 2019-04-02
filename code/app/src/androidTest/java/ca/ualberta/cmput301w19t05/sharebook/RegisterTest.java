@@ -72,7 +72,7 @@ public class RegisterTest extends ActivityTestRule<Register> {
         solo.enterText((EditText) solo.getView(R.id.signup_input_password), "1234567");
         solo.enterText((EditText) solo.getView(R.id.second_input_password), "234567");
         solo.clickOnText("Register Now");
-        assertTrue(solo.waitForText("two passwors do not match",1,2000));
+        assertTrue(solo.waitForText("two passwords do not match",1,2000));
 
     }
 

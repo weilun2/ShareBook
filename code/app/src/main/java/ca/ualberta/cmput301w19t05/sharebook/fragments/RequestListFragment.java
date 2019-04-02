@@ -48,7 +48,7 @@ public final class RequestListFragment extends Fragment {
         }
 
         initAdapter();
-        onlineDatabaseListener(adapter);;
+        onlineDatabaseListener(adapter);
 
 
     }
