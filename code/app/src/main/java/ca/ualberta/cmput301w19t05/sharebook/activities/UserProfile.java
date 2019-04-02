@@ -136,6 +136,8 @@ public class UserProfile extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         hideDialog();
                         Log.d(TAG, "onComplete: update email to " + toString);
+                        reference.child(user.getUid()).child("email").setValue(toString);
+                        firebaseHandler.updateUserToBooks(toString, "email");
                         viewUserEmail.setText(toString);
                     }
                 });
@@ -162,6 +164,7 @@ public class UserProfile extends AppCompatActivity {
                         hideDialog();
                         Log.d(TAG, "onComplete: update username to " + username);
                         reference.child(user.getUid()).child("username").setValue(username);
+                        firebaseHandler.updateUserToBooks(username, "username");
                         viewUserName.setText(username);
                     }
                 });

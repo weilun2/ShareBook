@@ -26,17 +26,15 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import ca.ualberta.cmput301w19t05.sharebook.R;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.APIServer;
-import ca.ualberta.cmput301w19t05.sharebook.models.Data;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.MyResponse;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Notification;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.RetroFitClient;
 import ca.ualberta.cmput301w19t05.sharebook.cloudMessage.Sender;
 import ca.ualberta.cmput301w19t05.sharebook.models.Book;
+import ca.ualberta.cmput301w19t05.sharebook.models.Data;
 import ca.ualberta.cmput301w19t05.sharebook.models.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -413,6 +411,28 @@ public class FirebaseHandler {
 
             }
         });
+    }
+
+    public void updateUserToBooks(final String value, final String type) {
+
+        myRef.child("books").child(getCurrentUser().getUserID())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot it : dataSnapshot.getChildren()) {
+                            String bookId = it.getKey();
+                            if (bookId != null) {
+                                myRef.child("books").child(getCurrentUser().getUserID())
+                                        .child(bookId).child("owner").child(type).setValue(value);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     public void returned(final Book book, final int res) {
