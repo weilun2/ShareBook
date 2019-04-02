@@ -232,11 +232,12 @@ public final class BorrowingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchBookAdapter.getFilter().filter(s.toString());
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                searchBookAdapter.getFilter().filter(s.toString());
 
             }
         });
@@ -253,7 +254,9 @@ public final class BorrowingFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for (DataSnapshot userId: dataSnapshot.getChildren()){
-                    if (firebaseHandler.getCurrentUser().getUserID().equals(userId.getKey())){
+
+                    if (userId.getKey() != null
+                            && userId.getKey().equals(firebaseHandler.getCurrentUser().getUserID())) {
                         addBookById(REQUEST,dataSnapshot.getKey());
                     }
                 }
@@ -299,7 +302,6 @@ public final class BorrowingFragment extends Fragment {
                                 Book book = users.child(bookId).getValue(Book.class);
                                 switch (adapterType){
                                     case REQUEST:{
-                                        requestingBooks.remove(book);
                                         requestingAdapter.removeBook(book);
                                         break;
                                     }
@@ -309,7 +311,7 @@ public final class BorrowingFragment extends Fragment {
                                     }
                                     case BORROWED:{
                                         borrowedAdapter.removeBook(book);
-                                        requestingBooks.remove(book);
+
 
                                         break;
                                     }
@@ -371,7 +373,10 @@ public final class BorrowingFragment extends Fragment {
                 for (DataSnapshot it : dataSnapshot.getChildren()) {
                     Book temp = it.getValue(Book.class);
                     if (temp != null&& temp.getOwner()!=null) {
-                        if (!requestingBooks.contains(temp)&&status.contains(temp.getStatus())&&!temp.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())){
+                        if (status.contains(temp.getStatus())
+                                && !temp.getOwner().getUserID().equals(firebaseHandler.getCurrentUser().getUserID())
+                                && !acceptedAdapter.contains(temp)
+                                && !borrowedAdapter.contains(temp)) {
                             adapter.addBook(temp);
                         }
 
@@ -384,15 +389,13 @@ public final class BorrowingFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                adapter.clear();
                 for (DataSnapshot it : dataSnapshot.getChildren()) {
                     Book temp = it.getValue(Book.class);
 
 
                     if (temp != null) {
-                        if (requestingBooks.contains(temp) || !status.contains(temp.getStatus())) {
+                        if (!status.contains(temp.getStatus())) {
                             adapter.removeBook(temp);
-                            continue;
                         }
                         else {
                             adapter.addBook(temp);
